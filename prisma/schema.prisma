@@ -1,0 +1,379 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../lib/generated/prisma"
+  importFileExtension = "ts"
+}
+
+// La url se configura en prisma.config.ts: en v7 `url` dentro del datasource
+// quedo deprecada.
+datasource db {
+  provider = "mysql"
+}
+
+enum Role {
+  USER
+  ADMIN
+  SUPERADMIN
+}
+
+// -----------------------------------------------------------------------------
+// PLAN DEL GIMNASIO (1 a 7 días por semana)
+// -----------------------------------------------------------------------------
+model Plan {
+  id            Int      @id @default(autoincrement())
+  nombre        String
+  descripcion   String?  @db.Text
+  diasPorSemana Int      @default(3) // Cantidad de días permitidos (1 a 7)
+  precio        Decimal? @db.Decimal(10, 2)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  usuarios Usuario[]
+  rutinasTemplates PlanRutinaTemplate[]
+
+  @@map("plan")
+}
+
+// -----------------------------------------------------------------------------
+// USUARIO DEL GIMNASIO
+// -----------------------------------------------------------------------------
+model Usuario {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  passwordHash String?
+  nombre       String
+  apellido     String
+  telefono     String
+  dni          String    @unique
+  direccion    String?
+  birthDate    DateTime? @db.Date
+  avatarUrl    String?
+  imageUrl     String?
+  role         Role      @default(USER)
+  isActive     Boolean   @default(true)
+  deletedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Plan asociado (determina cuántos días puede entrenar el usuario)
+  planId Int?
+  plan   Plan? @relation(fields: [planId], references: [id], onDelete: SetNull)
+
+  // Asignación de días y rutinas (1 a 7 días)
+  rutinasDias UsuarioRutinaDia[]
+
+  // Configuración y pesos actuales por ejercicio para este usuario
+  ejerciciosPersonalizados UsuarioEjercicio[]
+
+  // Historial temporal de evolución de peso y rendimiento
+  historialEjercicios HistorialEjercicio[]
+
+  // Registro de sesiones diarias completadas
+  sesiones SesionEntrenamiento[]
+
+  // Pagos de membresía / cuotas mensuales
+  pagos Pago[]
+
+  // Seguimiento de medidas corporales y evolución física
+  medidas MedidaCorporal[]
+  tiposMedidaPersonalizados TipoMedidaPersonalizada[]
+
+  @@index([planId])
+  @@map("usuario")
+}
+
+// -----------------------------------------------------------------------------
+// ASIGNACIÓN DE DÍA (1 A 7) -> 1 RUTINA POR DÍA
+// -----------------------------------------------------------------------------
+model UsuarioRutinaDia {
+  id        Int     @id @default(autoincrement())
+  usuarioId Int
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  // Día asignado (1 al 7, según los días permitidos por el plan del usuario)
+  diaNumero Int
+  nombreDia String? // Ej: "Día 1 - Pecho y Bíceps", "Lunes"
+
+  // Cada día tiene exactamente 1 rutina asociada
+  rutinaId Int
+  rutina   Rutina @relation(fields: [rutinaId], references: [id], onDelete: Cascade)
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Garantiza que un usuario tenga exactamente una rutina por cada número de día
+  @@unique([usuarioId, diaNumero])
+  @@index([rutinaId])
+  @@map("usuario_rutina_dia")
+}
+
+// -----------------------------------------------------------------------------
+// CATÁLOGO DE RUTINAS
+// -----------------------------------------------------------------------------
+model Rutina {
+  id          Int       @id @default(autoincrement())
+  nombre      String
+  descripcion String?   @db.Text
+  esTemplate  Boolean   @default(false) // Si es un template reutilizable para crear nuevas rutinas
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  isActive    Boolean   @default(true)
+
+  // N ejercicios que componen la rutina
+  ejercicios RutinaEjercicio[]
+
+  // Días en los que está asignada a los usuarios
+  usuariosDias UsuarioRutinaDia[]
+
+  // Plantillas de planes en las que participa esta rutina
+  templateDias PlanRutinaTemplateDia[]
+
+  // Sesiones ejecutadas con esta rutina
+  sesiones SesionEntrenamiento[]
+
+  @@map("rutina")
+}
+
+// -----------------------------------------------------------------------------
+// PLANTILLAS DE RUTINA PARA PLANES (Multi-día: 1 a N días del plan)
+// -----------------------------------------------------------------------------
+model PlanRutinaTemplate {
+  id          Int       @id @default(autoincrement())
+  nombre      String    // Ej: "Rutina Principiante — 3 Días", "Fuerza e Hipertrofia 5 Días"
+  descripcion String?   @db.Text
+  isActive    Boolean   @default(true)
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Plan asociado (determina cuántos días tiene la plantilla: 1 a 7)
+  planId Int
+  plan   Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  // Asignación de cada día (Día 1, Día 2, ..., Día N) a una rutina
+  dias PlanRutinaTemplateDia[]
+
+  @@index([planId])
+  @@map("plan_rutina_template")
+}
+
+model PlanRutinaTemplateDia {
+  id         Int                @id @default(autoincrement())
+  templateId Int
+  template   PlanRutinaTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  diaNumero Int     // Día 1 al N (según plan.diasPorSemana)
+  nombreDia String? // Ej: "Día 1 — Pecho y Bíceps", "Lunes"
+
+  rutinaId Int
+  rutina   Rutina @relation(fields: [rutinaId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([templateId, diaNumero])
+  @@index([rutinaId])
+  @@map("plan_rutina_template_dia")
+}
+
+// -----------------------------------------------------------------------------
+// CATÁLOGO DE EJERCICIOS
+// -----------------------------------------------------------------------------
+model Ejercicio {
+  id            Int       @id @default(autoincrement())
+  nombre        String
+  descripcion   String?   @db.Text
+  grupoMuscular String? // Ej: "Pecho", "Espalda", "Piernas"
+  imagenUrl     String?
+  videoUrl      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+  isActive      Boolean   @default(true)
+
+  // Rutinas en las que participa el ejercicio
+  rutinas RutinaEjercicio[]
+
+  // Configuración y peso actual por usuario
+  usuariosPersonalizados UsuarioEjercicio[]
+
+  // Historial de levantamiento y registros para gráficos de progreso
+  historial HistorialEjercicio[]
+
+  @@map("ejercicio")
+}
+
+// -----------------------------------------------------------------------------
+// EJERCICIOS DENTRO DE UNA RUTINA (Configuración base / plantilla)
+// -----------------------------------------------------------------------------
+model RutinaEjercicio {
+  id          Int       @id @default(autoincrement())
+  rutinaId    Int
+  rutina      Rutina    @relation(fields: [rutinaId], references: [id], onDelete: Cascade)
+  ejercicioId Int
+  ejercicio   Ejercicio @relation(fields: [ejercicioId], references: [id], onDelete: Cascade)
+
+  grupoNumero      Int?    // Número de grupo (1 al 10) para ejercicios que se realizan juntos
+  orden            Int     @default(1)
+  series           Int     @default(4)
+  repeticiones     String  @default("10-12") // String para permitir rangos ("10-12", "Fallo", etc.)
+  descansoSegundos Int?    @default(60)
+  pesoSugerido     Float? // Peso base o de referencia sugerido
+  notas            String?
+
+  @@unique([rutinaId, ejercicioId])
+  @@index([ejercicioId])
+  @@map("rutina_ejercicio")
+}
+
+// -----------------------------------------------------------------------------
+// PESO Y CONFIGURACIÓN ACTUAL POR USUARIO Y EJERCICIO
+// (Va cambiando a medida que el usuario progresa en el gimnasio)
+// -----------------------------------------------------------------------------
+model UsuarioEjercicio {
+  id          Int       @id @default(autoincrement())
+  usuarioId   Int
+  usuario     Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  ejercicioId Int
+  ejercicio   Ejercicio @relation(fields: [ejercicioId], references: [id], onDelete: Cascade)
+
+  // Peso actual de trabajo en kg (ej: 60.5)
+  pesoActual   Float   @default(0)
+  series       Int? // Series personalizadas para este usuario (opcional)
+  repeticiones String? // Repeticiones personalizadas (opcional)
+  notas        String?
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([usuarioId, ejercicioId])
+  @@index([ejercicioId])
+  @@map("usuario_ejercicio")
+}
+
+// -----------------------------------------------------------------------------
+// SESIÓN DE ENTRENAMIENTO DIARIA
+// (El usuario marca la rutina del día como completada)
+// -----------------------------------------------------------------------------
+model SesionEntrenamiento {
+  id        Int     @id @default(autoincrement())
+  usuarioId Int
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  rutinaId  Int
+  rutina    Rutina  @relation(fields: [rutinaId], references: [id])
+
+  fecha           DateTime @default(now())
+  completada      Boolean  @default(false)
+  duracionMinutos Int?
+  comentarios     String?
+
+  registros HistorialEjercicio[]
+
+  @@index([usuarioId, fecha])
+  @@index([rutinaId])
+  @@map("sesion_entrenamiento")
+}
+
+// -----------------------------------------------------------------------------
+// HISTORIAL TEMPORAL DE PESO Y RENDIMIENTO POR EJERCICIO
+// (Alimenta los gráficos de evolución y mejora en el tiempo)
+// -----------------------------------------------------------------------------
+model HistorialEjercicio {
+  id          Int       @id @default(autoincrement())
+  usuarioId   Int
+  usuario     Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  ejercicioId Int
+  ejercicio   Ejercicio @relation(fields: [ejercicioId], references: [id], onDelete: Cascade)
+
+  sesionId Int?
+  sesion   SesionEntrenamiento? @relation(fields: [sesionId], references: [id], onDelete: SetNull)
+
+  fecha                DateTime @default(now())
+  peso                 Float // Peso en kg registrado en esa fecha
+  seriesCompletadas    Int?
+  repeticionesLogradas Int?
+  rpe                  Int? // Escala de esfuerzo percibido 1 al 10 (opcional)
+  notas                String?
+  createdAt            DateTime @default(now())
+
+  @@index([usuarioId, ejercicioId, fecha])
+  @@index([ejercicioId])
+  @@index([sesionId])
+  @@map("historial_ejercicio")
+}
+
+// -----------------------------------------------------------------------------
+// REGISTRO DE PAGOS DE CUOTAS / MEMBRESÍAS
+// -----------------------------------------------------------------------------
+model Pago {
+  id          Int      @id @default(autoincrement())
+  usuarioId   Int
+  usuario     Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  mes         Int      // 1 al 12
+  anio        Int      // Ej: 2026
+  monto       Decimal  @db.Decimal(10, 2)
+  fechaPago   DateTime @default(now())
+  metodoPago  String?  @default("Efectivo") // "Efectivo", "Transferencia", "Tarjeta de Débito", "Mercado Pago"
+  comprobante String?
+  notas       String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([usuarioId, anio, mes])
+  @@index([usuarioId])
+  @@index([anio, mes])
+  @@map("pago")
+}
+
+// -----------------------------------------------------------------------------
+// SEGUIMIENTO DE MEDIDAS CORPORALES DEL SOCIO
+// Permite registrar mediciones individuales (ej: solo peso, solo cintura)
+// tanto de tipos preestablecidos como personalizados por el usuario
+// -----------------------------------------------------------------------------
+model MedidaCorporal {
+  id             Int      @id @default(autoincrement())
+  usuarioId      Int
+  usuario        Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  tipo           String   // Clave del tipo (ej: "peso", "cintura", "biceps", o clave personalizada)
+  nombre         String   // Nombre legible (ej: "Peso Corporal", "Cintura", "Muslo Superior")
+  unidad         String   @default("cm") // "kg", "cm", "%", etc.
+  valor          Float    // Valor numérico registrado
+  fecha          DateTime @default(now())
+  notas          String?  @db.Text // Observaciones opcionales
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([usuarioId, tipo, fecha])
+  @@index([usuarioId, fecha])
+  @@map("medida_corporal")
+}
+
+// Tipos de medidas personalizadas creadas por el usuario
+model TipoMedidaPersonalizada {
+  id             Int      @id @default(autoincrement())
+  usuarioId      Int
+  usuario        Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  clave          String   // Slug único para el usuario (ej: "gluteos", "pantorrilla_izq")
+  nombre         String   // Nombre descriptivo (ej: "Glúteos", "Cuádriceps Superior")
+  unidad         String   @default("cm") // "cm", "kg", "mm", "%"
+  icono          String   @default("📏")
+  color          String   @default("#3b82f6")
+
+  createdAt      DateTime @default(now())
+
+  @@unique([usuarioId, clave])
+  @@index([usuarioId])
+  @@map("tipo_medida_personalizada")
+}
+
+

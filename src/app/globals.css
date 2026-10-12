@@ -1,26 +1,85 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ===============================
+     TEMA DÍA (CLARO)
+     =============================== */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+
+  --surface: #ffffff;
+  --surface-hover: #f1f5f9;
+
+  --border: #e2e8f0;
+
+  --content: #0f172a;
+  --content-muted: #64748b;
+
+  --primary: #ea580c;
+  --primary-foreground: #ffffff;
+  --primary-hover: #c2410c;
+
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+
+  --logo-shadow: 0 1px 3px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.dark {
+  /* ===============================
+     TEMA NOCHE (OSCURO)
+     Fondo negro puro, superficies y bordes en grises oscuros (sin tonos azules),
+     y detalles de acento en verde sobrio (no chillón).
+     =============================== */
+  --background: #000000;
+  --foreground: #f4f4f5;
+
+  --surface: #121214;
+  --surface-hover: #1c1c20;
+
+  --border: #27272a;
+
+  --content: #f4f4f5;
+  --content-muted: #a1a1aa;
+
+  --primary: #16a34a;
+  --primary-foreground: #ffffff;
+  --primary-hover: #15803d;
+
+  --accent: #1c1c20;
+  --accent-foreground: #f4f4f5;
+
+  --logo-shadow: 0 0 14px rgba(255, 255, 255, 0.45), 0 2px 6px rgba(255, 255, 255, 0.25);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-content: var(--content);
+  --color-content-muted: var(--content-muted);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.logo-img-shadow {
+  box-shadow: var(--logo-shadow);
+  transition: box-shadow 0.2s ease;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
