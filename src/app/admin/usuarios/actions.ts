@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma, type Prisma } from "@lib/prisma";
 import { Role } from "@lib/generated/prisma/enums";
 import { hashPassword } from "@/lib/password";
+import { getCurrentUser } from "@/lib/auth";
 
 export interface GetUsuariosParams {
   page?: number;
@@ -60,6 +61,9 @@ export async function getUsuarios({
   status = "ALL",
 }: GetUsuariosParams = {}): Promise<GetUsuariosResult> {
   try {
+    const sessionUser = await getCurrentUser();
+    const isSuperAdmin = sessionUser?.role === Role.SUPERADMIN;
+
     const currentPage = Math.max(1, page);
     const take = Math.max(1, Math.min(100, pageSize));
     const skip = (currentPage - 1) * take;
@@ -71,6 +75,11 @@ export async function getUsuarios({
       deletedAt: null, // Excluir soft-deleted
     };
 
+    // Si el usuario autenticado NO es SUPERADMIN, ocultar completamente los usuarios SUPERADMIN
+    if (!isSuperAdmin) {
+      where.role = { not: Role.SUPERADMIN };
+    }
+
     if (trimmedSearch) {
       where.OR = [
         { nombre: { contains: trimmedSearch } },
@@ -81,7 +90,7 @@ export async function getUsuarios({
       ];
     }
 
-    if (role !== "ALL" && (role === "USER" || role === "ADMIN" || role === "SUPERADMIN")) {
+    if (role !== "ALL" && (role === "USER" || role === "ADMIN" || (role === "SUPERADMIN" && isSuperAdmin))) {
       where.role = role as Role;
     }
 
@@ -203,7 +212,17 @@ export async function crearUsuario(data: UsuarioFormData) {
 
     // Si el usuario es ADMIN o SUPERADMIN, asignamos o generamos contraseña hasheada
     let passwordHash: string | null = null;
-    if (role === Role.ADMIN || role === Role.SUPERADMIN) {
+    let targetRole = role || Role.USER;
+
+    const sessionUser = await getCurrentUser();
+    const isSuperAdmin = sessionUser?.role === Role.SUPERADMIN;
+
+    // Un ADMIN común no puede crear usuarios SUPERADMIN
+    if (targetRole === Role.SUPERADMIN && !isSuperAdmin) {
+      targetRole = Role.ADMIN;
+    }
+
+    if (targetRole === Role.ADMIN || targetRole === Role.SUPERADMIN) {
       passwordHash = hashPassword(password && password.trim() ? password.trim() : "admin123");
     }
 
@@ -216,7 +235,7 @@ export async function crearUsuario(data: UsuarioFormData) {
         dni: dni.trim(),
         direccion: direccion?.trim() || null,
         birthDate: birthDate ? new Date(birthDate) : null,
-        role: role || Role.USER,
+        role: targetRole,
         passwordHash,
         planId: planId ? Number(planId) : null,
         isActive: isActive !== undefined ? isActive : true,
@@ -243,6 +262,14 @@ export async function actualizarUsuario(id: number, data: UsuarioFormData) {
       return { success: false, error: "Usuario no encontrado" };
     }
 
+    const sessionUser = await getCurrentUser();
+    const isSuperAdmin = sessionUser?.role === Role.SUPERADMIN;
+
+    // Un ADMIN común no puede modificar a un SUPERADMIN
+    if (usuarioExistente.role === Role.SUPERADMIN && !isSuperAdmin) {
+      return { success: false, error: "No tienes permisos para modificar este usuario" };
+    }
+
     // Comprobar si el email pertenece a otro usuario
     const existenteEmail = await prisma.usuario.findUnique({
       where: { email: email.trim().toLowerCase() },
@@ -259,6 +286,12 @@ export async function actualizarUsuario(id: number, data: UsuarioFormData) {
       return { success: false, error: "El DNI ya está siendo utilizado por otro usuario" };
     }
 
+    let targetRole = role || Role.USER;
+    // Un ADMIN común no puede promover a nadie a SUPERADMIN
+    if (targetRole === Role.SUPERADMIN && !isSuperAdmin) {
+      targetRole = usuarioExistente.role === Role.SUPERADMIN ? Role.SUPERADMIN : Role.ADMIN;
+    }
+
     const updateData: Prisma.UsuarioUpdateInput = {
       nombre: nombre.trim(),
       apellido: apellido.trim(),
@@ -267,12 +300,12 @@ export async function actualizarUsuario(id: number, data: UsuarioFormData) {
       dni: dni.trim(),
       direccion: direccion?.trim() || null,
       birthDate: birthDate ? new Date(birthDate) : null,
-      role: role || Role.USER,
+      role: targetRole,
       plan: planId ? { connect: { id: Number(planId) } } : { disconnect: true },
       isActive: isActive !== undefined ? isActive : usuarioExistente.isActive,
     };
 
-    if (role === Role.ADMIN || role === Role.SUPERADMIN) {
+    if (targetRole === Role.ADMIN || targetRole === Role.SUPERADMIN) {
       if (password && password.trim()) {
         updateData.passwordHash = hashPassword(password.trim());
       } else if (!usuarioExistente.passwordHash) {
@@ -303,6 +336,13 @@ export async function toggleEstadoUsuario(id: number) {
       return { success: false, error: "Usuario no encontrado" };
     }
 
+    const sessionUser = await getCurrentUser();
+    const isSuperAdmin = sessionUser?.role === Role.SUPERADMIN;
+
+    if (usuario.role === Role.SUPERADMIN && !isSuperAdmin) {
+      return { success: false, error: "No tienes permisos para modificar este usuario" };
+    }
+
     const usuarioActualizado = await prisma.usuario.update({
       where: { id },
       data: { isActive: !usuario.isActive },
@@ -319,6 +359,18 @@ export async function toggleEstadoUsuario(id: number) {
 
 export async function eliminarUsuario(id: number) {
   try {
+    const usuario = await prisma.usuario.findUnique({ where: { id } });
+    if (!usuario) {
+      return { success: false, error: "Usuario no encontrado" };
+    }
+
+    const sessionUser = await getCurrentUser();
+    const isSuperAdmin = sessionUser?.role === Role.SUPERADMIN;
+
+    if (usuario.role === Role.SUPERADMIN && !isSuperAdmin) {
+      return { success: false, error: "No tienes permisos para eliminar este usuario" };
+    }
+
     // Soft delete: marcamos deletedAt y desactivamos
     await prisma.usuario.update({
       where: { id },

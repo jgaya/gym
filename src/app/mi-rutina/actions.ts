@@ -69,6 +69,7 @@ export async function getMiRutinaData() {
       },
       select: {
         ejercicioId: true,
+        seriesCompletadas: true,
       },
     }),
   ]);
@@ -79,9 +80,17 @@ export async function getMiRutinaData() {
     new Set(registrosHoy.map((r) => r.ejercicioId))
   );
 
+  const seriesCompletadasHoy: Record<number, number> = {};
+  for (const r of registrosHoy) {
+    if (r.seriesCompletadas) {
+      seriesCompletadasHoy[r.ejercicioId] = r.seriesCompletadas;
+    }
+  }
+
   return {
     ...usuario,
     ejerciciosCompletadosHoy,
+    seriesCompletadasHoy,
   };
 }
 
@@ -130,7 +139,11 @@ export async function actualizarPesoEjercicio(ejercicioId: number, peso: number)
   }
 }
 
-export async function toggleCompletarEjercicioHoy(ejercicioId: number, peso: number) {
+export async function toggleCompletarEjercicioHoy(
+  ejercicioId: number,
+  peso: number,
+  seriesCompletadas?: number
+) {
   const sessionUser = await getCurrentUser();
   if (!sessionUser) {
     return { success: false, error: "No autenticado" };
@@ -180,6 +193,7 @@ export async function toggleCompletarEjercicioHoy(ejercicioId: number, peso: num
             usuarioId: sessionUser.id,
             ejercicioId,
             peso: pesoNum,
+            seriesCompletadas: seriesCompletadas ?? null,
             fecha: new Date(),
           },
         }),

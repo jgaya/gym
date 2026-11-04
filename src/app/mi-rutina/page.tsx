@@ -56,10 +56,16 @@ export default async function MiRutinaPage({ searchParams }: MiRutinaPageProps) 
               {usuarioData.plan.nombre} ({usuarioData.plan.diasPorSemana} días/sem)
             </Badge>
           )}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Link
+              href="/calendario"
+              className="text-xs font-semibold text-content-muted hover:text-content border border-border bg-surface px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 shadow-2xs"
+            >
+              <span>📅 Calendario</span>
+            </Link>
             <Link
               href="/mis-medidas"
-              className="text-xs font-semibold text-content-muted hover:text-content border border-border bg-surface px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
+              className="text-xs font-semibold text-content-muted hover:text-content border border-border bg-surface px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 shadow-2xs"
             >
               <span>📏 Mis Medidas</span>
             </Link>

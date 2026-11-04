@@ -22,9 +22,10 @@ interface PlanOption {
 interface UsuariosClientProps {
   initialData: GetUsuariosResult;
   planes: PlanOption[];
+  isSuperAdmin?: boolean;
 }
 
-export function UsuariosClient({ initialData, planes }: UsuariosClientProps) {
+export function UsuariosClient({ initialData, planes, isSuperAdmin = false }: UsuariosClientProps) {
   const [data, setData] = useState<GetUsuariosResult>(initialData);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -104,7 +105,7 @@ export function UsuariosClient({ initialData, planes }: UsuariosClientProps) {
               <option value="ALL">Todos los roles</option>
               <option value="USER">Miembros</option>
               <option value="ADMIN">Admins</option>
-              <option value="SUPERADMIN">Super Admin</option>
+              {isSuperAdmin && <option value="SUPERADMIN">Super Admin</option>}
             </Select>
 
             <Select
@@ -164,6 +165,7 @@ export function UsuariosClient({ initialData, planes }: UsuariosClientProps) {
         onClose={() => setIsModalOpen(false)}
         usuario={selectedUser}
         planes={planes}
+        isSuperAdmin={isSuperAdmin}
         onSuccess={fetchData}
       />
     </div>

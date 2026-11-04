@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import { getCurrentUser } from "@/lib/auth";
+import { Role } from "@lib/generated/prisma/enums";
 import { getUsuarios, getPlanesDisponibles } from "./actions";
 import { UsuariosClient } from "./UsuariosClient";
 
@@ -9,10 +11,13 @@ export const metadata: Metadata = {
 
 export default async function AdminUsuariosPage() {
   // Carga inicial en el servidor para velocidad y SEO
-  const [initialData, planes] = await Promise.all([
+  const [currentUser, initialData, planes] = await Promise.all([
+    getCurrentUser(),
     getUsuarios({ page: 1, pageSize: 10 }),
     getPlanesDisponibles(),
   ]);
+
+  const isSuperAdmin = currentUser?.role === Role.SUPERADMIN;
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-6">
@@ -34,7 +39,7 @@ export default async function AdminUsuariosPage() {
       </div>
 
       {/* Componente interactivo de listado, filtros, paginación y ABM */}
-      <UsuariosClient initialData={initialData} planes={planes} />
+      <UsuariosClient initialData={initialData} planes={planes} isSuperAdmin={isSuperAdmin} />
     </div>
   );
 }

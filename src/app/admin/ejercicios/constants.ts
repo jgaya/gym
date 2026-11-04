@@ -1,7 +1,7 @@
 export const GRUPOS_MUSCULARES = [
   "Core / Abdomen",
   "Bíceps",
-  "Cuadriceps",
+  "Cuádriceps",
   "Espalda",
   "Femorales",
   "Glúteos",

@@ -24,6 +24,7 @@ interface UsuarioFormModalProps {
   onClose: () => void;
   usuario?: UsuarioItem | null;
   planes: PlanOption[];
+  isSuperAdmin?: boolean;
   onSuccess: () => void;
 }
 
@@ -32,6 +33,7 @@ export function UsuarioFormModal({
   onClose,
   usuario,
   planes,
+  isSuperAdmin = false,
   onSuccess,
 }: UsuarioFormModalProps) {
   const isEditing = Boolean(usuario);
@@ -278,7 +280,9 @@ export function UsuarioFormModal({
           >
             <option value={Role.USER}>Usuario (Miembro del Gym)</option>
             <option value={Role.ADMIN}>Administrador</option>
-            <option value={Role.SUPERADMIN}>Super Administrador</option>
+            {isSuperAdmin && (
+              <option value={Role.SUPERADMIN}>Super Administrador</option>
+            )}
           </Select>
 
           <Select

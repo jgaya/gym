@@ -42,6 +42,7 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
     rawNavLinks = [
       { href: "/", label: "Inicio" },
       { href: "/mi-rutina", label: "Mi Rutina" },
+      { href: "/calendario", label: "Calendario" },
       { href: "/mis-medidas", label: "Mis Medidas" },
       { href: "/perfil", label: "Mi Perfil" },
     ];
@@ -125,10 +126,10 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
           />
           <span className="flex flex-col leading-tight">
             <span className="text-base font-extrabold tracking-wider uppercase text-content">
-              Meraki Centro de Entrenamiento
+              Meraki
             </span>
             <span className="text-[10px] font-medium text-content-muted tracking-widest uppercase">
-              Fitness & Training
+              Centro de Entrenamiento
             </span>
           </span>
         </Link>
@@ -141,11 +142,10 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative rounded-lg px-3.5 py-2 text-sm font-semibold transition-all ${
-                  isActive
+                className={`relative rounded-lg px-3.5 py-2 text-sm font-semibold transition-all ${isActive
                     ? "bg-primary/10 text-primary shadow-2xs font-bold"
                     : "text-content-muted hover:bg-surface-hover hover:text-content"
-                }`}
+                  }`}
               >
                 <span>{link.label}</span>
                 {isActive && (
@@ -254,7 +254,7 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
         <div
           id="mobile-navigation"
           ref={mobileMenuRef}
-          className="fixed inset-x-0 top-16 bottom-0 z-40 flex flex-col bg-surface/98 backdrop-blur-lg border-b border-border p-6 shadow-xl md:hidden animate-in fade-in slide-in-from-top-4 duration-200 overflow-y-auto"
+          className="fixed inset-x-0 top-16 h-[calc(100dvh-4rem)] max-h-[calc(100dvh-4rem)] z-50 flex flex-col bg-surface border-b border-border p-6 shadow-2xl md:hidden overflow-y-auto"
         >
           {/* Info del usuario logueado en mobile */}
           {currentUser ? (
@@ -310,11 +310,10 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition-all ${
-                    isActive
+                  className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition-all ${isActive
                       ? "bg-primary/10 text-primary font-bold border border-primary/20"
                       : "text-content hover:bg-surface-hover"
-                  }`}
+                    }`}
                 >
                   <span className="flex items-center gap-2">
                     {isActive && (

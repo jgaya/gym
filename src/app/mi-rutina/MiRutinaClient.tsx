@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { actualizarPesoEjercicio, toggleCompletarEjercicioHoy, MiRutinaData } from "./actions";
 import { HistorialGraficoModal } from "@/app/mi-rutina/HistorialGraficoModal";
+import { EjercicioDetalleModal } from "./EjercicioDetalleModal";
+import { TimerFlotante } from "./TimerFlotante";
+import { LockScreenProgress } from "./LockScreenProgress";
+import confetti from "canvas-confetti";
 
 interface EjercicioDetalle {
   id: number;
@@ -63,11 +67,79 @@ export function MiRutinaClient({ usuario }: MiRutinaClientProps) {
     nombre: string;
   } | null>(null);
 
+  // Modal para ver detalles, técnica, imagen y video del ejercicio
+  const [ejercicioDetalleModal, setEjercicioDetalleModal] = useState<EjercicioDetalle["ejercicio"] | null>(null);
+
   // Estado de ejercicios completados hoy (Set de ejercicioId)
   const [completadosHoy, setCompletadosHoy] = useState<Set<number>>(
     () => new Set(usuario.ejerciciosCompletadosHoy || [])
   );
   const [loadingCompletadoId, setLoadingCompletadoId] = useState<number | null>(null);
+
+  // Helper para clave de localStorage de series del día
+  const getStorageKey = () => {
+    const today = new Date().toISOString().split("T")[0];
+    return `gym_series_${usuario.id}_${today}`;
+  };
+
+  const saveSeriesToStorage = (map: Record<number, number>) => {
+    if (typeof window === "undefined") return;
+    try {
+      localStorage.setItem(getStorageKey(), JSON.stringify(map));
+    } catch {
+      // Ignorar quota exceeded o modo incógnito
+    }
+  };
+
+  // Estado del conteo de series completadas por ejercicio (ejercicioId -> número de series realizadas)
+  const [seriesMap, setSeriesMap] = useState<Record<number, number>>(() => {
+    const initialMap: Record<number, number> = {};
+
+    // 1. Cargar series completadas desde el servidor si están disponibles
+    if (usuario.seriesCompletadasHoy) {
+      Object.assign(initialMap, usuario.seriesCompletadasHoy);
+    }
+
+    // 2. Si un ejercicio ya está completado hoy en DB, asegurar que tenga todas sus series
+    const completadosSet = new Set(usuario.ejerciciosCompletadosHoy || []);
+    for (const dia of usuario.rutinasDias) {
+      for (const re of dia.rutina.ejercicios) {
+        if (completadosSet.has(re.ejercicio.id)) {
+          initialMap[re.ejercicio.id] = Math.max(1, re.series || 1);
+        }
+      }
+    }
+
+    return initialMap;
+  });
+
+  // Sincronizar en cliente con localStorage para restaurar series parciales de hoy
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const today = new Date().toISOString().split("T")[0];
+      const saved = localStorage.getItem(`gym_series_${usuario.id}_${today}`);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === "object") {
+          setSeriesMap((prev) => {
+            const merged = { ...parsed, ...prev };
+            // Asegurar que los completados hoy conserven todas sus series
+            for (const dia of usuario.rutinasDias) {
+              for (const re of dia.rutina.ejercicios) {
+                if (completadosHoy.has(re.ejercicio.id)) {
+                  merged[re.ejercicio.id] = Math.max(1, re.series || 1);
+                }
+              }
+            }
+            return merged;
+          });
+        }
+      }
+    } catch {
+      // Ignorar error de parseo
+    }
+  }, [completadosHoy, usuario.id, usuario.rutinasDias]);
 
   const [pesosMap, setPesosMap] = useState<Record<number, number>>(() => {
     const map: Record<number, number> = {};
@@ -107,13 +179,125 @@ export function MiRutinaClient({ usuario }: MiRutinaClientProps) {
     }
   };
 
-  // Toggle completar ejercicio hoy
-  const handleToggleCompletado = async (ejercicioId: number) => {
+  // Disparar celebración con confeti en ráfaga
+  const triggerConfettiCelebration = () => {
+    try {
+      // Primera ráfaga central
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ["#ea580c", "#16a34a", "#38bdf8", "#fbbf24", "#f43f5e"],
+      });
+
+      // Ráfagas laterales retardadas para efecto fuegos artificiales
+      setTimeout(() => {
+        confetti({
+          particleCount: 50,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: ["#ea580c", "#16a34a", "#fbbf24"],
+        });
+        confetti({
+          particleCount: 50,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: ["#38bdf8", "#16a34a", "#f43f5e"],
+        });
+      }, 250);
+    } catch (e) {
+      console.warn("No se pudo ejecutar confetti:", e);
+    }
+  };
+
+  // Marcar/desmarcar serie individual de un ejercicio
+  const handleToggleSerie = async (
+    ejercicioId: number,
+    serieNum: number,
+    totalSeries: number
+  ) => {
+    const currentCount = seriesMap[ejercicioId] || 0;
+    const isCurrentlyCompleted = completadosHoy.has(ejercicioId);
+    const pesoActual = pesosMap[ejercicioId] || 0;
+
+    let newCount: number;
+
+    if (serieNum <= currentCount) {
+      // Al hacer clic en una serie ya completada, desmarca esa serie y posteriores
+      newCount = serieNum - 1;
+    } else {
+      // Al hacer clic en una serie pendiente, avanza hasta esa serie
+      newCount = serieNum;
+    }
+
+    newCount = Math.max(0, Math.min(totalSeries, newCount));
+
+    setSeriesMap((prev) => {
+      const updated = { ...prev, [ejercicioId]: newCount };
+      saveSeriesToStorage(updated);
+      return updated;
+    });
+
+    // Caso 1: Se completó la última serie (o todas) y el ejercicio no estaba completo -> Marcar ejercicio completo
+    if (newCount >= totalSeries && !isCurrentlyCompleted) {
+      setLoadingCompletadoId(ejercicioId);
+      try {
+        const res = await toggleCompletarEjercicioHoy(ejercicioId, pesoActual, totalSeries);
+        if (res.success && res.completado) {
+          setCompletadosHoy((prev) => {
+            const next = new Set(prev);
+            next.add(ejercicioId);
+
+            if (diaActual && diaActual.rutina.ejercicios.length > 0) {
+              const todosCompletos = diaActual.rutina.ejercicios.every((re) =>
+                next.has(re.ejercicio.id)
+              );
+              if (todosCompletos) {
+                triggerConfettiCelebration();
+              }
+            }
+
+            return next;
+          });
+        }
+      } finally {
+        setLoadingCompletadoId(null);
+      }
+    }
+    // Caso 2: El ejercicio estaba completado pero se desmarcó una serie -> Desmarcar ejercicio completo
+    else if (newCount < totalSeries && isCurrentlyCompleted) {
+      setLoadingCompletadoId(ejercicioId);
+      try {
+        const res = await toggleCompletarEjercicioHoy(ejercicioId, pesoActual);
+        if (res.success && !res.completado) {
+          setCompletadosHoy((prev) => {
+            const next = new Set(prev);
+            next.delete(ejercicioId);
+            return next;
+          });
+        }
+      } finally {
+        setLoadingCompletadoId(null);
+      }
+    }
+  };
+
+  // Marcar/desmarcar ejercicio completo de una vez (botón de acción directa)
+  const handleToggleCompletado = async (
+    ejercicioId: number,
+    totalSeries: number
+  ) => {
     setLoadingCompletadoId(ejercicioId);
     const pesoActual = pesosMap[ejercicioId] || 0;
 
     try {
-      const res = await toggleCompletarEjercicioHoy(ejercicioId, pesoActual);
+      const res = await toggleCompletarEjercicioHoy(
+        ejercicioId,
+        pesoActual,
+        totalSeries
+      );
       if (res.success) {
         setCompletadosHoy((prev) => {
           const next = new Set(prev);
@@ -122,7 +306,28 @@ export function MiRutinaClient({ usuario }: MiRutinaClientProps) {
           } else {
             next.delete(ejercicioId);
           }
+
+          // Verificar si con este cambio se completaron TODOS los ejercicios del día actual (100%)
+          if (res.completado && diaActual && diaActual.rutina.ejercicios.length > 0) {
+            const todosCompletos = diaActual.rutina.ejercicios.every((re) =>
+              next.has(re.ejercicio.id)
+            );
+            if (todosCompletos) {
+              triggerConfettiCelebration();
+            }
+          }
+
           return next;
+        });
+
+        // Sincronizar series: si se completó de una vez, todas quedan completadas; si se desmarcó, a 0
+        setSeriesMap((prev) => {
+          const updated = {
+            ...prev,
+            [ejercicioId]: res.completado ? totalSeries : 0,
+          };
+          saveSeriesToStorage(updated);
+          return updated;
         });
       }
     } finally {
@@ -175,11 +380,15 @@ export function MiRutinaClient({ usuario }: MiRutinaClientProps) {
   ) => {
     const pesoActual = pesosMap[re.ejercicio.id] || 0;
     const isCompletadoHoy = completadosHoy.has(re.ejercicio.id);
+    const totalSeries = Math.max(1, re.series || 1);
+    const seriesHechas = isCompletadoHoy
+      ? totalSeries
+      : Math.min(totalSeries, Math.max(0, seriesMap[re.ejercicio.id] || 0));
 
     return (
       <div
         key={re.id}
-        className={`rounded-xl border p-4 space-y-3 transition-all ${
+        className={`rounded-xl border p-4 transition-all space-y-3.5 ${
           isCompletadoHoy
             ? "border-emerald-500/40 bg-emerald-500/5 dark:bg-emerald-950/10 shadow-2xs"
             : isInGroup
@@ -187,11 +396,11 @@ export function MiRutinaClient({ usuario }: MiRutinaClientProps) {
               : "border-border bg-surface-hover/30 hover:border-primary/40"
         }`}
       >
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          {/* PARTE IZQUIERDA: Nombre, Grupo Muscular, Descripción y (Series, Reps, Descanso) */}
-          <div className="flex items-start gap-3 flex-1 min-w-0">
+        {/* FILA SUPERIOR: Número de ejercicio + Tags de Grupo + Botón Info & Guía alineados */}
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap">
             <span
-              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg font-black text-sm transition-colors ${
+              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg font-black text-xs transition-colors ${
                 isCompletadoHoy
                   ? "bg-emerald-500 text-white"
                   : "bg-primary/10 text-primary"
@@ -200,127 +409,210 @@ export function MiRutinaClient({ usuario }: MiRutinaClientProps) {
               {isCompletadoHoy ? "✓" : itemIndex}
             </span>
 
-            <div className="space-y-2 flex-1 min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <h3
-                  className={`font-bold text-base transition-colors ${
-                    isCompletadoHoy
-                      ? "text-emerald-700 dark:text-emerald-300"
-                      : "text-content"
-                  }`}
-                >
-                  {re.ejercicio.nombre}
-                </h3>
-                {re.ejercicio.grupoMuscular && (
-                  <span className="rounded bg-surface px-2 py-0.5 text-[10px] font-bold uppercase text-content-muted border border-border">
-                    {re.ejercicio.grupoMuscular}
-                  </span>
-                )}
-                {re.grupoNumero && !isInGroup && (
-                  <span className="rounded bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase text-primary border border-primary/20">
-                    Grupo {re.grupoNumero}
-                  </span>
-                )}
-              </div>
-
-              {re.ejercicio.descripcion && (
-                <p className="text-xs text-content-muted whitespace-pre-line line-clamp-2">
-                  {re.ejercicio.descripcion}
-                </p>
-              )}
-
-              {/* Series, Repeticiones y Descanso a la izquierda bajo el nombre */}
-              <div className="flex flex-wrap items-center gap-1.5 pt-0.5 text-xs">
-                <span className="inline-flex items-center gap-1 rounded-md bg-surface px-2.5 py-1 text-content border border-border font-medium shadow-2xs">
-                  <span className="text-primary font-bold">{re.series}</span> series
-                </span>
-                <span className="inline-flex items-center gap-1 rounded-md bg-surface px-2.5 py-1 text-content border border-border font-medium shadow-2xs">
-                  <span className="text-primary font-bold">{re.repeticiones}</span> reps
-                </span>
-                {re.descansoSegundos && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-surface px-2.5 py-1 text-content-muted border border-border font-medium shadow-2xs">
-                    ⏱️ {re.descansoSegundos}s descanso
-                  </span>
-                )}
-                {re.pesoSugerido && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-surface px-2.5 py-1 text-content-muted border border-border text-[11px] shadow-2xs">
-                    Sugerido: {re.pesoSugerido} kg
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* PARTE DERECHA: Espacio ampliado con los 3 botones de acción */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0 justify-end pt-2 lg:pt-0 border-t border-border/40 lg:border-t-0 pl-11 lg:pl-0">
-            {/* ACCIÓN 1: Carga actual / Modificar peso */}
-            <button
-              type="button"
-              onClick={() => handleOpenPesoModal(re.ejercicio.id, re.ejercicio.nombre)}
-              className="flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-content hover:bg-surface-hover hover:border-primary/40 transition-colors cursor-pointer shadow-2xs"
-              title="Modificar peso o carga de trabajo"
-            >
-              <span className="text-content-muted text-[11px] font-normal">Carga:</span>
-              <span className={pesoActual > 0 ? "text-primary font-black" : "text-content-muted italic"}>
-                {pesoActual > 0 ? `${pesoActual} kg` : "0 kg"}
+            {re.ejercicio.grupoMuscular && (
+              <span className="rounded bg-surface px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-content-muted border border-border shadow-2xs">
+                {re.ejercicio.grupoMuscular}
               </span>
-              <svg className="h-3 w-3 text-content-muted ml-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-              </svg>
-            </button>
+            )}
 
-            {/* ACCIÓN 2: Ver historial de carga con gráfico */}
-            <button
-              type="button"
-              onClick={() =>
-                setHistorialModalEjercicio({
-                  id: re.ejercicio.id,
-                  nombre: re.ejercicio.nombre,
-                })
-              }
-              className="flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-content hover:bg-surface-hover hover:border-primary/40 transition-colors cursor-pointer shadow-2xs"
-              title="Ver evolución y gráfico de suba de carga"
-            >
-              <svg className="h-3.5 w-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-              </svg>
-              <span>Historial</span>
-            </button>
-
-            {/* ACCIÓN 3: Botón Toggle para marcar como completado hoy */}
-            <button
-              type="button"
-              onClick={() => handleToggleCompletado(re.ejercicio.id)}
-              disabled={loadingCompletadoId === re.ejercicio.id}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer shadow-2xs ${
-                isCompletadoHoy
-                  ? "bg-emerald-600 hover:bg-emerald-700 text-white"
-                  : "bg-surface border border-border text-content hover:bg-emerald-500/10 hover:text-emerald-600 hover:border-emerald-500/40"
-              }`}
-              title={
-                isCompletadoHoy
-                  ? "Completado hoy. Hacé clic para desmarcar y borrar del historial de hoy."
-                  : "Marcar como completado hoy y guardar registro en el historial."
-              }
-            >
-              {loadingCompletadoId === re.ejercicio.id ? (
-                <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
-              ) : isCompletadoHoy ? (
-                <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              ) : (
-                <svg className="h-3.5 w-3.5 text-content-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <circle cx="12" cy="12" r="9" strokeWidth={2} />
-                </svg>
-              )}
-              <span>{isCompletadoHoy ? "Completado" : "Marcar Hecho"}</span>
-            </button>
+            {re.grupoNumero && !isInGroup && (
+              <span className="rounded bg-primary/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-primary border border-primary/20 shadow-2xs">
+                Grupo {re.grupoNumero}
+              </span>
+            )}
           </div>
+
+          <button
+            type="button"
+            onClick={() => setEjercicioDetalleModal(re.ejercicio)}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 px-2.5 py-1 text-xs font-semibold transition-all hover:scale-105 cursor-pointer shadow-2xs shrink-0"
+            title="Ver explicación completa, técnica, imagen y video"
+          >
+            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Guía y Técnica</span>
+          </button>
+        </div>
+
+        {/* CONTENIDO PRINCIPAL: Título del ejercicio a ancho completo */}
+        <div className="space-y-2">
+          <h3
+            className={`font-bold text-base sm:text-lg transition-colors leading-snug ${
+              isCompletadoHoy
+                ? "text-emerald-700 dark:text-emerald-300"
+                : "text-content"
+            }`}
+          >
+            {re.ejercicio.nombre}
+          </h3>
+
+          {/* Métricas: Series, Repeticiones, Descanso y Peso Sugerido */}
+          <div className="flex flex-wrap items-center gap-2 pt-0.5 text-xs">
+            <span className="inline-flex items-center gap-1 rounded-md bg-surface px-2.5 py-1 text-content border border-border font-medium shadow-2xs">
+              <span className="text-primary font-bold">{re.series}</span> series
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-md bg-surface px-2.5 py-1 text-content border border-border font-medium shadow-2xs">
+              <span className="text-primary font-bold">{re.repeticiones}</span> reps
+            </span>
+            {re.descansoSegundos && (
+              <span className="inline-flex items-center gap-1 rounded-md bg-surface px-2.5 py-1 text-content-muted border border-border font-medium shadow-2xs">
+                ⏱️ {re.descansoSegundos}s descanso
+              </span>
+            )}
+            {re.pesoSugerido && (
+              <span className="inline-flex items-center gap-1 rounded-md bg-surface px-2.5 py-1 text-content-muted border border-border text-[11px] shadow-2xs">
+                Sugerido: {re.pesoSugerido} kg
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* SECCIÓN INTERACTIVA: Registro paso a paso de series */}
+        <div className="rounded-xl border border-border/80 bg-surface/70 p-3 space-y-2.5">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <div className="flex items-center gap-1.5 text-xs">
+              <span className="font-bold text-content">Series:</span>
+              <span className="font-black text-primary">
+                {seriesHechas} de {totalSeries}
+              </span>
+              <span className="text-[11px] text-content-muted">
+                ({Math.round((seriesHechas / totalSeries) * 100)}%)
+              </span>
+            </div>
+
+            {isCompletadoHoy ? (
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                Ejercicio completado
+              </span>
+            ) : seriesHechas > 0 ? (
+              <span className="text-[11px] font-medium text-content-muted">
+                Falta{totalSeries - seriesHechas > 1 ? "n" : ""} {totalSeries - seriesHechas} serie{totalSeries - seriesHechas > 1 ? "s" : ""}
+              </span>
+            ) : (
+              <span className="text-[11px] text-content-muted">
+                Tocá cada serie al terminarla
+              </span>
+            )}
+          </div>
+
+          {/* Botones de Series interactivas */}
+          <div className="flex flex-wrap gap-2 items-center">
+            {Array.from({ length: totalSeries }, (_, idx) => {
+              const num = idx + 1;
+              const isDone = num <= seriesHechas;
+              const isNext = num === seriesHechas + 1 && !isCompletadoHoy;
+              return (
+                <button
+                  key={num}
+                  type="button"
+                  onClick={() => handleToggleSerie(re.ejercicio.id, num, totalSeries)}
+                  disabled={loadingCompletadoId === re.ejercicio.id}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer shadow-2xs border ${
+                    isDone
+                      ? "bg-emerald-600 text-white border-emerald-700 dark:bg-emerald-500 dark:border-emerald-600 shadow-xs"
+                      : isNext
+                        ? "bg-primary/10 text-primary border-primary/40 hover:bg-primary/20 hover:scale-102"
+                        : "bg-surface border-border text-content hover:bg-surface-hover hover:border-border/80"
+                  }`}
+                  title={
+                    isDone
+                      ? `Serie ${num} completada. Hacé clic para desmarcar.`
+                      : num === totalSeries
+                        ? `Serie ${num} (última). Al marcarla se completará el ejercicio automáticamente.`
+                        : `Marcar Serie ${num} como completada.`
+                  }
+                >
+                  <span
+                    className={`flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-black ${
+                      isDone
+                        ? "bg-white/20 text-white"
+                        : isNext
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-content-muted/20 text-content"
+                    }`}
+                  >
+                    {isDone ? "✓" : num}
+                  </span>
+                  <span>Serie {num}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* FILA INFERIOR: Botones de Acción en fila de ancho completo (Carga actual, Historial, Marcar Hecho) */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-border/50">
+          {/* ACCIÓN 1: Carga actual / Modificar peso */}
+          <button
+            type="button"
+            onClick={() => handleOpenPesoModal(re.ejercicio.id, re.ejercicio.nombre)}
+            className="flex items-center justify-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-xs font-semibold text-content hover:bg-surface-hover hover:border-primary/40 transition-colors cursor-pointer shadow-2xs w-full"
+            title="Modificar peso o carga de trabajo"
+          >
+            <span className="text-content-muted text-[11px] font-normal">Carga:</span>
+            <span className={pesoActual > 0 ? "text-primary font-black" : "text-content-muted italic"}>
+              {pesoActual > 0 ? `${pesoActual} kg` : "0 kg"}
+            </span>
+            <svg className="h-3 w-3 text-content-muted ml-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+          </button>
+
+          {/* ACCIÓN 2: Ver historial de carga con gráfico */}
+          <button
+            type="button"
+            onClick={() =>
+              setHistorialModalEjercicio({
+                id: re.ejercicio.id,
+                nombre: re.ejercicio.nombre,
+              })
+            }
+            className="flex items-center justify-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-xs font-semibold text-content hover:bg-surface-hover hover:border-primary/40 transition-colors cursor-pointer shadow-2xs w-full"
+            title="Ver evolución y gráfico de suba de carga"
+          >
+            <svg className="h-3.5 w-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+            </svg>
+            <span>Historial</span>
+          </button>
+
+          {/* ACCIÓN 3: Botón para completar todo el ejercicio de una vez o desmarcarlo */}
+          <button
+            type="button"
+            onClick={() => handleToggleCompletado(re.ejercicio.id, totalSeries)}
+            disabled={loadingCompletadoId === re.ejercicio.id}
+            className={`flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition-all cursor-pointer shadow-2xs w-full ${
+              isCompletadoHoy
+                ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                : "bg-surface border border-border text-content hover:bg-emerald-500/10 hover:text-emerald-600 hover:border-emerald-500/40"
+            }`}
+            title={
+              isCompletadoHoy
+                ? "Completado hoy. Hacé clic para desmarcar y reiniciar series."
+                : "Completar todo el ejercicio de una vez (marca todas las series y guarda registro)."
+            }
+          >
+            {loadingCompletadoId === re.ejercicio.id ? (
+              <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            ) : isCompletadoHoy ? (
+              <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fillRule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            ) : (
+              <svg className="h-3.5 w-3.5 text-content-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <circle cx="12" cy="12" r="9" strokeWidth={2} />
+              </svg>
+            )}
+            <span>{isCompletadoHoy ? "Completado" : "Completar Todo"}</span>
+          </button>
         </div>
       </div>
     );
@@ -408,11 +700,17 @@ export function MiRutinaClient({ usuario }: MiRutinaClientProps) {
               )}
             </div>
 
-            <div className="flex flex-col sm:items-end gap-2 shrink-0">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:items-end gap-2.5 shrink-0">
+              <div className="flex flex-wrap items-center gap-2">
                 <Badge variant={completadosDia === totalEjerciciosDia && totalEjerciciosDia > 0 ? "success" : "primary"}>
                   {completadosDia} de {totalEjerciciosDia} completados hoy
                 </Badge>
+                <LockScreenProgress
+                  completados={completadosDia}
+                  total={totalEjerciciosDia}
+                  rutinaNombre={diaActual.rutina.nombre}
+                  diaNumero={diaActual.diaNumero}
+                />
               </div>
 
               {/* Barra de Progreso del Día */}
@@ -553,6 +851,16 @@ export function MiRutinaClient({ usuario }: MiRutinaClientProps) {
         ejercicio={historialModalEjercicio}
         pesoActual={historialModalEjercicio ? pesosMap[historialModalEjercicio.id] || 0 : 0}
       />
+
+      {/* Modal de Explicación Completa, Técnica, Imagen y Video */}
+      <EjercicioDetalleModal
+        isOpen={Boolean(ejercicioDetalleModal)}
+        onClose={() => setEjercicioDetalleModal(null)}
+        ejercicio={ejercicioDetalleModal}
+      />
+
+      {/* Timer / Cronómetro Flotante para Descansos */}
+      <TimerFlotante initialSeconds={60} />
     </div>
   );
 }
