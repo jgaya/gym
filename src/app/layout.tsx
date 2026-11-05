@@ -99,7 +99,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
               >
                 Mintork Soft
               </a>
-              &nbsp;(c) {new Date().getFullYear()} - Gym Meraki - Plataforma de gestión y entrenamiento.
+              &nbsp;(c) {new Date().getFullYear()} -  Meraki - Centro de entrenamiento.
             </div>
           </footer>
         </ThemeProvider>

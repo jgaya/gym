@@ -21,6 +21,7 @@ import {
   EyeIcon,
 } from "@/components/ui/ActionsMenu";
 import { EjercicioItem, eliminarEjercicio, toggleEstadoEjercicio } from "./actions";
+import { getYouTubeEmbedUrl } from "@/app/mi-rutina/EjercicioDetalleModal";
 
 interface EjerciciosTableProps {
   ejercicios: EjercicioItem[];
@@ -275,7 +276,7 @@ export function EjerciciosTable({
         onClose={() => setEjercicioToView(null)}
         title={ejercicioToView?.nombre || "Instrucciones de Ejecución"}
         description={`Grupo Muscular: ${ejercicioToView?.grupoMuscular || "General"}`}
-        maxWidth="lg"
+        maxWidth="xl"
         footer={
           <div className="flex items-center justify-between w-full">
             <div>
@@ -286,7 +287,7 @@ export function EjerciciosTable({
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:bg-surface-hover transition-colors"
                 >
-                  🎬 Ver Video Demostrativo
+                  🎬 Ver Video en YouTube
                 </a>
               ) : null}
             </div>
@@ -311,6 +312,32 @@ export function EjerciciosTable({
                 />
               </div>
             )}
+
+            {/* Video demostrativo embedido con Autoplay & Loop continuo */}
+            {ejercicioToView.videoUrl && (() => {
+              const ytEmbedUrl = getYouTubeEmbedUrl(ejercicioToView.videoUrl);
+              return ytEmbedUrl ? (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider text-primary">
+                      🎬 Video Demostrativo
+                    </span>
+                    <span className="text-[10px] text-primary/80 font-semibold bg-primary/10 px-2 py-0.5 rounded-full">
+                      Bucle Continuo 🔄
+                    </span>
+                  </div>
+                  <div className="relative w-full overflow-hidden rounded-xl bg-black aspect-video shadow-md border border-border/40">
+                    <iframe
+                      src={ytEmbedUrl}
+                      title={`Video demostrativo de ${ejercicioToView.nombre}`}
+                      className="absolute inset-0 h-full w-full border-0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  </div>
+                </div>
+              ) : null;
+            })()}
 
             <div className="space-y-2">
               <span className="text-xs font-bold uppercase tracking-wider text-primary">
