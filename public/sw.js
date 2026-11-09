@@ -1,10 +1,10 @@
-// Service Worker para Meraki Centro de Entrenamiento (PWA)
-const CACHE_NAME = "meraki-pwa-v1";
+// Service Worker para TotalGym Centro de Entrenamiento (PWA)
+const CACHE_NAME = "TotalGym-pwa-v1";
 
 const PRECACHE_ASSETS = [
   "/",
   "/favicon.ico",
-  "/logoGym.jpg",
+  "/TGLogo.jpeg",
   "/hero-gym.jpg",
   "/icons/icon-192x192.png",
   "/icons/icon-512x512.png",

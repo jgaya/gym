@@ -22,7 +22,7 @@ export function exportarBalanceExcel(data: EconomiaDataResponse) {
   const lines: string[] = [];
 
   // Encabezado del reporte
-  lines.push(`"REPORTE ECONÓMICO Y BALANCE DE CAJA - GYM MERAKI"`);
+  lines.push(`"REPORTE ECONÓMICO Y BALANCE DE CAJA - TotalGym"`);
   lines.push(`"Período:","${metricas.nombreMes} ${metricas.anio}"`);
   lines.push(`"Fecha de Emisión:","${new Date().toLocaleString("es-AR")}"`);
   lines.push("");
@@ -109,7 +109,7 @@ export function exportarBalanceExcel(data: EconomiaDataResponse) {
   const url = URL.createObjectURL(blob);
 
   const link = document.createElement("a");
-  const filename = `Balance_GymMeraki_${metricas.anio}_${String(metricas.mes).padStart(2, "0")}.csv`;
+  const filename = `Balance_GymTotalGym_${metricas.anio}_${String(metricas.mes).padStart(2, "0")}.csv`;
   link.setAttribute("href", url);
   link.setAttribute("download", filename);
   document.body.appendChild(link);
@@ -141,7 +141,7 @@ export function exportarBalancePDF(data: EconomiaDataResponse) {
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>Balance Económico - ${metricas.nombreMes} ${metricas.anio} - Gym Meraki</title>
+  <title>Balance Económico - ${metricas.nombreMes} ${metricas.anio} - TotalGym</title>
   <style>
     @page {
       size: A4 portrait;
@@ -323,7 +323,7 @@ export function exportarBalancePDF(data: EconomiaDataResponse) {
 
   <div class="header">
     <div class="brand">
-      <h1>GYM MERAKI</h1>
+      <h1>TotalGym</h1>
       <p>Reporte Contable Oficial — Estado de Caja y Rendición de Membresías</p>
     </div>
     <div class="report-meta">
@@ -357,8 +357,7 @@ export function exportarBalancePDF(data: EconomiaDataResponse) {
   </div>
 
   <!-- DESGLOSE MEDIOS DE PAGO -->
-  ${
-    metodosPagoDesglose.length > 0
+  ${metodosPagoDesglose.length > 0
       ? `
   <div class="section-title">Distribución por Medio de Cobro</div>
   <table class="methods-table">
@@ -387,7 +386,7 @@ export function exportarBalancePDF(data: EconomiaDataResponse) {
   </table>
   `
       : ""
-  }
+    }
 
   <!-- TABLA DE COBROS Y MOROSIDAD -->
   <div class="section-title">Nómina de Socios y Estado de Cuenta (${usuarios.length} Registros)</div>
@@ -406,8 +405,8 @@ export function exportarBalancePDF(data: EconomiaDataResponse) {
     </thead>
     <tbody>
       ${usuarios
-        .map(
-          (u, idx) => `
+      .map(
+        (u, idx) => `
         <tr>
           <td>${idx + 1}</td>
           <td>
@@ -423,22 +422,21 @@ export function exportarBalancePDF(data: EconomiaDataResponse) {
           </td>
           <td class="text-right"><strong>${u.pagoMesActual ? formatMoney(u.pagoMesActual.monto) : "$0"}</strong></td>
           <td>
-            ${
-              u.pagoMesActual
-                ? `${new Date(u.pagoMesActual.fechaPago).toLocaleDateString("es-AR")}<br><span style="font-size: 8.5px; color: #64748b;">${u.pagoMesActual.metodoPago || "Efectivo"}</span>`
-                : "-"
-            }
+            ${u.pagoMesActual
+            ? `${new Date(u.pagoMesActual.fechaPago).toLocaleDateString("es-AR")}<br><span style="font-size: 8.5px; color: #64748b;">${u.pagoMesActual.metodoPago || "Efectivo"}</span>`
+            : "-"
+          }
           </td>
           <td style="font-size: 8.5px; font-family: monospace;">${u.pagoMesActual?.comprobante || "-"}</td>
         </tr>
       `
-        )
-        .join("")}
+      )
+      .join("")}
     </tbody>
   </table>
 
   <div class="footer">
-    <div>Gym Meraki Management System &copy; ${new Date().getFullYear()}</div>
+    <div>TotalGym Management System &copy; ${new Date().getFullYear()}</div>
     <div>Documento para control contable y administrativo interno</div>
   </div>
 

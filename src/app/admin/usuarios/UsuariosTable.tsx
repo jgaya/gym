@@ -143,7 +143,7 @@ export function UsuariosTable({
                       <a
                         href={getWhatsAppUrl(
                           user.telefono,
-                          `Hola ${user.nombre}, te contactamos desde Gym Meraki.`
+                          `Hola ${user.nombre}, te contactamos desde TotalGym.`
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -226,7 +226,7 @@ export function UsuariosTable({
                             icon: <WhatsAppIcon />,
                             href: getWhatsAppUrl(
                               user.telefono,
-                              `Hola ${user.nombre}, te contactamos desde Gym Meraki.`
+                              `Hola ${user.nombre}, te contactamos desde TotalGym.`
                             ),
                             target: "_blank",
                             variant: "success",

@@ -25,7 +25,7 @@ export function ThemeToggle({ className = "", showLabel = false }: ThemeTogglePr
       onClick={toggleTheme}
       aria-label={isDark ? "Cambiar a modo claro (día)" : "Cambiar a modo oscuro (noche)"}
       title={isDark ? "Activar modo día" : "Activar modo noche"}
-      className={`relative inline-flex items-center justify-center gap-2 rounded-lg p-2 text-content-muted transition-colors hover:bg-surface-hover hover:text-content focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${className}`}
+      className={`relative inline-flex items-center justify-center gap-2 rounded-xl p-2 text-content-muted transition-all duration-200 hover:bg-surface-hover hover:text-content active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer ${className}`}
     >
       <span className="relative flex h-5 w-5 items-center justify-center">
         {/* Icono de Sol (Modo Día) */}

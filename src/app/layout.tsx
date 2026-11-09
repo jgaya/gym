@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
-    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+    { media: "(prefers-color-scheme: light)", color: "#fafaf9" },
+    { media: "(prefers-color-scheme: dark)", color: "#1c1917" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -26,13 +26,13 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Meraki Centro de Entrenamiento — Fitness & Training",
-  description: "Plataforma de gestión de gimnasio, rutinas y membresías de Meraki Centro de Entrenamiento",
+  title: "TotalGym Centro de Entrenamiento — Fitness & Training",
+  description: "Plataforma de gestión de gimnasio, rutinas y membresías de TotalGym Centro de Entrenamiento",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Meraki",
+    title: "TotalGym",
   },
   icons: {
     icon: [
@@ -99,7 +99,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
               >
                 Mintork Soft
               </a>
-              &nbsp;(c) {new Date().getFullYear()} - Gym Meraki - Plataforma de gestión y entrenamiento.
+              &nbsp;(c) {new Date().getFullYear()} - TotalGym - Plataforma de gestión y entrenamiento.
             </div>
           </footer>
         </ThemeProvider>

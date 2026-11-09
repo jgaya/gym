@@ -7,7 +7,7 @@ import { getCalendarioData } from "./actions";
 import { CalendarioClient } from "./CalendarioClient";
 
 export const metadata: Metadata = {
-  title: "Mi Calendario de Asistencias — Gym Meraki",
+  title: "Mi Calendario de Asistencias — TotalGym",
   description: "Seguimiento de días entrenados y constancia en el gimnasio",
 };
 

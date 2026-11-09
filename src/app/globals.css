@@ -3,55 +3,74 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* ===============================
+  /* ========================================================
      TEMA DÍA (CLARO)
-     =============================== */
-  --background: #f8fafc;
-  --foreground: #0f172a;
+     ======================================================== */
+  --background: #fafaf9;
+  --foreground: #1c1917;
 
   --surface: #ffffff;
-  --surface-hover: #f1f5f9;
+  --surface-hover: #f5f5f4;
 
-  --border: #e2e8f0;
+  --border: #e7e5e4;
 
-  --content: #0f172a;
-  --content-muted: #64748b;
+  --content: #1c1917;
+  --content-muted: #78716c;
 
-  --primary: #ea580c;
+  --primary: #e11d48;
+  --primary-sec: #fb7185;
   --primary-foreground: #ffffff;
-  --primary-hover: #c2410c;
+  --primary-hover: #be123c;
 
   --accent: #f1f5f9;
-  --accent-foreground: #0f172a;
+  --accent-foreground: #94a3b8;
 
-  --logo-shadow: 0 1px 3px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.1);
+  --ring: #e11d48;
+
+  --radius-card: 16px;
+  --radius-btn: 12px;
+
+  --logo-shadow: 0 4px 14px rgba(225, 29, 72, 0.15), 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 4px 20px -2px rgba(225, 29, 72, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 10px 30px -4px rgba(225, 29, 72, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.06);
+  --shadow-primary: 0 4px 14px 0 rgba(225, 29, 72, 0.35);
 }
 
 .dark {
-  /* ===============================
+  /* ========================================================
      TEMA NOCHE (OSCURO)
-     Fondo negro puro, superficies y bordes en grises oscuros (sin tonos azules),
-     y detalles de acento en verde sobrio (no chillón).
-     =============================== */
-  --background: #000000;
-  --foreground: #f4f4f5;
+     Fondos: #1C1917 (Stone-900 cálido/carbón)
+     Primario: #E11D48 (Rose-600 enérgico)
+     Acento: #94A3B8 (Slate-400 metálico/acero)
+     ======================================================== */
+  --background: #1c1917;
+  --foreground: #fafaf9;
 
-  --surface: #121214;
-  --surface-hover: #1c1c20;
+  --surface: #292524;
+  --surface-hover: #36312e;
 
-  --border: #27272a;
+  --border: #44403c;
 
-  --content: #f4f4f5;
-  --content-muted: #a1a1aa;
+  --content: #fafaf9;
+  --content-muted: #94a3b8;
 
-  --primary: #16a34a;
+  --primary: #e11d48;
+  --primary-sec: #fb7185;
   --primary-foreground: #ffffff;
-  --primary-hover: #15803d;
+  --primary-hover: #f43f5e;
 
-  --accent: #1c1c20;
-  --accent-foreground: #f4f4f5;
+  --accent: #292524;
+  --accent-foreground: #94a3b8;
 
-  --logo-shadow: 0 0 14px rgba(255, 255, 255, 0.45), 0 2px 6px rgba(255, 255, 255, 0.25);
+  --ring: #e11d48;
+
+  --radius-card: 16px;
+  --radius-btn: 12px;
+
+  --logo-shadow: 0 0 20px rgba(225, 29, 72, 0.35), 0 2px 6px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 4px 24px -2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --shadow-card-hover: 0 12px 36px -4px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(225, 29, 72, 0.3);
+  --shadow-primary: 0 0 25px -4px rgba(225, 29, 72, 0.45);
 }
 
 @theme inline {
@@ -63,10 +82,12 @@
   --color-content: var(--content);
   --color-content-muted: var(--content-muted);
   --color-primary: var(--primary);
+  --color-primary-sec: var(--primary-sec);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary-hover: var(--primary-hover);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-ring: var(--ring);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -75,6 +96,15 @@
 .logo-img-shadow {
   box-shadow: var(--logo-shadow);
   transition: box-shadow 0.2s ease;
+}
+
+/* Interacción táctil con retroalimentación tipo resorte (spring animation) */
+.touch-spring {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.touch-spring:active {
+  transform: scale(0.97);
 }
 
 body {

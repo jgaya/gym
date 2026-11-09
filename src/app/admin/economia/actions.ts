@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@lib/prisma";
+import { getCurrentUser } from "@/lib/auth";
 import {
   MESES_NOMBRES,
   type UsuarioEconomiaItem,
@@ -392,7 +393,7 @@ export async function registrarPagoDetallado({
 }
 
 /**
- * Anula un pago registrado
+ * Anula un pago registrado (y emite reembolso en Mercado Pago si corresponde)
  */
 export async function anularPago({
   usuarioId,
@@ -404,6 +405,35 @@ export async function anularPago({
   anio: number;
 }) {
   try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser || (currentUser.role !== "ADMIN" && currentUser.role !== "SUPERADMIN")) {
+      return { success: false, error: "No autorizado para anular pagos." };
+    }
+
+    const pagoExistente = await prisma.pago.findUnique({
+      where: {
+        usuarioId_anio_mes: {
+          usuarioId,
+          anio,
+          mes,
+        },
+      },
+    });
+
+    if (
+      pagoExistente?.comprobante &&
+      pagoExistente.comprobante.startsWith("MP-") &&
+      !pagoExistente.comprobante.startsWith("MP-SIM-") &&
+      !pagoExistente.comprobante.startsWith("MP-SUB-")
+    ) {
+      try {
+        const { reembolsarPagoMercadoPago } = await import("@/lib/mercadopago");
+        await reembolsarPagoMercadoPago(pagoExistente.comprobante);
+      } catch (refundErr) {
+        console.warn("[Mercado Pago Refund] No se pudo reembolsar en MP:", refundErr);
+      }
+    }
+
     await prisma.pago.deleteMany({
       where: {
         usuarioId,
@@ -436,6 +466,11 @@ export async function crearLinkCobroOnline({
   tipoCobro?: "cuota_mes" | "suscripcion_mensual";
 }) {
   try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser || (currentUser.role !== "ADMIN" && currentUser.role !== "SUPERADMIN")) {
+      return { success: false, error: "No autorizado para generar links de cobro." };
+    }
+
     const usuario = await prisma.usuario.findUnique({
       where: { id: usuarioId },
       include: { plan: true },
@@ -455,6 +490,8 @@ export async function crearLinkCobroOnline({
       nombreUsuario: usuario.nombre,
       apellidoUsuario: usuario.apellido,
       emailUsuario: usuario.email,
+      dniUsuario: usuario.dni,
+      telefonoUsuario: usuario.telefono,
       planNombre,
       monto,
       mes,

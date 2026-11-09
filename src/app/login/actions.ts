@@ -145,7 +145,7 @@ export async function iniciarSesionComo(
       const defaultDni = rol === "SUPERADMIN" ? "10000001" : rol === "ADMIN" ? "20000002" : "30000003";
       usuario = await prisma.usuario.create({
         data: {
-          email: `${sufijo}@gymmeraki.com`,
+          email: `${sufijo}@gymTotalGym.com`,
           nombre: rol === "USER" ? "Lucas" : rol === "ADMIN" ? "Martín" : "Gonzalo",
           apellido: rol === "USER" ? "Gómez" : rol === "ADMIN" ? "Admin" : "SuperAdmin",
           telefono: "+54 9 11 5555-0000",

@@ -1,4 +1,4 @@
-# Gimnasio Meraki — Especificaciones Técnicas y Funcionales del Sistema
+# Gimnasio TotalGym — Especificaciones Técnicas y Funcionales del Sistema
 
 > **Documento de Especificación Oficial**  
 > **Versión:** 1.0  
@@ -13,7 +13,7 @@
 
 ## 1. Visión General y Propósito del Sistema
 
-Gym Meraki  es una plataforma web y PWA (Progressive Web App)  dedicada a la gestión de un gimnasio y de las rutinas de los usuarios del mismo. El sistema está diseñado para facilitar la gestión de los entrenamientos, la gestión de los miembros y la administración del gimnasio.
+TotalGym  es una plataforma web y PWA (Progressive Web App)  dedicada a la gestión de un gimnasio y de las rutinas de los usuarios del mismo. El sistema está diseñado para facilitar la gestión de los entrenamientos, la gestión de los miembros y la administración del gimnasio.
 
 ### Objetivos Clave
 - **Facilidad para la subida de nuevos miembros:** El admin tiene un ABM facil para todos los datos de los miembros. Debe incluir whatsup, DNI y otros datos relevantes.

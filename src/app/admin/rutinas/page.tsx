@@ -9,7 +9,7 @@ import {
 import { RutinasClient } from "./RutinasClient";
 
 export const metadata: Metadata = {
-  title: "Gestión de Rutinas y Plantillas — Gym Meraki Admin",
+  title: "Gestión de Rutinas y Plantillas — TotalGym Admin",
   description: "ABM de rutinas de entrenamiento, plantillas base y asignación de ejercicios",
 };
 

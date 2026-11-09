@@ -159,10 +159,10 @@ export function TimerFlotante({ initialSeconds = 60 }: TimerFlotanteProps) {
           }}
           className={`group relative flex items-center justify-center rounded-full shadow-2xl transition-all duration-300 cursor-pointer active:scale-95 ${
             isRunning
-              ? "h-14 px-4 bg-primary text-primary-foreground ring-4 ring-primary/30 animate-pulse"
+              ? "h-14 px-4 bg-gradient-to-r from-primary to-primary-sec text-primary-foreground ring-4 ring-primary/30 animate-pulse"
               : hasFinished
                 ? "h-14 px-4 bg-emerald-500 text-white ring-4 ring-emerald-500/30 animate-bounce"
-                : "h-14 w-14 bg-primary text-primary-foreground hover:bg-primary-hover hover:scale-105"
+                : "h-14 w-14 bg-gradient-to-r from-primary to-primary-sec text-primary-foreground hover:brightness-110 hover:scale-105 shadow-primary/30"
           }`}
           title="Abrir Cronómetro / Timer de descanso"
           aria-label="Abrir Cronómetro / Timer de descanso"

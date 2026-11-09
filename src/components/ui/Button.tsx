@@ -23,19 +23,19 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-semibold rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
+      "inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 ease-out active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100 cursor-pointer";
 
     const variantStyles: Record<ButtonVariant, string> = {
       primary:
-        "bg-primary text-primary-foreground hover:bg-primary-hover shadow-sm",
+        "bg-gradient-to-r from-primary to-primary-sec hover:brightness-105 text-primary-foreground shadow-sm shadow-primary/25 hover:shadow-md hover:shadow-primary/35",
       secondary:
-        "bg-surface-hover text-content hover:bg-surface border border-border",
+        "bg-surface text-content hover:bg-surface-hover border border-border shadow-2xs",
       outline:
-        "border border-border bg-surface text-content hover:bg-surface-hover",
+        "border border-border bg-surface text-content hover:bg-surface-hover hover:border-primary/40",
       ghost:
         "text-content-muted hover:text-content hover:bg-surface-hover",
       danger:
-        "bg-red-600 text-white hover:bg-red-700 shadow-sm focus-visible:ring-red-500",
+        "bg-rose-600 text-white hover:bg-rose-700 shadow-sm focus-visible:ring-rose-500",
     };
 
     const sizeStyles: Record<ButtonSize, string> = {

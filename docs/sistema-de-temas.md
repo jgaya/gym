@@ -1,4 +1,4 @@
-# Guía del Sistema de Temas (Día / Noche) y Guía de Componentes — Gym Meraki
+# Guía del Sistema de Temas (Día / Noche) y Guía de Componentes — TotalGym
 
 Esta documentación describe la arquitectura de diseño y la metodología de estilos implementada en el proyecto con **Next.js (App Router)** y **Tailwind CSS v4**. Explica cómo funciona el sistema de temas (Día / Noche), cómo está construido el `SiteHeader`, y cómo deben construir y heredar los estilos los futuros componentes.
 
@@ -137,7 +137,7 @@ export function MiComponente() {
 El componente se ubica en `src/components/SiteHeader.tsx` y está configurado en `src/app/layout.tsx`:
 
 - **Modo Desktop (`md:flex`):**
-  - Muestra el logotipo de la marca **Gym Meraki**.
+  - Muestra el logotipo de la marca **TotalGym**.
   - Muestra la lista de enlaces de navegación principal (`/`, `/rutinas`, `/ejercicios`, `/miembros`).
   - Muestra el botón interactivo `ThemeToggle` a la derecha.
   - El botón hamburguesa está **completamente oculto**.

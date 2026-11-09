@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { Role } from "@lib/generated/prisma/enums";
 
 export const COOKIE_NAME = "gym_session";
-const JWT_SECRET = process.env.JWT_SECRET || "gym-meraki-super-secret-session-key-2026";
+const JWT_SECRET = process.env.JWT_SECRET || "gym-TotalGym-super-secret-session-key-2026";
 const SEVEN_DAYS_IN_SECONDS = 7 * 24 * 60 * 60;
 
 export interface SessionUser {

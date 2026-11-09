@@ -210,8 +210,8 @@ export function HistorialGraficoModal({
                 >
                   <defs>
                     <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="var(--color-primary, #16a34a)" stopOpacity="0.35" />
-                      <stop offset="100%" stopColor="var(--color-primary, #16a34a)" stopOpacity="0.0" />
+                      <stop offset="0%" stopColor="var(--color-primary, #e11d48)" stopOpacity="0.35" />
+                      <stop offset="100%" stopColor="var(--color-primary, #e11d48)" stopOpacity="0.0" />
                     </linearGradient>
                   </defs>
 
@@ -252,7 +252,7 @@ export function HistorialGraficoModal({
                     <path
                       d={pathD}
                       fill="none"
-                      stroke="var(--color-primary, #16a34a)"
+                      stroke="var(--color-primary, #e11d48)"
                       strokeWidth="3"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -270,7 +270,7 @@ export function HistorialGraficoModal({
                         cx={p.x}
                         cy={p.y}
                         r="5"
-                        fill="var(--color-primary, #16a34a)"
+                        fill="var(--color-primary, #e11d48)"
                         stroke="var(--color-surface, #ffffff)"
                         strokeWidth="2"
                       />

@@ -2,14 +2,14 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Meraki Centro de Entrenamiento",
-    short_name: "Meraki",
-    description: "Plataforma de entrenamiento, rutinas y seguimiento de Meraki Centro de Entrenamiento",
+    name: "TotalGym Centro de Entrenamiento",
+    short_name: "TotalGym",
+    description: "Plataforma de entrenamiento, rutinas y seguimiento de TotalGym Centro de Entrenamiento",
     start_url: "/",
     id: "/",
     display: "standalone",
-    background_color: "#000000",
-    theme_color: "#ea580c",
+    background_color: "#1C1917",
+    theme_color: "#E11D48",
     orientation: "portrait-primary",
     scope: "/",
     lang: "es",

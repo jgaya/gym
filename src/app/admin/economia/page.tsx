@@ -3,7 +3,7 @@ import { getEconomiaData } from "./actions";
 import { EconomiaClient } from "./EconomiaClient";
 
 export const metadata: Metadata = {
-  title: "Economía y Cobranzas — Gym Meraki Admin",
+  title: "Economía y Cobranzas — TotalGym Admin",
   description:
     "Gestión de pagos de cuotas, recaudación mensual, evolución histórica de ingresos y socios con proyecciones.",
 };

@@ -42,7 +42,7 @@ export function PwaManager() {
     }
 
     // 3. Revisar si el usuario ya descartó el banner previamente
-    const dismissedUntil = localStorage.getItem("meraki-pwa-dismissed");
+    const dismissedUntil = localStorage.getItem("TotalGym-pwa-dismissed");
     if (dismissedUntil && Date.now() < Number(dismissedUntil)) {
       setIsDismissed(true);
     } else {
@@ -87,7 +87,7 @@ export function PwaManager() {
   const handleDismiss = () => {
     setIsDismissed(true);
     // Recordar el descarte por 7 días
-    localStorage.setItem("meraki-pwa-dismissed", String(Date.now() + 7 * 24 * 60 * 60 * 1000));
+    localStorage.setItem("TotalGym-pwa-dismissed", String(Date.now() + 7 * 24 * 60 * 60 * 1000));
   };
 
   // Si ya está instalada, descartada, o no es instalable (ni iOS), no mostrar el banner flotante
@@ -109,12 +109,12 @@ export function PwaManager() {
         <div className="flex items-start gap-3">
           <img
             src="/icons/icon-192x192.png"
-            alt="App Meraki"
+            alt="App TotalGym"
             className="h-12 w-12 rounded-xl object-cover border border-border shadow-xs shrink-0"
           />
           <div className="flex-1 min-w-0">
             <h4 className="text-sm font-bold text-content leading-tight">
-              Instalar App Meraki
+              Instalar App TotalGym
             </h4>
             <p className="text-xs text-content-muted mt-1 leading-snug">
               Acceso directo desde tu pantalla de inicio, más rápido y sin barras de navegador.
@@ -123,7 +123,7 @@ export function PwaManager() {
               <button
                 type="button"
                 onClick={handleInstallClick}
-                className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 text-xs font-bold text-primary-foreground shadow-xs hover:bg-primary-hover active:scale-95 transition-all cursor-pointer"
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-primary to-primary-sec px-3.5 py-1.5 text-xs font-bold text-primary-foreground shadow-xs shadow-primary/25 hover:brightness-105 active:scale-95 transition-all cursor-pointer"
               >
                 <span>Instalar</span>
                 <span>📲</span>
@@ -162,7 +162,7 @@ function IosInstructionsModal({ onClose }: { onClose: () => void }) {
           <div className="flex items-center gap-2.5">
             <img
               src="/icons/apple-touch-icon.png"
-              alt="Meraki"
+              alt="TotalGym"
               className="h-10 w-10 rounded-xl object-cover border border-border"
             />
             <div>
@@ -219,7 +219,7 @@ function IosInstructionsModal({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             onClick={onClose}
-            className="w-full rounded-xl bg-primary py-2.5 text-xs font-bold text-primary-foreground hover:bg-primary-hover transition-colors"
+            className="w-full rounded-xl bg-gradient-to-r from-primary to-primary-sec py-2.5 text-xs font-bold text-primary-foreground hover:brightness-105 transition-all shadow-xs shadow-primary/25 active:scale-95 cursor-pointer"
           >
             Entendido
           </button>

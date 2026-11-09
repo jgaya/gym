@@ -5,7 +5,7 @@ import { getUsuarios, getPlanesDisponibles } from "./actions";
 import { UsuariosClient } from "./UsuariosClient";
 
 export const metadata: Metadata = {
-  title: "Gestión de Usuarios — Gym Meraki Admin",
+  title: "Gestión de Usuarios — TotalGym Admin",
   description: "Listado, búsqueda, alta y modificación de miembros del gimnasio",
 };
 

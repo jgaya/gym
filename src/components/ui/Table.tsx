@@ -6,7 +6,7 @@ export function Table({
   ...props
 }: HTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="w-full overflow-x-auto rounded-xl border border-border bg-surface shadow-xs">
+    <div className="w-full overflow-x-auto rounded-2xl border border-border bg-surface shadow-xs">
       <table className={`w-full text-left text-sm text-content ${className}`} {...props}>
         {children}
       </table>
@@ -21,7 +21,7 @@ export function TableHeader({
 }: HTMLAttributes<HTMLTableSectionElement>) {
   return (
     <thead
-      className={`border-b border-border bg-surface-hover/60 text-xs font-semibold uppercase tracking-wider text-content-muted ${className}`}
+      className={`border-b border-border bg-surface-hover/50 text-xs font-mono font-semibold uppercase tracking-wider text-content-muted ${className}`}
       {...props}
     >
       {children}
@@ -48,7 +48,7 @@ export function TableRow({
 }: HTMLAttributes<HTMLTableRowElement>) {
   return (
     <tr
-      className={`transition-colors hover:bg-surface-hover/50 ${className}`}
+      className={`transition-colors hover:bg-primary/[0.03] dark:hover:bg-primary/[0.06] ${className}`}
       {...props}
     >
       {children}

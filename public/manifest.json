@@ -1,16 +1,21 @@
 {
-  "name": "Meraki Centro de Entrenamiento",
-  "short_name": "Meraki",
-  "description": "Plataforma de entrenamiento, rutinas y seguimiento de Meraki Centro de Entrenamiento",
+  "name": "TotalGym Centro de Entrenamiento",
+  "short_name": "TotalGym",
+  "description": "Plataforma de entrenamiento, rutinas y seguimiento de TotalGym Centro de Entrenamiento",
   "start_url": "/",
   "id": "/",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#ea580c",
+  "background_color": "#1C1917",
+  "theme_color": "#E11D48",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "es",
-  "categories": ["fitness", "sports", "health", "lifestyle"],
+  "categories": [
+    "fitness",
+    "sports",
+    "health",
+    "lifestyle"
+  ],
   "icons": [
     {
       "src": "/icons/icon-72x72.png",
@@ -67,15 +72,24 @@
       "short_name": "Rutina",
       "description": "Acceso rápido a tu rutina del día",
       "url": "/mi-rutina",
-      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Calendario",
       "short_name": "Calendario",
       "description": "Calendario de asistencias y entrenamientos",
       "url": "/calendario",
-      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }
-

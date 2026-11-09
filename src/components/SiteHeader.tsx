@@ -116,20 +116,20 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
           className="flex items-center gap-2.5 font-bold text-lg tracking-tight text-content transition-opacity hover:opacity-90"
         >
           <img
-            src="/logoGym.jpg"
-            alt="Meraki Centro de Entrenamiento"
+            src="/TGLogo.jpeg"
+            alt="TotalGym Plataforma para gimnacios"
             style={{ boxShadow: "var(--logo-shadow)" }}
-            className="h-9 w-9 rounded-lg object-cover logo-img-shadow border border-border"
+            className="h-9 w-9 rounded-lg object-contain logo-img-shadow border border-border"
             onError={(e) => {
               (e.target as HTMLElement).style.display = "none";
             }}
           />
           <span className="flex flex-col leading-tight">
             <span className="text-base font-extrabold tracking-wider uppercase text-content">
-              Meraki
+              TotalGym
             </span>
             <span className="text-[10px] font-medium text-content-muted tracking-widest uppercase">
-              Centro de Entrenamiento
+              Plataforma para gimnacios
             </span>
           </span>
         </Link>
@@ -142,14 +142,14 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative rounded-lg px-3.5 py-2 text-sm font-semibold transition-all ${isActive
-                    ? "bg-primary/10 text-primary shadow-2xs font-bold"
-                    : "text-content-muted hover:bg-surface-hover hover:text-content"
+                className={`relative rounded-xl px-3.5 py-2 text-sm font-semibold transition-all touch-spring ${isActive
+                  ? "bg-primary/10 text-primary shadow-2xs font-bold"
+                  : "text-content-muted hover:bg-surface-hover hover:text-content"
                   }`}
               >
                 <span>{link.label}</span>
                 {isActive && (
-                  <span className="absolute bottom-0.5 left-3.5 right-3.5 h-0.5 rounded-full bg-primary" />
+                  <span className="absolute bottom-0.5 left-3.5 right-3.5 h-0.5 rounded-full bg-gradient-to-r from-primary to-primary-sec" />
                 )}
               </Link>
             );
@@ -166,7 +166,7 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
                 href={currentUser.role === "USER" ? "/perfil" : "/admin/usuarios"}
                 className="flex items-center gap-2 text-left group"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold">
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary font-mono text-xs font-bold">
                   {currentUser.nombre.charAt(0)}
                   {currentUser.apellido.charAt(0)}
                 </div>
@@ -189,7 +189,7 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
                   type="submit"
                   aria-label="Cerrar sesión"
                   title="Cerrar sesión"
-                  className="rounded-lg p-2 text-content-muted hover:text-red-500 hover:bg-surface-hover transition-colors cursor-pointer text-xs"
+                  className="rounded-xl p-2 text-content-muted hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer text-xs"
                 >
                   <svg
                     className="h-4 w-4"
@@ -211,7 +211,7 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
           ) : (
             <Link
               href="/login"
-              className="rounded-lg bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary-hover shadow-xs"
+              className="rounded-xl bg-gradient-to-r from-primary to-primary-sec px-3.5 py-1.5 text-xs font-semibold text-primary-foreground transition-all hover:brightness-105 active:scale-95 shadow-xs shadow-primary/25 cursor-pointer"
             >
               Ingresar
             </Link>
@@ -292,7 +292,7 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
               <Link
                 href="/login"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center justify-center w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-primary-foreground shadow-sm"
+                className="flex items-center justify-center w-full rounded-xl bg-gradient-to-r from-primary to-primary-sec py-2.5 text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/25 active:scale-95 transition-all cursor-pointer"
               >
                 Ingresar a Mi Cuenta
               </Link>
@@ -311,8 +311,8 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition-all ${isActive
-                      ? "bg-primary/10 text-primary font-bold border border-primary/20"
-                      : "text-content hover:bg-surface-hover"
+                    ? "bg-primary/10 text-primary font-bold border border-primary/20"
+                    : "text-content hover:bg-surface-hover"
                     }`}
                 >
                   <span className="flex items-center gap-2">

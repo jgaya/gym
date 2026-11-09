@@ -3,7 +3,7 @@ import { getEjercicios } from "./actions";
 import { EjerciciosClient } from "./EjerciciosClient";
 
 export const metadata: Metadata = {
-  title: "Catálogo de Ejercicios — Gym Meraki Admin",
+  title: "Catálogo de Ejercicios — TotalGym Admin",
   description: "ABM de ejercicios, grupos musculares y recursos multimedia para rutinas",
 };
 

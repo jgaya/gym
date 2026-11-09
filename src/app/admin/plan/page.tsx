@@ -3,7 +3,7 @@ import { getPlanes } from "./actions";
 import { PlanesClient } from "./PlanesClient";
 
 export const metadata: Metadata = {
-  title: "Planes de Membresía — Gym Meraki Admin",
+  title: "Planes de Membresía — TotalGym Admin",
   description: "Administración de planes de entrenamiento, frecuencias semanales y aranceles",
 };
 

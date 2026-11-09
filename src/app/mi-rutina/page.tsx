@@ -6,13 +6,15 @@ import { getMiRutinaData } from "./actions";
 import { MiRutinaClient } from "./MiRutinaClient";
 
 export const metadata: Metadata = {
-  title: "Mi Rutina de Entrenamiento — Gym Meraki",
+  title: "Mi Rutina de Entrenamiento — TotalGym",
   description: "Entrenamiento del día, ejercicios y registro de peso",
 };
 
 interface MiRutinaPageProps {
   searchParams: Promise<{
     error?: string;
+    pago?: "success" | "pending" | "failure";
+    ref?: string;
   }>;
 }
 
@@ -24,6 +26,7 @@ export default async function MiRutinaPage({ searchParams }: MiRutinaPageProps) 
   ]);
 
   const isUnauthorized = params.error === "acceso_denegado";
+  const estadoPago = params.pago;
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-8 sm:px-6 space-y-6">
@@ -31,6 +34,39 @@ export default async function MiRutinaPage({ searchParams }: MiRutinaPageProps) 
         <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-700 dark:text-amber-400">
           ⚠️ <strong>Área de administración restringida:</strong> Las rutas que comienzan con
           <code>/admin</code> están reservadas exclusivamente para administradores. Has sido redirigido a tu panel de entrenamiento.
+        </div>
+      )}
+
+      {estadoPago === "success" && (
+        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-700 dark:text-emerald-400 flex items-center justify-between gap-3">
+          <div>
+            ✅ <strong>¡Pago acreditado con éxito!</strong> Tu membresía de Mercado Pago fue procesada correctamente{params.ref ? ` (Ref: ${params.ref})` : ""}.
+          </div>
+          <Link href="/mi-rutina" className="text-xs font-bold underline shrink-0">
+            Cerrar
+          </Link>
+        </div>
+      )}
+
+      {estadoPago === "pending" && (
+        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-700 dark:text-amber-400 flex items-center justify-between gap-3">
+          <div>
+            ⏳ <strong>Pago en proceso de acreditación:</strong> Mercado Pago nos notificará automáticamente apenas se confirme la operación.
+          </div>
+          <Link href="/mi-rutina" className="text-xs font-bold underline shrink-0">
+            Cerrar
+          </Link>
+        </div>
+      )}
+
+      {estadoPago === "failure" && (
+        <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-700 dark:text-rose-400 flex items-center justify-between gap-3">
+          <div>
+            ❌ <strong>El pago no pudo completarse:</strong> Podés volver a intentarlo desde el link enviado por recepción o consultar en el gimnasio.
+          </div>
+          <Link href="/mi-rutina" className="text-xs font-bold underline shrink-0">
+            Cerrar
+          </Link>
         </div>
       )}
 

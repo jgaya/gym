@@ -6,8 +6,8 @@ import { getMisMedidas, getTiposMetricas } from "./actions";
 import { MisMedidasClient } from "./MisMedidasClient";
 
 export const metadata: Metadata = {
-  title: "Mis Medidas — Gym Meraki",
-  description: "Seguimiento y evolución de tus medidas corporales, peso y perímetros musculares en Gym Meraki",
+  title: "Mis Medidas — TotalGym",
+  description: "Seguimiento y evolución de tus medidas corporales, peso y perímetros musculares en TotalGym",
 };
 
 export default async function MisMedidasPage() {

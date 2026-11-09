@@ -87,7 +87,7 @@ export function LockScreenProgress({
       album: faltantes === 0 ? "🎉 ¡Rutina completada!" : `Faltan ${faltantes} ${faltantes === 1 ? "ejercicio" : "ejercicios"}`,
       artwork: [
         {
-          src: "/logoGym.jpg",
+          src: "/TGLogo.jpeg",
           sizes: "512x512",
           type: "image/jpeg",
         },
@@ -109,7 +109,7 @@ export function LockScreenProgress({
 
     // Configurar handlers de reproducción para permitir pausar o reanudar desde los controles de bloqueo
     navigator.mediaSession.setActionHandler("play", () => {
-      audioRef.current?.play().then(() => setIsActive(true)).catch(() => {});
+      audioRef.current?.play().then(() => setIsActive(true)).catch(() => { });
     });
     navigator.mediaSession.setActionHandler("pause", () => {
       audioRef.current?.pause();
@@ -136,7 +136,7 @@ export function LockScreenProgress({
               playbackRate: 1,
               position: completados,
             });
-          } catch {}
+          } catch { }
         }
       } catch (err) {
         console.warn("No se pudo reproducir el audio de segundo plano:", err);
@@ -151,11 +151,10 @@ export function LockScreenProgress({
       <button
         type="button"
         onClick={toggleLockScreenMode}
-        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-2xs border ${
-          isActive
+        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-2xs border ${isActive
             ? "bg-emerald-500/10 border-emerald-500 text-emerald-600 dark:text-emerald-400 ring-2 ring-emerald-500/20"
             : "bg-surface border-border text-content hover:bg-surface-hover hover:border-primary/40"
-        }`}
+          }`}
         title={
           isActive
             ? "Modo Pantalla de Bloqueo activo. Al bloquear el teléfono verás el progreso de la rutina."

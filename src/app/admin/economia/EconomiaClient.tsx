@@ -53,9 +53,9 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
   // Modal y Configuración para Recordatorios de WhatsApp (Sugerencia 1)
   const [modalWaUsuario, setModalWaUsuario] = useState<UsuarioEconomiaItem | null>(null);
   const [datosBancarios, setDatosBancarios] = useState({
-    alias: "MERAKI.GYM",
+    alias: "TotalGym.GYM",
     cbu: "0000003100012345678901",
-    titular: "Gym Meraki S.R.L.",
+    titular: "TotalGym S.R.L.",
     banco: "Mercado Pago / Banco Galicia",
     diaVencimiento: "10",
   });
@@ -229,7 +229,7 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
     const anioActual = metricas.anio;
 
     return (
-      `Hola *${nombreSocio}*! Te escribimos desde *Gym Meraki* 🏋️‍♂️\n\n` +
+      `Hola *${nombreSocio}*! Te escribimos desde *TotalGym* 🏋️‍♂️\n\n` +
       `Te dejamos el recordatorio de la cuota mensual correspondiente a *${mesNombre} ${anioActual}*:\n\n` +
       `📋 *Plan:* ${planNombre}\n` +
       `💰 *Monto a abonar:* ${formatMoney(saldoPendiente)}\n` +
@@ -1174,11 +1174,10 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                           {/* Botón Recordatorio WhatsApp (1-click) */}
                           <button
                             onClick={() => handleEnviarWhatsAppDirecto(u)}
-                            className={`p-1.5 px-2 rounded-lg border font-bold text-xs transition-colors flex items-center gap-1 ${
-                              !u.haPagado
-                                ? "border-emerald-500/40 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 shadow-sm"
-                                : "border-border bg-background hover:bg-surface text-content-muted hover:text-content"
-                            }`}
+                            className={`p-1.5 px-2 rounded-lg border font-bold text-xs transition-colors flex items-center gap-1 ${!u.haPagado
+                              ? "border-emerald-500/40 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 shadow-sm"
+                              : "border-border bg-background hover:bg-surface text-content-muted hover:text-content"
+                              }`}
                             title={
                               !u.haPagado
                                 ? `Enviar recordatorio de cuota pendiente por WhatsApp a ${u.nombre}`
@@ -1626,7 +1625,7 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                   {(() => {
                     const mensajeWa = encodeURIComponent(
                       `Hola ${modalMpUsuario.nombre}! Te comparto el link de ${tipoCobroOnline === "suscripcion_mensual" ? "adhesión al débito automático mensual" : `pago de tu cuota de ${metricas.nombreMes}`
-                      } de Gym Meraki por un valor de ${formatMoney(modalMpUsuario.plan ? modalMpUsuario.plan.precio : 28000)}:\n\n${linkGenerado.initPoint}\n\nUna vez abonado, se acredita automáticamente en tu perfil. Saludos!`
+                      } de TotalGym por un valor de ${formatMoney(modalMpUsuario.plan ? modalMpUsuario.plan.precio : 28000)}:\n\n${linkGenerado.initPoint}\n\nUna vez abonado, se acredita automáticamente en tu perfil. Saludos!`
                     );
                     const telLimpio = (modalMpUsuario.telefono || "").replace(/\D/g, "");
                     const waUrl = telLimpio
@@ -1814,7 +1813,7 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                     setDatosBancarios((prev) => ({ ...prev, alias: e.target.value.toUpperCase() }))
                   }
                   className="w-full px-3 py-2 rounded-xl border border-border bg-background text-content text-xs font-bold focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Ej: MERAKI.GYM"
+                  placeholder="Ej: TotalGym.GYM"
                 />
               </div>
 
@@ -1844,7 +1843,7 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                     setDatosBancarios((prev) => ({ ...prev, titular: e.target.value }))
                   }
                   className="w-full px-3 py-2 rounded-xl border border-border bg-background text-content text-xs focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Ej: Gym Meraki S.R.L."
+                  placeholder="Ej: TotalGym S.R.L."
                 />
               </div>
 

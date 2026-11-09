@@ -45,7 +45,7 @@ export function SearchBar({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-border bg-surface py-2.5 pl-10 pr-10 text-sm text-content placeholder:text-content-muted transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary hover:border-content-muted/50"
+        className="w-full rounded-xl border border-border bg-surface py-2.5 pl-10 pr-10 text-sm text-content placeholder:text-content-muted transition-all duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary focus:shadow-[0_0_15px_-3px_rgba(225,29,72,0.25)] hover:border-content-muted/50"
         {...props}
       />
 

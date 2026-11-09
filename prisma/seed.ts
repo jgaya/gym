@@ -4,7 +4,7 @@ import { Role } from "../lib/generated/prisma/enums.ts";
 import { hashPassword } from "../src/lib/password.ts";
 
 async function main() {
-  console.log("🌱 Iniciando seed de la base de datos de Gym Meraki...");
+  console.log("🌱 Iniciando seed de la base de datos de TotalGym...");
 
   // ---------------------------------------------------------------------------
   // 1. PLANES DE MEMBRESÍA
@@ -59,10 +59,10 @@ async function main() {
 
   // SuperAdmin
   const superadmin = await prisma.usuario.upsert({
-    where: { email: "superadmin@gymmeraki.com" },
+    where: { email: "superadmin@gymTotalGym.com" },
     update: {
       nombre: "Gonzalo",
-      apellido: "Meraki",
+      apellido: "TotalGym",
       telefono: "+54 9 11 9999-0001",
       dni: "10000001",
       direccion: "Av. Libertador 1500, CABA",
@@ -71,9 +71,9 @@ async function main() {
       isActive: true,
     },
     create: {
-      email: "superadmin@gymmeraki.com",
+      email: "superadmin@gymTotalGym.com",
       nombre: "Gonzalo",
-      apellido: "Meraki",
+      apellido: "TotalGym",
       telefono: "+54 9 11 9999-0001",
       dni: "10000001",
       direccion: "Av. Libertador 1500, CABA",
@@ -85,7 +85,7 @@ async function main() {
 
   // Admin
   const admin = await prisma.usuario.upsert({
-    where: { email: "admin@gymmeraki.com" },
+    where: { email: "admin@gymTotalGym.com" },
     update: {
       nombre: "Martín",
       apellido: "Entrenador",
@@ -97,7 +97,7 @@ async function main() {
       isActive: true,
     },
     create: {
-      email: "admin@gymmeraki.com",
+      email: "admin@gymTotalGym.com",
       nombre: "Martín",
       apellido: "Entrenador",
       telefono: "+54 9 11 8888-0002",
@@ -111,7 +111,7 @@ async function main() {
 
   // Usuario Regular (Miembro)
   const usuario = await prisma.usuario.upsert({
-    where: { email: "usuario@gymmeraki.com" },
+    where: { email: "usuario@gymTotalGym.com" },
     update: {
       nombre: "Lucas",
       apellido: "Gómez",
@@ -124,7 +124,7 @@ async function main() {
       isActive: true,
     },
     create: {
-      email: "usuario@gymmeraki.com",
+      email: "usuario@gymTotalGym.com",
       nombre: "Lucas",
       apellido: "Gómez",
       telefono: "+54 9 11 7777-0003",
@@ -2985,9 +2985,9 @@ async function main() {
   console.log(`✓ Rutina de 3 días asignada a Lucas Gómez.`);
 
   console.log("\n🎉 Seed completado exitosamente con:");
-  console.log("  • 1 SuperAdmin: superadmin@gymmeraki.com (pass: admin123)");
-  console.log("  • 1 Admin:      admin@gymmeraki.com (pass: admin123)");
-  console.log("  • 1 Miembro:    usuario@gymmeraki.com (DNI: 30000003)");
+  console.log("  • 1 SuperAdmin: superadmin@gymTotalGym.com (pass: admin123)");
+  console.log("  • 1 Admin:      admin@gymTotalGym.com (pass: admin123)");
+  console.log("  • 1 Miembro:    usuario@gymTotalGym.com (DNI: 30000003)");
   console.log("  • 159 Ejercicios catalogados con fotos, videos y descripciones completas");
   console.log("  • 3 Rutinas diarias en el catálogo");
   console.log("  • 1 Plantilla multi-día para Plan de 3 Días");

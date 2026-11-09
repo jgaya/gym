@@ -310,9 +310,9 @@ export function CalendarioClient({ data }: CalendarioClientProps) {
               <button
                 type="button"
                 onClick={() => setVista("mes")}
-                className={`flex-1 sm:flex-initial px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`flex-1 sm:flex-initial px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all touch-spring cursor-pointer ${
                   vista === "mes"
-                    ? "bg-primary text-primary-foreground shadow-xs"
+                    ? "bg-gradient-to-r from-primary to-primary-sec text-primary-foreground shadow-xs shadow-primary/25"
                     : "text-content-muted hover:text-content"
                 }`}
               >
@@ -321,9 +321,9 @@ export function CalendarioClient({ data }: CalendarioClientProps) {
               <button
                 type="button"
                 onClick={() => setVista("semana")}
-                className={`flex-1 sm:flex-initial px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`flex-1 sm:flex-initial px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all touch-spring cursor-pointer ${
                   vista === "semana"
-                    ? "bg-primary text-primary-foreground shadow-xs"
+                    ? "bg-gradient-to-r from-primary to-primary-sec text-primary-foreground shadow-xs shadow-primary/25"
                     : "text-content-muted hover:text-content"
                 }`}
               >

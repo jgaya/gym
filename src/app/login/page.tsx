@@ -4,8 +4,8 @@ import { LoginForm } from "./LoginForm";
 import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = {
-  title: "Iniciar Sesión — Gym Meraki",
-  description: "Acceso seguro a la plataforma de entrenamiento de Gym Meraki",
+  title: "Iniciar Sesión — TotalGym",
+  description: "Acceso seguro a la plataforma de entrenamiento de TotalGym",
 };
 
 interface LoginPageProps {
@@ -32,14 +32,14 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         <div className="text-center space-y-2">
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl mb-2">
             <img
-              src="/logoGym.jpg"
-              alt="Meraki Centro de Entrenamiento"
+              src="/TGLogo.jpeg"
+              alt="TotalGym Centro de Entrenamiento"
               style={{ boxShadow: "var(--logo-shadow)" }}
               className="h-12 w-12 rounded-lg object-cover logo-img-shadow border border-border"
             />
           </div>
           <h1 className="text-2xl font-extrabold tracking-tight text-content">
-            Meraki Centro de Entrenamiento
+            TotalGym Centro de Entrenamiento
           </h1>
           <p className="text-xs text-content-muted">
             Ingresá tu DNI para acceder a tu panel de entrenamiento.

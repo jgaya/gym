@@ -9,7 +9,7 @@ import { PerfilForm } from "./PerfilForm";
 import { PreferenciasVisuales } from "./PreferenciasVisuales";
 
 export const metadata: Metadata = {
-  title: "Mi Perfil — Gym Meraki",
+  title: "Mi Perfil — TotalGym",
   description: "Datos personales, preferencias de visualización y estado de la membresía",
 };
 
