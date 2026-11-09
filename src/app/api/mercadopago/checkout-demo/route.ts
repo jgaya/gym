@@ -2,23 +2,48 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 /**
  * Pantalla interactiva que simula el Checkout de Mercado Pago
  * Permite al administrador o al socio ver el link generado y presionar "Pagar ahora",
  * lo cual envía la notificación al webhook y actualiza el estado a "Pagado" inmediatamente.
+ * Solo habilitado en modo de desarrollo / sin token productivo.
  */
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const prefId = searchParams.get("prefId") || "PREF-DEMO";
-  const ref = searchParams.get("ref") || "";
-  const monto = searchParams.get("monto") || "0";
-  const titulo = searchParams.get("titulo") || "Cuota Gimnasio";
-  const tipo = searchParams.get("tipo") || "cuota_mes";
-  const mes = searchParams.get("mes") || "10";
-  const anio = searchParams.get("anio") || "2026";
-  const usuarioId = searchParams.get("usuarioId") || "0";
+  if (
+    process.env.NODE_ENV === "production" &&
+    process.env.MERCADO_PAGO_ACCESS_TOKEN?.trim()
+  ) {
+    return NextResponse.json(
+      { error: "Demo checkout deshabilitado en producción." },
+      { status: 403 }
+    );
+  }
 
-  const isSuscripcion = tipo === "suscripcion_mensual";
+  const { searchParams } = new URL(req.url);
+  const prefId = escapeHtml(searchParams.get("prefId") || "PREF-DEMO");
+  const refRaw = searchParams.get("ref") || "";
+  const ref = escapeHtml(refRaw);
+  const montoNum = Number(searchParams.get("monto")) || 0;
+  const titulo = escapeHtml(searchParams.get("titulo") || "Cuota Gimnasio");
+  const tipoRaw =
+    searchParams.get("tipo") === "suscripcion_mensual"
+      ? "suscripcion_mensual"
+      : "cuota_mes";
+  const tipo = escapeHtml(tipoRaw);
+  const mes = escapeHtml(String(Number(searchParams.get("mes")) || 10));
+  const anio = escapeHtml(String(Number(searchParams.get("anio")) || 2026));
+  const usuarioId = escapeHtml(String(Number(searchParams.get("usuarioId")) || 0));
+
+  const isSuscripcion = tipoRaw === "suscripcion_mensual";
 
   const html = `
 <!DOCTYPE html>
@@ -261,7 +286,7 @@ export async function GET(req: NextRequest) {
     <div class="card-body">
       <div class="amount-box">
         <div class="label">${isSuscripcion ? "Monto Débito Recurrente" : "Total a Pagar"}</div>
-        <div class="price">$${Number(monto).toLocaleString("es-AR")}</div>
+        <div class="price">$${montoNum.toLocaleString("es-AR")}</div>
         ${isSuscripcion ? '<div class="badge-sub">🔁 Se debitará automáticamente mes a mes</div>' : ""}
       </div>
 
@@ -271,11 +296,11 @@ export async function GET(req: NextRequest) {
       </div>
       <div class="detail-row">
         <span class="detail-label">Período:</span>
-        <span class="detail-val">Mes ${mes} / ${anio}</span>
+        <span class="detail-val">Mes ${mes} / ${anio} (#${usuarioId})</span>
       </div>
       <div class="detail-row">
         <span class="detail-label">Referencia:</span>
-        <span class="detail-val" style="font-family: monospace; font-size: 11px;">${ref}</span>
+        <span class="detail-val" style="font-family: monospace; font-size: 11px;">${ref} (${prefId})</span>
       </div>
 
       <div style="margin-top: 14px;">
@@ -288,7 +313,7 @@ export async function GET(req: NextRequest) {
       </div>
 
       <button id="payBtn" class="btn-pay" onclick="simularPago()">
-        <span>🔒 Confirmar y Pagar $${Number(monto).toLocaleString("es-AR")}</span>
+        <span>🔒 Confirmar y Pagar $${montoNum.toLocaleString("es-AR")}</span>
       </button>
 
       <button class="btn-cancel" onclick="window.close(); window.history.back();">
@@ -314,9 +339,9 @@ export async function GET(req: NextRequest) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             isSimulation: true,
-            externalReference: "${ref}",
-            monto: ${monto},
-            tipo: "${tipo}",
+            externalReference: ${JSON.stringify(refRaw)},
+            monto: ${JSON.stringify(montoNum)},
+            tipo: ${JSON.stringify(tipoRaw)},
             paymentId: Math.floor(10000000 + Math.random() * 90000000)
           })
         });

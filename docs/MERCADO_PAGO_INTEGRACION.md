@@ -18,10 +18,11 @@ Para que el dinero ingrese directamente en la cuenta bancaria / cuenta de Mercad
    - Completar el formulario de homologación de negocio si es la primera vez (rubro: *Servicios deportivos / Gimnasio*).
 5. Copiar y entregarte únicamente:
    - **`Access Token` de Producción** (empieza con `APP_USR-...`)
+   - **`Clave Secreta (Secret Signature)` del Webhook** (generada en la sección *Webhooks* del panel)
    - *(Opcional)* **`Public Key`** (empieza con `APP_USR-...`)
 
 > [!WARNING]
-> El cliente **NUNCA** debe compartir su contraseña de Mercado Pago ni su email personal. Solo debe entregarte el **Access Token** generado dentro del Panel de Desarrolladores.
+> El cliente **NUNCA** debe compartir su contraseña de Mercado Pago ni su email personal. Solo debe entregarte el **Access Token** y la **Clave Secreta del Webhook** generados dentro del Panel de Desarrolladores.
 
 ---
 
@@ -35,6 +36,9 @@ NEXT_PUBLIC_BASE_URL="https://tu-dominio.com"
 
 # Token de Mercado Pago (Sandbox para pruebas o Producción para cobros reales)
 MERCADO_PAGO_ACCESS_TOKEN="APP_USR-xxxxxx-xxxxxx-xxxxxx"
+
+# Clave secreta del Webhook para validar la firma HMAC-SHA256 (x-signature)
+MERCADO_PAGO_WEBHOOK_SECRET="tu-webhook-secret-signature"
 ```
 
 ---
