@@ -1422,6 +1422,19 @@ export const UsuarioScalarFieldEnum = {
   role: 'role',
   isActive: 'isActive',
   deletedAt: 'deletedAt',
+  tieneLesion: 'tieneLesion',
+  detalleLesion: 'detalleLesion',
+  tomaMedicacion: 'tomaMedicacion',
+  detalleMedicacion: 'detalleMedicacion',
+  tieneRestricciones: 'tieneRestricciones',
+  detalleRestricciones: 'detalleRestricciones',
+  autorizadoPorMedico: 'autorizadoPorMedico',
+  observacionesSalud: 'observacionesSalud',
+  emergenciaContacto: 'emergenciaContacto',
+  emergenciaParentesco: 'emergenciaParentesco',
+  emergenciaTelefono: 'emergenciaTelefono',
+  objetivos: 'objetivos',
+  objetivoOtro: 'objetivoOtro',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   planId: 'planId'
@@ -1641,7 +1654,16 @@ export const UsuarioOrderByRelevanceFieldEnum = {
   dni: 'dni',
   direccion: 'direccion',
   avatarUrl: 'avatarUrl',
-  imageUrl: 'imageUrl'
+  imageUrl: 'imageUrl',
+  detalleLesion: 'detalleLesion',
+  detalleMedicacion: 'detalleMedicacion',
+  detalleRestricciones: 'detalleRestricciones',
+  observacionesSalud: 'observacionesSalud',
+  emergenciaContacto: 'emergenciaContacto',
+  emergenciaParentesco: 'emergenciaParentesco',
+  emergenciaTelefono: 'emergenciaTelefono',
+  objetivos: 'objetivos',
+  objetivoOtro: 'objetivoOtro'
 } as const
 
 export type UsuarioOrderByRelevanceFieldEnum = (typeof UsuarioOrderByRelevanceFieldEnum)[keyof typeof UsuarioOrderByRelevanceFieldEnum]

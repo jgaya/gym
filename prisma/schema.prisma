@@ -57,6 +57,26 @@ model Usuario {
   role         Role      @default(USER)
   isActive     Boolean   @default(true)
   deletedAt    DateTime?
+
+  // Información de Salud
+  tieneLesion          Boolean   @default(false)
+  detalleLesion        String?   @db.Text
+  tomaMedicacion       Boolean   @default(false)
+  detalleMedicacion    String?   @db.Text
+  tieneRestricciones   Boolean   @default(false)
+  detalleRestricciones String?   @db.Text
+  autorizadoPorMedico  Boolean   @default(false)
+  observacionesSalud   String?   @db.Text
+
+  // Datos de Emergencia
+  emergenciaContacto   String?
+  emergenciaParentesco String?
+  emergenciaTelefono   String?
+
+  // Objetivos (JSON array de claves seleccionadas + detalle de "Otro")
+  objetivos            String?   @db.Text
+  objetivoOtro         String?
+
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 

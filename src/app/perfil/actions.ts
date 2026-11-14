@@ -5,12 +5,32 @@ import { prisma } from "@lib/prisma";
 import { getCurrentUser, setSessionCookie } from "@/lib/auth";
 
 export interface PerfilFormData {
+  // Datos personales básicos
   nombre: string;
   apellido: string;
   email: string;
   telefono: string;
   direccion?: string;
   birthDate?: string; // YYYY-MM-DD
+
+  // Información de salud
+  tieneLesion: boolean;
+  detalleLesion?: string;
+  tomaMedicacion: boolean;
+  detalleMedicacion?: string;
+  tieneRestricciones: boolean;
+  detalleRestricciones?: string;
+  autorizadoPorMedico: boolean;
+  observacionesSalud?: string;
+
+  // Datos de emergencia
+  emergenciaContacto?: string;
+  emergenciaParentesco?: string;
+  emergenciaTelefono?: string;
+
+  // Objetivos (múltiple selección)
+  objetivos: string[];
+  objetivoOtro?: string;
 }
 
 export async function actualizarDatosPerfil(data: PerfilFormData) {
@@ -20,7 +40,27 @@ export async function actualizarDatosPerfil(data: PerfilFormData) {
       return { success: false, error: "Debes iniciar sesión para modificar tu perfil" };
     }
 
-    const { nombre, apellido, email, telefono, direccion, birthDate } = data;
+    const {
+      nombre,
+      apellido,
+      email,
+      telefono,
+      direccion,
+      birthDate,
+      tieneLesion,
+      detalleLesion,
+      tomaMedicacion,
+      detalleMedicacion,
+      tieneRestricciones,
+      detalleRestricciones,
+      autorizadoPorMedico,
+      observacionesSalud,
+      emergenciaContacto,
+      emergenciaParentesco,
+      emergenciaTelefono,
+      objetivos,
+      objetivoOtro,
+    } = data;
 
     if (!nombre.trim() || !apellido.trim()) {
       return { success: false, error: "El nombre y apellido son obligatorios" };
@@ -43,6 +83,11 @@ export async function actualizarDatosPerfil(data: PerfilFormData) {
       return { success: false, error: "El correo electrónico ya está registrado por otro miembro" };
     }
 
+    const objetivosArray = Array.isArray(objetivos)
+      ? objetivos.map((o) => String(o).trim()).filter(Boolean)
+      : [];
+    const incluyeOtro = objetivosArray.includes("otro");
+
     // Actualizar registro en base de datos
     const usuarioActualizado = await prisma.usuario.update({
       where: { id: session.id },
@@ -53,6 +98,29 @@ export async function actualizarDatosPerfil(data: PerfilFormData) {
         telefono: telefono.trim(),
         direccion: direccion?.trim() || null,
         birthDate: birthDate ? new Date(birthDate) : null,
+
+        // Información de salud
+        tieneLesion: Boolean(tieneLesion),
+        detalleLesion: tieneLesion && detalleLesion?.trim() ? detalleLesion.trim() : null,
+        tomaMedicacion: Boolean(tomaMedicacion),
+        detalleMedicacion:
+          tomaMedicacion && detalleMedicacion?.trim() ? detalleMedicacion.trim() : null,
+        tieneRestricciones: Boolean(tieneRestricciones),
+        detalleRestricciones:
+          tieneRestricciones && detalleRestricciones?.trim()
+            ? detalleRestricciones.trim()
+            : null,
+        autorizadoPorMedico: Boolean(autorizadoPorMedico),
+        observacionesSalud: observacionesSalud?.trim() || null,
+
+        // Datos de emergencia
+        emergenciaContacto: emergenciaContacto?.trim() || null,
+        emergenciaParentesco: emergenciaParentesco?.trim() || null,
+        emergenciaTelefono: emergenciaTelefono?.trim() || null,
+
+        // Objetivos
+        objetivos: JSON.stringify(objetivosArray),
+        objetivoOtro: incluyeOtro && objetivoOtro?.trim() ? objetivoOtro.trim() : null,
       },
     });
 
@@ -66,6 +134,7 @@ export async function actualizarDatosPerfil(data: PerfilFormData) {
     });
 
     revalidatePath("/perfil");
+    revalidatePath("/admin/usuarios");
     revalidatePath("/", "layout");
 
     return {
@@ -86,4 +155,3 @@ export async function actualizarDatosPerfil(data: PerfilFormData) {
     return { success: false, error: message };
   }
 }
-

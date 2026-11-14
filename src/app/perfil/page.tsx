@@ -137,7 +137,7 @@ export default async function PerfilPage() {
         </div>
       </div>
 
-      {/* Sección 1: Modificar Datos Personales */}
+      {/* Sección 1: Datos Personales, Salud, Emergencia y Objetivos */}
       <PerfilForm
         initialData={{
           nombre: usuario.nombre,
@@ -147,6 +147,27 @@ export default async function PerfilPage() {
           dni: usuario.dni,
           direccion: usuario.direccion,
           birthDate: usuario.birthDate,
+          tieneLesion: usuario.tieneLesion,
+          detalleLesion: usuario.detalleLesion,
+          tomaMedicacion: usuario.tomaMedicacion,
+          detalleMedicacion: usuario.detalleMedicacion,
+          tieneRestricciones: usuario.tieneRestricciones,
+          detalleRestricciones: usuario.detalleRestricciones,
+          autorizadoPorMedico: usuario.autorizadoPorMedico,
+          observacionesSalud: usuario.observacionesSalud,
+          emergenciaContacto: usuario.emergenciaContacto,
+          emergenciaParentesco: usuario.emergenciaParentesco,
+          emergenciaTelefono: usuario.emergenciaTelefono,
+          objetivos: (() => {
+            if (!usuario.objetivos) return [];
+            try {
+              const parsed = JSON.parse(usuario.objetivos);
+              return Array.isArray(parsed) ? parsed : [];
+            } catch {
+              return [];
+            }
+          })(),
+          objetivoOtro: usuario.objetivoOtro,
         }}
       />
 

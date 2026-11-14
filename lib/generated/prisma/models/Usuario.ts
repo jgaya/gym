@@ -51,6 +51,19 @@ export type UsuarioMinAggregateOutputType = {
   role: $Enums.Role | null
   isActive: boolean | null
   deletedAt: Date | null
+  tieneLesion: boolean | null
+  detalleLesion: string | null
+  tomaMedicacion: boolean | null
+  detalleMedicacion: string | null
+  tieneRestricciones: boolean | null
+  detalleRestricciones: string | null
+  autorizadoPorMedico: boolean | null
+  observacionesSalud: string | null
+  emergenciaContacto: string | null
+  emergenciaParentesco: string | null
+  emergenciaTelefono: string | null
+  objetivos: string | null
+  objetivoOtro: string | null
   createdAt: Date | null
   updatedAt: Date | null
   planId: number | null
@@ -71,6 +84,19 @@ export type UsuarioMaxAggregateOutputType = {
   role: $Enums.Role | null
   isActive: boolean | null
   deletedAt: Date | null
+  tieneLesion: boolean | null
+  detalleLesion: string | null
+  tomaMedicacion: boolean | null
+  detalleMedicacion: string | null
+  tieneRestricciones: boolean | null
+  detalleRestricciones: string | null
+  autorizadoPorMedico: boolean | null
+  observacionesSalud: string | null
+  emergenciaContacto: string | null
+  emergenciaParentesco: string | null
+  emergenciaTelefono: string | null
+  objetivos: string | null
+  objetivoOtro: string | null
   createdAt: Date | null
   updatedAt: Date | null
   planId: number | null
@@ -91,6 +117,19 @@ export type UsuarioCountAggregateOutputType = {
   role: number
   isActive: number
   deletedAt: number
+  tieneLesion: number
+  detalleLesion: number
+  tomaMedicacion: number
+  detalleMedicacion: number
+  tieneRestricciones: number
+  detalleRestricciones: number
+  autorizadoPorMedico: number
+  observacionesSalud: number
+  emergenciaContacto: number
+  emergenciaParentesco: number
+  emergenciaTelefono: number
+  objetivos: number
+  objetivoOtro: number
   createdAt: number
   updatedAt: number
   planId: number
@@ -123,6 +162,19 @@ export type UsuarioMinAggregateInputType = {
   role?: true
   isActive?: true
   deletedAt?: true
+  tieneLesion?: true
+  detalleLesion?: true
+  tomaMedicacion?: true
+  detalleMedicacion?: true
+  tieneRestricciones?: true
+  detalleRestricciones?: true
+  autorizadoPorMedico?: true
+  observacionesSalud?: true
+  emergenciaContacto?: true
+  emergenciaParentesco?: true
+  emergenciaTelefono?: true
+  objetivos?: true
+  objetivoOtro?: true
   createdAt?: true
   updatedAt?: true
   planId?: true
@@ -143,6 +195,19 @@ export type UsuarioMaxAggregateInputType = {
   role?: true
   isActive?: true
   deletedAt?: true
+  tieneLesion?: true
+  detalleLesion?: true
+  tomaMedicacion?: true
+  detalleMedicacion?: true
+  tieneRestricciones?: true
+  detalleRestricciones?: true
+  autorizadoPorMedico?: true
+  observacionesSalud?: true
+  emergenciaContacto?: true
+  emergenciaParentesco?: true
+  emergenciaTelefono?: true
+  objetivos?: true
+  objetivoOtro?: true
   createdAt?: true
   updatedAt?: true
   planId?: true
@@ -163,6 +228,19 @@ export type UsuarioCountAggregateInputType = {
   role?: true
   isActive?: true
   deletedAt?: true
+  tieneLesion?: true
+  detalleLesion?: true
+  tomaMedicacion?: true
+  detalleMedicacion?: true
+  tieneRestricciones?: true
+  detalleRestricciones?: true
+  autorizadoPorMedico?: true
+  observacionesSalud?: true
+  emergenciaContacto?: true
+  emergenciaParentesco?: true
+  emergenciaTelefono?: true
+  objetivos?: true
+  objetivoOtro?: true
   createdAt?: true
   updatedAt?: true
   planId?: true
@@ -270,6 +348,19 @@ export type UsuarioGroupByOutputType = {
   role: $Enums.Role
   isActive: boolean
   deletedAt: Date | null
+  tieneLesion: boolean
+  detalleLesion: string | null
+  tomaMedicacion: boolean
+  detalleMedicacion: string | null
+  tieneRestricciones: boolean
+  detalleRestricciones: string | null
+  autorizadoPorMedico: boolean
+  observacionesSalud: string | null
+  emergenciaContacto: string | null
+  emergenciaParentesco: string | null
+  emergenciaTelefono: string | null
+  objetivos: string | null
+  objetivoOtro: string | null
   createdAt: Date
   updatedAt: Date
   planId: number | null
@@ -313,6 +404,19 @@ export type UsuarioWhereInput = {
   role?: Prisma.EnumRoleFilter<"Usuario"> | $Enums.Role
   isActive?: Prisma.BoolFilter<"Usuario"> | boolean
   deletedAt?: Prisma.DateTimeNullableFilter<"Usuario"> | Date | string | null
+  tieneLesion?: Prisma.BoolFilter<"Usuario"> | boolean
+  detalleLesion?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  tomaMedicacion?: Prisma.BoolFilter<"Usuario"> | boolean
+  detalleMedicacion?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  tieneRestricciones?: Prisma.BoolFilter<"Usuario"> | boolean
+  detalleRestricciones?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  autorizadoPorMedico?: Prisma.BoolFilter<"Usuario"> | boolean
+  observacionesSalud?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  emergenciaContacto?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  emergenciaParentesco?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  emergenciaTelefono?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  objetivos?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  objetivoOtro?: Prisma.StringNullableFilter<"Usuario"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
   planId?: Prisma.IntNullableFilter<"Usuario"> | number | null
@@ -341,6 +445,19 @@ export type UsuarioOrderByWithRelationInput = {
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  tieneLesion?: Prisma.SortOrder
+  detalleLesion?: Prisma.SortOrderInput | Prisma.SortOrder
+  tomaMedicacion?: Prisma.SortOrder
+  detalleMedicacion?: Prisma.SortOrderInput | Prisma.SortOrder
+  tieneRestricciones?: Prisma.SortOrder
+  detalleRestricciones?: Prisma.SortOrderInput | Prisma.SortOrder
+  autorizadoPorMedico?: Prisma.SortOrder
+  observacionesSalud?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergenciaContacto?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergenciaParentesco?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergenciaTelefono?: Prisma.SortOrderInput | Prisma.SortOrder
+  objetivos?: Prisma.SortOrderInput | Prisma.SortOrder
+  objetivoOtro?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   planId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -373,6 +490,19 @@ export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.EnumRoleFilter<"Usuario"> | $Enums.Role
   isActive?: Prisma.BoolFilter<"Usuario"> | boolean
   deletedAt?: Prisma.DateTimeNullableFilter<"Usuario"> | Date | string | null
+  tieneLesion?: Prisma.BoolFilter<"Usuario"> | boolean
+  detalleLesion?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  tomaMedicacion?: Prisma.BoolFilter<"Usuario"> | boolean
+  detalleMedicacion?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  tieneRestricciones?: Prisma.BoolFilter<"Usuario"> | boolean
+  detalleRestricciones?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  autorizadoPorMedico?: Prisma.BoolFilter<"Usuario"> | boolean
+  observacionesSalud?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  emergenciaContacto?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  emergenciaParentesco?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  emergenciaTelefono?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  objetivos?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  objetivoOtro?: Prisma.StringNullableFilter<"Usuario"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
   planId?: Prisma.IntNullableFilter<"Usuario"> | number | null
@@ -401,6 +531,19 @@ export type UsuarioOrderByWithAggregationInput = {
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  tieneLesion?: Prisma.SortOrder
+  detalleLesion?: Prisma.SortOrderInput | Prisma.SortOrder
+  tomaMedicacion?: Prisma.SortOrder
+  detalleMedicacion?: Prisma.SortOrderInput | Prisma.SortOrder
+  tieneRestricciones?: Prisma.SortOrder
+  detalleRestricciones?: Prisma.SortOrderInput | Prisma.SortOrder
+  autorizadoPorMedico?: Prisma.SortOrder
+  observacionesSalud?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergenciaContacto?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergenciaParentesco?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergenciaTelefono?: Prisma.SortOrderInput | Prisma.SortOrder
+  objetivos?: Prisma.SortOrderInput | Prisma.SortOrder
+  objetivoOtro?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   planId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -429,6 +572,19 @@ export type UsuarioScalarWhereWithAggregatesInput = {
   role?: Prisma.EnumRoleWithAggregatesFilter<"Usuario"> | $Enums.Role
   isActive?: Prisma.BoolWithAggregatesFilter<"Usuario"> | boolean
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Usuario"> | Date | string | null
+  tieneLesion?: Prisma.BoolWithAggregatesFilter<"Usuario"> | boolean
+  detalleLesion?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
+  tomaMedicacion?: Prisma.BoolWithAggregatesFilter<"Usuario"> | boolean
+  detalleMedicacion?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
+  tieneRestricciones?: Prisma.BoolWithAggregatesFilter<"Usuario"> | boolean
+  detalleRestricciones?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
+  autorizadoPorMedico?: Prisma.BoolWithAggregatesFilter<"Usuario"> | boolean
+  observacionesSalud?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
+  emergenciaContacto?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
+  emergenciaParentesco?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
+  emergenciaTelefono?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
+  objetivos?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
+  objetivoOtro?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Usuario"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Usuario"> | Date | string
   planId?: Prisma.IntNullableWithAggregatesFilter<"Usuario"> | number | null
@@ -448,6 +604,19 @@ export type UsuarioCreateInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
@@ -475,6 +644,19 @@ export type UsuarioUncheckedCreateInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   planId?: number | null
@@ -501,6 +683,19 @@ export type UsuarioUpdateInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
@@ -528,6 +723,19 @@ export type UsuarioUncheckedUpdateInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -555,6 +763,19 @@ export type UsuarioCreateManyInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   planId?: number | null
@@ -574,6 +795,19 @@ export type UsuarioUpdateManyMutationInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -593,6 +827,19 @@ export type UsuarioUncheckedUpdateManyInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -629,6 +876,19 @@ export type UsuarioCountOrderByAggregateInput = {
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  tieneLesion?: Prisma.SortOrder
+  detalleLesion?: Prisma.SortOrder
+  tomaMedicacion?: Prisma.SortOrder
+  detalleMedicacion?: Prisma.SortOrder
+  tieneRestricciones?: Prisma.SortOrder
+  detalleRestricciones?: Prisma.SortOrder
+  autorizadoPorMedico?: Prisma.SortOrder
+  observacionesSalud?: Prisma.SortOrder
+  emergenciaContacto?: Prisma.SortOrder
+  emergenciaParentesco?: Prisma.SortOrder
+  emergenciaTelefono?: Prisma.SortOrder
+  objetivos?: Prisma.SortOrder
+  objetivoOtro?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   planId?: Prisma.SortOrder
@@ -654,6 +914,19 @@ export type UsuarioMaxOrderByAggregateInput = {
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  tieneLesion?: Prisma.SortOrder
+  detalleLesion?: Prisma.SortOrder
+  tomaMedicacion?: Prisma.SortOrder
+  detalleMedicacion?: Prisma.SortOrder
+  tieneRestricciones?: Prisma.SortOrder
+  detalleRestricciones?: Prisma.SortOrder
+  autorizadoPorMedico?: Prisma.SortOrder
+  observacionesSalud?: Prisma.SortOrder
+  emergenciaContacto?: Prisma.SortOrder
+  emergenciaParentesco?: Prisma.SortOrder
+  emergenciaTelefono?: Prisma.SortOrder
+  objetivos?: Prisma.SortOrder
+  objetivoOtro?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   planId?: Prisma.SortOrder
@@ -674,6 +947,19 @@ export type UsuarioMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  tieneLesion?: Prisma.SortOrder
+  detalleLesion?: Prisma.SortOrder
+  tomaMedicacion?: Prisma.SortOrder
+  detalleMedicacion?: Prisma.SortOrder
+  tieneRestricciones?: Prisma.SortOrder
+  detalleRestricciones?: Prisma.SortOrder
+  autorizadoPorMedico?: Prisma.SortOrder
+  observacionesSalud?: Prisma.SortOrder
+  emergenciaContacto?: Prisma.SortOrder
+  emergenciaParentesco?: Prisma.SortOrder
+  emergenciaTelefono?: Prisma.SortOrder
+  objetivos?: Prisma.SortOrder
+  objetivoOtro?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   planId?: Prisma.SortOrder
@@ -859,6 +1145,19 @@ export type UsuarioCreateWithoutPlanInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rutinasDias?: Prisma.UsuarioRutinaDiaCreateNestedManyWithoutUsuarioInput
@@ -885,6 +1184,19 @@ export type UsuarioUncheckedCreateWithoutPlanInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedCreateNestedManyWithoutUsuarioInput
@@ -940,6 +1252,19 @@ export type UsuarioScalarWhereInput = {
   role?: Prisma.EnumRoleFilter<"Usuario"> | $Enums.Role
   isActive?: Prisma.BoolFilter<"Usuario"> | boolean
   deletedAt?: Prisma.DateTimeNullableFilter<"Usuario"> | Date | string | null
+  tieneLesion?: Prisma.BoolFilter<"Usuario"> | boolean
+  detalleLesion?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  tomaMedicacion?: Prisma.BoolFilter<"Usuario"> | boolean
+  detalleMedicacion?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  tieneRestricciones?: Prisma.BoolFilter<"Usuario"> | boolean
+  detalleRestricciones?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  autorizadoPorMedico?: Prisma.BoolFilter<"Usuario"> | boolean
+  observacionesSalud?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  emergenciaContacto?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  emergenciaParentesco?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  emergenciaTelefono?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  objetivos?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  objetivoOtro?: Prisma.StringNullableFilter<"Usuario"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
   planId?: Prisma.IntNullableFilter<"Usuario"> | number | null
@@ -959,6 +1284,19 @@ export type UsuarioCreateWithoutRutinasDiasInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
@@ -985,6 +1323,19 @@ export type UsuarioUncheckedCreateWithoutRutinasDiasInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   planId?: number | null
@@ -1026,6 +1377,19 @@ export type UsuarioUpdateWithoutRutinasDiasInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
@@ -1052,6 +1416,19 @@ export type UsuarioUncheckedUpdateWithoutRutinasDiasInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1077,6 +1454,19 @@ export type UsuarioCreateWithoutEjerciciosPersonalizadosInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
@@ -1103,6 +1493,19 @@ export type UsuarioUncheckedCreateWithoutEjerciciosPersonalizadosInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   planId?: number | null
@@ -1144,6 +1547,19 @@ export type UsuarioUpdateWithoutEjerciciosPersonalizadosInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
@@ -1170,6 +1586,19 @@ export type UsuarioUncheckedUpdateWithoutEjerciciosPersonalizadosInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1195,6 +1624,19 @@ export type UsuarioCreateWithoutSesionesInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
@@ -1221,6 +1663,19 @@ export type UsuarioUncheckedCreateWithoutSesionesInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   planId?: number | null
@@ -1262,6 +1717,19 @@ export type UsuarioUpdateWithoutSesionesInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
@@ -1288,6 +1756,19 @@ export type UsuarioUncheckedUpdateWithoutSesionesInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1313,6 +1794,19 @@ export type UsuarioCreateWithoutHistorialEjerciciosInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
@@ -1339,6 +1833,19 @@ export type UsuarioUncheckedCreateWithoutHistorialEjerciciosInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   planId?: number | null
@@ -1380,6 +1887,19 @@ export type UsuarioUpdateWithoutHistorialEjerciciosInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
@@ -1406,6 +1926,19 @@ export type UsuarioUncheckedUpdateWithoutHistorialEjerciciosInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1431,6 +1964,19 @@ export type UsuarioCreateWithoutPagosInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
@@ -1457,6 +2003,19 @@ export type UsuarioUncheckedCreateWithoutPagosInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   planId?: number | null
@@ -1498,6 +2057,19 @@ export type UsuarioUpdateWithoutPagosInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
@@ -1524,6 +2096,19 @@ export type UsuarioUncheckedUpdateWithoutPagosInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1549,6 +2134,19 @@ export type UsuarioCreateWithoutMedidasInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
@@ -1575,6 +2173,19 @@ export type UsuarioUncheckedCreateWithoutMedidasInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   planId?: number | null
@@ -1616,6 +2227,19 @@ export type UsuarioUpdateWithoutMedidasInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
@@ -1642,6 +2266,19 @@ export type UsuarioUncheckedUpdateWithoutMedidasInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1667,6 +2304,19 @@ export type UsuarioCreateWithoutTiposMedidaPersonalizadosInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
@@ -1693,6 +2343,19 @@ export type UsuarioUncheckedCreateWithoutTiposMedidaPersonalizadosInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   planId?: number | null
@@ -1734,6 +2397,19 @@ export type UsuarioUpdateWithoutTiposMedidaPersonalizadosInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
@@ -1760,6 +2436,19 @@ export type UsuarioUncheckedUpdateWithoutTiposMedidaPersonalizadosInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1786,6 +2475,19 @@ export type UsuarioCreateManyPlanInput = {
   role?: $Enums.Role
   isActive?: boolean
   deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1804,6 +2506,19 @@ export type UsuarioUpdateWithoutPlanInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rutinasDias?: Prisma.UsuarioRutinaDiaUpdateManyWithoutUsuarioNestedInput
@@ -1830,6 +2545,19 @@ export type UsuarioUncheckedUpdateWithoutPlanInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -1856,6 +2584,19 @@ export type UsuarioUncheckedUpdateManyWithoutPlanInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1960,6 +2701,19 @@ export type UsuarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   role?: boolean
   isActive?: boolean
   deletedAt?: boolean
+  tieneLesion?: boolean
+  detalleLesion?: boolean
+  tomaMedicacion?: boolean
+  detalleMedicacion?: boolean
+  tieneRestricciones?: boolean
+  detalleRestricciones?: boolean
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: boolean
+  emergenciaContacto?: boolean
+  emergenciaParentesco?: boolean
+  emergenciaTelefono?: boolean
+  objetivos?: boolean
+  objetivoOtro?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   planId?: boolean
@@ -1991,12 +2745,25 @@ export type UsuarioSelectScalar = {
   role?: boolean
   isActive?: boolean
   deletedAt?: boolean
+  tieneLesion?: boolean
+  detalleLesion?: boolean
+  tomaMedicacion?: boolean
+  detalleMedicacion?: boolean
+  tieneRestricciones?: boolean
+  detalleRestricciones?: boolean
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: boolean
+  emergenciaContacto?: boolean
+  emergenciaParentesco?: boolean
+  emergenciaTelefono?: boolean
+  objetivos?: boolean
+  objetivoOtro?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   planId?: boolean
 }
 
-export type UsuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "nombre" | "apellido" | "telefono" | "dni" | "direccion" | "birthDate" | "avatarUrl" | "imageUrl" | "role" | "isActive" | "deletedAt" | "createdAt" | "updatedAt" | "planId", ExtArgs["result"]["usuario"]>
+export type UsuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "nombre" | "apellido" | "telefono" | "dni" | "direccion" | "birthDate" | "avatarUrl" | "imageUrl" | "role" | "isActive" | "deletedAt" | "tieneLesion" | "detalleLesion" | "tomaMedicacion" | "detalleMedicacion" | "tieneRestricciones" | "detalleRestricciones" | "autorizadoPorMedico" | "observacionesSalud" | "emergenciaContacto" | "emergenciaParentesco" | "emergenciaTelefono" | "objetivos" | "objetivoOtro" | "createdAt" | "updatedAt" | "planId", ExtArgs["result"]["usuario"]>
 export type UsuarioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   plan?: boolean | Prisma.Usuario$planArgs<ExtArgs>
   rutinasDias?: boolean | Prisma.Usuario$rutinasDiasArgs<ExtArgs>
@@ -2036,6 +2803,19 @@ export type $UsuarioPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     role: $Enums.Role
     isActive: boolean
     deletedAt: Date | null
+    tieneLesion: boolean
+    detalleLesion: string | null
+    tomaMedicacion: boolean
+    detalleMedicacion: string | null
+    tieneRestricciones: boolean
+    detalleRestricciones: string | null
+    autorizadoPorMedico: boolean
+    observacionesSalud: string | null
+    emergenciaContacto: string | null
+    emergenciaParentesco: string | null
+    emergenciaTelefono: string | null
+    objetivos: string | null
+    objetivoOtro: string | null
     createdAt: Date
     updatedAt: Date
     planId: number | null
@@ -2430,6 +3210,19 @@ export interface UsuarioFieldRefs {
   readonly role: Prisma.FieldRef<"Usuario", 'Role'>
   readonly isActive: Prisma.FieldRef<"Usuario", 'Boolean'>
   readonly deletedAt: Prisma.FieldRef<"Usuario", 'DateTime'>
+  readonly tieneLesion: Prisma.FieldRef<"Usuario", 'Boolean'>
+  readonly detalleLesion: Prisma.FieldRef<"Usuario", 'String'>
+  readonly tomaMedicacion: Prisma.FieldRef<"Usuario", 'Boolean'>
+  readonly detalleMedicacion: Prisma.FieldRef<"Usuario", 'String'>
+  readonly tieneRestricciones: Prisma.FieldRef<"Usuario", 'Boolean'>
+  readonly detalleRestricciones: Prisma.FieldRef<"Usuario", 'String'>
+  readonly autorizadoPorMedico: Prisma.FieldRef<"Usuario", 'Boolean'>
+  readonly observacionesSalud: Prisma.FieldRef<"Usuario", 'String'>
+  readonly emergenciaContacto: Prisma.FieldRef<"Usuario", 'String'>
+  readonly emergenciaParentesco: Prisma.FieldRef<"Usuario", 'String'>
+  readonly emergenciaTelefono: Prisma.FieldRef<"Usuario", 'String'>
+  readonly objetivos: Prisma.FieldRef<"Usuario", 'String'>
+  readonly objetivoOtro: Prisma.FieldRef<"Usuario", 'String'>
   readonly createdAt: Prisma.FieldRef<"Usuario", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Usuario", 'DateTime'>
   readonly planId: Prisma.FieldRef<"Usuario", 'Int'>
