@@ -132,12 +132,23 @@ export function LoginForm({ callbackUrl = "" }: LoginFormProps) {
         </>
       ) : (
         <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
-          {/* Notificación de credenciales administrativas (solo visible para admin/superadmin) */}
+          {/* Notificación de credenciales de staff (visible para entrenador/admin/superadmin) */}
           <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-700 dark:text-amber-300 space-y-1">
             <div className="flex items-center gap-2 font-bold">
-              <span>{adminInfo?.role === Role.SUPERADMIN ? "⚡" : "🛡️"}</span>
               <span>
-                Cuenta de {adminInfo?.role === Role.SUPERADMIN ? "SuperAdmin" : "Administrador"}
+                {adminInfo?.role === Role.SUPERADMIN
+                  ? "⚡"
+                  : adminInfo?.role === Role.ENTRENADOR
+                    ? "🏋️"
+                    : "🛡️"}
+              </span>
+              <span>
+                Cuenta de{" "}
+                {adminInfo?.role === Role.SUPERADMIN
+                  ? "SuperAdmin"
+                  : adminInfo?.role === Role.ENTRENADOR
+                    ? "Entrenador"
+                    : "Administrador"}
               </span>
             </div>
             <p className="text-[11px] opacity-90">

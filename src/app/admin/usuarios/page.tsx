@@ -18,6 +18,7 @@ export default async function AdminUsuariosPage() {
   ]);
 
   const isSuperAdmin = currentUser?.role === Role.SUPERADMIN;
+  const isEntrenador = currentUser?.role === Role.ENTRENADOR;
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-6">
@@ -25,7 +26,7 @@ export default async function AdminUsuariosPage() {
       <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between border-b border-border pb-5">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
-            <span>Administración</span>
+            <span>{isEntrenador ? "Entrenamiento" : "Administración"}</span>
             <span className="text-content-muted">/</span>
             <span className="text-content-muted">Panel General</span>
           </div>
@@ -33,13 +34,18 @@ export default async function AdminUsuariosPage() {
             Miembros del Gimnasio
           </h1>
           <p className="text-sm text-content-muted mt-1">
-            Administrá altas, modificaciones, asignación de planes y estado de membresía de los usuarios.
+            Administrá altas, modificaciones, asignación de rutinas y planes de los usuarios.
           </p>
         </div>
       </div>
 
       {/* Componente interactivo de listado, filtros, paginación y ABM */}
-      <UsuariosClient initialData={initialData} planes={planes} isSuperAdmin={isSuperAdmin} />
+      <UsuariosClient
+        initialData={initialData}
+        planes={planes}
+        isSuperAdmin={isSuperAdmin}
+        isEntrenador={isEntrenador}
+      />
     </div>
   );
 }

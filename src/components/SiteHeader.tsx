@@ -37,6 +37,14 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
       { href: "/admin/plan", label: "Planes" },
       { href: "/admin/economia", label: "Economía" },
     ];
+  } else if (currentUser?.role === "ENTRENADOR") {
+    // Menú para Entrenadores (sin acceso a Economía ni Planes comerciales)
+    rawNavLinks = [
+      { href: "/", label: "Inicio" },
+      { href: "/admin/rutinas", label: "Rutinas" },
+      { href: "/admin/ejercicios", label: "Ejercicios" },
+      { href: "/admin/usuarios", label: "Usuarios" },
+    ];
   } else if (currentUser?.role === "USER") {
     // Menú exclusivo para Usuarios Comunes (Atletas / Miembros)
     rawNavLinks = [
@@ -177,9 +185,11 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
                   <span className="text-[10px] font-medium text-content-muted">
                     {currentUser.role === "USER"
                       ? "Miembro"
-                      : currentUser.role === "ADMIN"
-                        ? "Admin"
-                        : "SuperAdmin"}
+                      : currentUser.role === "ENTRENADOR"
+                        ? "Entrenador"
+                        : currentUser.role === "ADMIN"
+                          ? "Admin"
+                          : "SuperAdmin"}
                   </span>
                 </div>
               </Link>
@@ -271,9 +281,11 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
                   <span className="text-xs text-content-muted">
                     {currentUser.role === "USER"
                       ? "Miembro del Gimnasio"
-                      : currentUser.role === "ADMIN"
-                        ? "Administrador"
-                        : "Super Administrador"}
+                      : currentUser.role === "ENTRENADOR"
+                        ? "Entrenador"
+                        : currentUser.role === "ADMIN"
+                          ? "Administrador"
+                          : "Super Administrador"}
                   </span>
                 </div>
               </div>

@@ -83,7 +83,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               Accedé en 1 clic para probar los permisos de cada tipo de cuenta:
             </p>
 
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 pt-1">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 pt-1">
               <form action={iniciarSesionComo.bind(null, "USER", callbackUrl)}>
                 <Button
                   type="submit"
@@ -93,6 +93,18 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                   title="DNI: 30000003 — Acceso directo sin clave"
                 >
                   👤 Miembro
+                </Button>
+              </form>
+
+              <form action={iniciarSesionComo.bind(null, "ENTRENADOR", callbackUrl)}>
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  size="sm"
+                  className="w-full text-xs font-medium border-sky-500/30 text-sky-600 dark:text-sky-400"
+                  title="DNI: 25000004 — Entrenador (Rutinas y Ejercicios)"
+                >
+                  🏋️ Entrenador
                 </Button>
               </form>
 

@@ -284,6 +284,11 @@ export async function togglePagoMes({
   metodoPago?: string;
 }) {
   try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser || (currentUser.role !== "ADMIN" && currentUser.role !== "SUPERADMIN")) {
+      return { success: false, error: "No autorizado para gestionar pagos." };
+    }
+
     const pagoExistente = await prisma.pago.findUnique({
       where: {
         usuarioId_anio_mes: {
@@ -354,6 +359,11 @@ export async function registrarPagoDetallado({
   notas?: string;
 }) {
   try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser || (currentUser.role !== "ADMIN" && currentUser.role !== "SUPERADMIN")) {
+      return { success: false, error: "No autorizado para registrar pagos." };
+    }
+
     const montoNum = Math.max(0, Number(monto) || 0);
 
     const pago = await prisma.pago.upsert({
