@@ -23,12 +23,26 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    // Solo ADMIN o SUPERADMIN tienen autorización para ingresar a /admin
-    if (session.role !== "ADMIN" && session.role !== "SUPERADMIN") {
+    // Solo ADMIN, SUPERADMIN o ENTRENADOR tienen autorización para ingresar a /admin
+    if (
+      session.role !== "ADMIN" &&
+      session.role !== "SUPERADMIN" &&
+      session.role !== "ENTRENADOR"
+    ) {
       // Si es un usuario común (USER), redirigir a su vista de miembro
       const memberUrl = new URL("/mi-rutina", request.url);
       memberUrl.searchParams.set("error", "acceso_denegado");
       return NextResponse.redirect(memberUrl);
+    }
+
+    // El rol ENTRENADOR NO tiene acceso a la parte económica ni a planes comerciales
+    if (
+      session.role === "ENTRENADOR" &&
+      (pathname.startsWith("/admin/economia") || pathname.startsWith("/admin/plan"))
+    ) {
+      const trainerUrl = new URL("/admin/rutinas", request.url);
+      trainerUrl.searchParams.set("error", "acceso_economia_denegado");
+      return NextResponse.redirect(trainerUrl);
     }
   }
 

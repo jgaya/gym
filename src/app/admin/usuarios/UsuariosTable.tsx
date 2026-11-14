@@ -76,6 +76,8 @@ export function UsuariosTable({
         return <Badge variant="primary">Super Admin</Badge>;
       case Role.ADMIN:
         return <Badge variant="warning">Admin</Badge>;
+      case Role.ENTRENADOR:
+        return <Badge variant="info">Entrenador</Badge>;
       default:
         return <Badge variant="default">Miembro</Badge>;
     }

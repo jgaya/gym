@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth";
 import { getEconomiaData } from "./actions";
 import { EconomiaClient } from "./EconomiaClient";
 
@@ -9,6 +11,11 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminEconomiaPage() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser || (currentUser.role !== "ADMIN" && currentUser.role !== "SUPERADMIN")) {
+    redirect("/admin/rutinas?error=acceso_economia_denegado");
+  }
+
   // Carga inicial de datos en el servidor
   const initialData = await getEconomiaData();
 

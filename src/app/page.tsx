@@ -90,7 +90,10 @@ function TikTokIcon({ className = "h-5 w-5" }: { className?: string }) {
 
 export default async function Home() {
   const user = await getCurrentUser();
-  const isAdmin = user?.role === "ADMIN" || user?.role === "SUPERADMIN";
+  const isAdmin =
+    user?.role === "ADMIN" ||
+    user?.role === "SUPERADMIN" ||
+    user?.role === "ENTRENADOR";
   const isMember = user?.role === "USER";
 
   return (

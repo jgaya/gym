@@ -63,6 +63,7 @@ export async function getUsuarios({
   try {
     const sessionUser = await getCurrentUser();
     const isSuperAdmin = sessionUser?.role === Role.SUPERADMIN;
+    const isEntrenador = sessionUser?.role === Role.ENTRENADOR;
 
     const currentPage = Math.max(1, page);
     const take = Math.max(1, Math.min(100, pageSize));
@@ -75,8 +76,11 @@ export async function getUsuarios({
       deletedAt: null, // Excluir soft-deleted
     };
 
-    // Si el usuario autenticado NO es SUPERADMIN, ocultar completamente los usuarios SUPERADMIN
-    if (!isSuperAdmin) {
+    // Si es ENTRENADOR, solo ve Miembros (USER) y Entrenadores (ENTRENADOR)
+    // Si es ADMIN, oculta SUPERADMIN
+    if (isEntrenador) {
+      where.role = { in: [Role.USER, Role.ENTRENADOR] };
+    } else if (!isSuperAdmin) {
       where.role = { not: Role.SUPERADMIN };
     }
 
@@ -90,7 +94,13 @@ export async function getUsuarios({
       ];
     }
 
-    if (role !== "ALL" && (role === "USER" || role === "ADMIN" || (role === "SUPERADMIN" && isSuperAdmin))) {
+    if (
+      role !== "ALL" &&
+      (role === "USER" ||
+        role === "ENTRENADOR" ||
+        (role === "ADMIN" && !isEntrenador) ||
+        (role === "SUPERADMIN" && isSuperAdmin))
+    ) {
       where.role = role as Role;
     }
 
@@ -210,19 +220,27 @@ export async function crearUsuario(data: UsuarioFormData) {
       return { success: false, error: "Ya existe un usuario con este DNI" };
     }
 
-    // Si el usuario es ADMIN o SUPERADMIN, asignamos o generamos contraseña hasheada
+    // Si el usuario es ENTRENADOR, ADMIN o SUPERADMIN, asignamos o generamos contraseña hasheada
     let passwordHash: string | null = null;
     let targetRole = role || Role.USER;
 
     const sessionUser = await getCurrentUser();
     const isSuperAdmin = sessionUser?.role === Role.SUPERADMIN;
+    const isEntrenador = sessionUser?.role === Role.ENTRENADOR;
 
-    // Un ADMIN común no puede crear usuarios SUPERADMIN
-    if (targetRole === Role.SUPERADMIN && !isSuperAdmin) {
+    // Un ENTRENADOR solo puede dar de alta usuarios con rol USER
+    if (isEntrenador) {
+      targetRole = Role.USER;
+    } else if (targetRole === Role.SUPERADMIN && !isSuperAdmin) {
+      // Un ADMIN común no puede crear usuarios SUPERADMIN
       targetRole = Role.ADMIN;
     }
 
-    if (targetRole === Role.ADMIN || targetRole === Role.SUPERADMIN) {
+    if (
+      targetRole === Role.ENTRENADOR ||
+      targetRole === Role.ADMIN ||
+      targetRole === Role.SUPERADMIN
+    ) {
       passwordHash = hashPassword(password && password.trim() ? password.trim() : "admin123");
     }
 
@@ -264,9 +282,15 @@ export async function actualizarUsuario(id: number, data: UsuarioFormData) {
 
     const sessionUser = await getCurrentUser();
     const isSuperAdmin = sessionUser?.role === Role.SUPERADMIN;
+    const isEntrenador = sessionUser?.role === Role.ENTRENADOR;
 
-    // Un ADMIN común no puede modificar a un SUPERADMIN
-    if (usuarioExistente.role === Role.SUPERADMIN && !isSuperAdmin) {
+    // Un ADMIN común no puede modificar a un SUPERADMIN, y un ENTRENADOR no puede modificar a un ADMIN/SUPERADMIN
+    if (
+      (usuarioExistente.role === Role.SUPERADMIN && !isSuperAdmin) ||
+      (isEntrenador &&
+        (usuarioExistente.role === Role.ADMIN ||
+          usuarioExistente.role === Role.SUPERADMIN))
+    ) {
       return { success: false, error: "No tienes permisos para modificar este usuario" };
     }
 
@@ -287,8 +311,10 @@ export async function actualizarUsuario(id: number, data: UsuarioFormData) {
     }
 
     let targetRole = role || Role.USER;
-    // Un ADMIN común no puede promover a nadie a SUPERADMIN
-    if (targetRole === Role.SUPERADMIN && !isSuperAdmin) {
+    if (isEntrenador) {
+      targetRole = usuarioExistente.role;
+    } else if (targetRole === Role.SUPERADMIN && !isSuperAdmin) {
+      // Un ADMIN común no puede promover a nadie a SUPERADMIN
       targetRole = usuarioExistente.role === Role.SUPERADMIN ? Role.SUPERADMIN : Role.ADMIN;
     }
 
@@ -305,7 +331,11 @@ export async function actualizarUsuario(id: number, data: UsuarioFormData) {
       isActive: isActive !== undefined ? isActive : usuarioExistente.isActive,
     };
 
-    if (targetRole === Role.ADMIN || targetRole === Role.SUPERADMIN) {
+    if (
+      targetRole === Role.ENTRENADOR ||
+      targetRole === Role.ADMIN ||
+      targetRole === Role.SUPERADMIN
+    ) {
       if (password && password.trim()) {
         updateData.passwordHash = hashPassword(password.trim());
       } else if (!usuarioExistente.passwordHash) {
@@ -338,8 +368,13 @@ export async function toggleEstadoUsuario(id: number) {
 
     const sessionUser = await getCurrentUser();
     const isSuperAdmin = sessionUser?.role === Role.SUPERADMIN;
+    const isEntrenador = sessionUser?.role === Role.ENTRENADOR;
 
-    if (usuario.role === Role.SUPERADMIN && !isSuperAdmin) {
+    if (
+      (usuario.role === Role.SUPERADMIN && !isSuperAdmin) ||
+      (isEntrenador &&
+        (usuario.role === Role.ADMIN || usuario.role === Role.SUPERADMIN))
+    ) {
       return { success: false, error: "No tienes permisos para modificar este usuario" };
     }
 
@@ -366,8 +401,13 @@ export async function eliminarUsuario(id: number) {
 
     const sessionUser = await getCurrentUser();
     const isSuperAdmin = sessionUser?.role === Role.SUPERADMIN;
+    const isEntrenador = sessionUser?.role === Role.ENTRENADOR;
 
-    if (usuario.role === Role.SUPERADMIN && !isSuperAdmin) {
+    if (
+      (usuario.role === Role.SUPERADMIN && !isSuperAdmin) ||
+      (isEntrenador &&
+        (usuario.role === Role.ADMIN || usuario.role === Role.SUPERADMIN))
+    ) {
       return { success: false, error: "No tienes permisos para eliminar este usuario" };
     }
 

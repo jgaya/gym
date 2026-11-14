@@ -25,6 +25,7 @@ interface UsuarioFormModalProps {
   usuario?: UsuarioItem | null;
   planes: PlanOption[];
   isSuperAdmin?: boolean;
+  isEntrenador?: boolean;
   onSuccess: () => void;
 }
 
@@ -34,6 +35,7 @@ export function UsuarioFormModal({
   usuario,
   planes,
   isSuperAdmin = false,
+  isEntrenador = false,
   onSuccess,
 }: UsuarioFormModalProps) {
   const isEditing = Boolean(usuario);
@@ -277,9 +279,11 @@ export function UsuarioFormModal({
             name="role"
             value={formData.role}
             onChange={handleChange}
+            disabled={isEntrenador}
           >
             <option value={Role.USER}>Usuario (Miembro del Gym)</option>
-            <option value={Role.ADMIN}>Administrador</option>
+            <option value={Role.ENTRENADOR}>Entrenador</option>
+            {!isEntrenador && <option value={Role.ADMIN}>Administrador</option>}
             {isSuperAdmin && (
               <option value={Role.SUPERADMIN}>Super Administrador</option>
             )}
@@ -300,11 +304,13 @@ export function UsuarioFormModal({
           </Select>
         </div>
 
-        {(formData.role === Role.ADMIN || formData.role === Role.SUPERADMIN) && (
+        {(formData.role === Role.ENTRENADOR ||
+          formData.role === Role.ADMIN ||
+          formData.role === Role.SUPERADMIN) && (
           <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5 space-y-2">
             <div className="flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-amber-400">
               <span>🔐</span>
-              <span>Seguridad de Acceso Administrativo</span>
+              <span>Seguridad de Acceso ({formData.role === Role.ENTRENADOR ? "Entrenador" : "Administrativo"})</span>
             </div>
             <Input
               label="Contraseña"
@@ -315,7 +321,7 @@ export function UsuarioFormModal({
               placeholder={isEditing ? "Dejar vacío para no modificar la contraseña actual" : "admin123 (por defecto)"}
               helperText={
                 isEditing
-                  ? "Solo completá este campo si deseás cambiar la contraseña del administrador."
+                  ? "Solo completá este campo si deseás cambiar la contraseña actual."
                   : "Contraseña para ingresar al panel. Si la dejás vacía, será 'admin123'."
               }
             />

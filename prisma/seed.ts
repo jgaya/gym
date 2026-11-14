@@ -109,6 +109,32 @@ async function main() {
     },
   });
 
+  // Entrenador
+  const entrenador = await prisma.usuario.upsert({
+    where: { email: "entrenador@gymmeraki.com" },
+    update: {
+      nombre: "Sofía",
+      apellido: "Coach",
+      telefono: "+54 9 11 8888-0004",
+      dni: "25000004",
+      direccion: "Av. Cabildo 1800, CABA",
+      role: Role.ENTRENADOR,
+      passwordHash: defaultAdminPassHash,
+      isActive: true,
+    },
+    create: {
+      email: "entrenador@gymmeraki.com",
+      nombre: "Sofía",
+      apellido: "Coach",
+      telefono: "+54 9 11 8888-0004",
+      dni: "25000004",
+      direccion: "Av. Cabildo 1800, CABA",
+      role: Role.ENTRENADOR,
+      passwordHash: defaultAdminPassHash,
+      isActive: true,
+    },
+  });
+
   // Usuario Regular (Miembro)
   const usuario = await prisma.usuario.upsert({
     where: { email: "usuario@gymmeraki.com" },

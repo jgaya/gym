@@ -63,8 +63,12 @@ export async function autenticarPorDni({
       };
     }
 
-    // Si es ADMIN o SUPERADMIN, requiere contraseña obligatoria
-    if (usuario.role === Role.ADMIN || usuario.role === Role.SUPERADMIN) {
+    // Si es ENTRENADOR, ADMIN o SUPERADMIN, requiere contraseña obligatoria
+    if (
+      usuario.role === Role.ENTRENADOR ||
+      usuario.role === Role.ADMIN ||
+      usuario.role === Role.SUPERADMIN
+    ) {
       if (!password || !password.trim()) {
         return {
           success: false,
@@ -105,7 +109,12 @@ export async function autenticarPorDni({
 
     revalidatePath("/", "layout");
 
-    const destinoDefault = usuario.role === Role.USER ? "/mi-rutina" : "/admin/usuarios";
+    const destinoDefault =
+      usuario.role === Role.USER
+        ? "/mi-rutina"
+        : usuario.role === Role.ENTRENADOR
+          ? "/admin/rutinas"
+          : "/admin/usuarios";
     const redirectUrl = callbackUrl || destinoDefault;
 
     return {
@@ -126,10 +135,16 @@ export async function autenticarPorDni({
  * Atajo para pruebas y desarrollo: Inicia sesión directamente como un rol dado
  */
 export async function iniciarSesionComo(
-  rol: "USER" | "ADMIN" | "SUPERADMIN",
+  rol: "USER" | "ENTRENADOR" | "ADMIN" | "SUPERADMIN",
   callbackUrl?: string
 ): Promise<void> {
-  let destino = callbackUrl || (rol === "USER" ? "/mi-rutina" : "/admin/usuarios");
+  let destino =
+    callbackUrl ||
+    (rol === "USER"
+      ? "/mi-rutina"
+      : rol === "ENTRENADOR"
+        ? "/admin/rutinas"
+        : "/admin/usuarios");
 
   try {
     let usuario = await prisma.usuario.findFirst({
@@ -142,12 +157,33 @@ export async function iniciarSesionComo(
 
     if (!usuario) {
       const sufijo = rol.toLowerCase();
-      const defaultDni = rol === "SUPERADMIN" ? "10000001" : rol === "ADMIN" ? "20000002" : "30000003";
+      const defaultDni =
+        rol === "SUPERADMIN"
+          ? "10000001"
+          : rol === "ADMIN"
+            ? "20000002"
+            : rol === "ENTRENADOR"
+              ? "25000004"
+              : "30000003";
       usuario = await prisma.usuario.create({
         data: {
           email: `${sufijo}@gymmeraki.com`,
-          nombre: rol === "USER" ? "Lucas" : rol === "ADMIN" ? "Martín" : "Gonzalo",
-          apellido: rol === "USER" ? "Gómez" : rol === "ADMIN" ? "Admin" : "SuperAdmin",
+          nombre:
+            rol === "USER"
+              ? "Lucas"
+              : rol === "ENTRENADOR"
+                ? "Sofía"
+                : rol === "ADMIN"
+                  ? "Martín"
+                  : "Gonzalo",
+          apellido:
+            rol === "USER"
+              ? "Gómez"
+              : rol === "ENTRENADOR"
+                ? "Coach"
+                : rol === "ADMIN"
+                  ? "Admin"
+                  : "SuperAdmin",
           telefono: "+54 9 11 5555-0000",
           dni: defaultDni,
           role: rol,
