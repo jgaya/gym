@@ -1,72 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-
-interface FontStep {
-  value: number; // porcentaje (75, 90, 100, 125, 150)
-  label: string;
-  tag: string;
-}
-
-const FONT_STEPS: FontStep[] = [
-  { value: 75, label: "75%", tag: "Compacto" },
-  { value: 90, label: "90%", tag: "Reducido" },
-  { value: 100, label: "100%", tag: "Estándar (Actual)" },
-  { value: 125, label: "125%", tag: "Aumentado" },
-  { value: 150, label: "150%", tag: "Grande" },
-];
-
-const STORAGE_KEY = "gym-font-size";
+import { FONT_STEPS, DEFAULT_FONT_STEP_INDEX } from "@/lib/fontSize";
+import { useFontSize } from "@/lib/useFontSize";
 
 export function PreferenciasVisuales() {
-  const [stepIndex, setStepIndex] = useState<number>(2); // 2 = 100% (el medio)
-  const [mounted, setMounted] = useState(false);
-
-  // Cargar tamaño guardado al montar en el cliente
-  useEffect(() => {
-    setMounted(true);
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const numeric = parseInt(stored, 10);
-        const foundIndex = FONT_STEPS.findIndex((s) => s.value === numeric);
-        if (foundIndex !== -1) {
-          setStepIndex(foundIndex);
-          document.documentElement.style.fontSize = `${FONT_STEPS[foundIndex].value}%`;
-          return;
-        }
-      }
-      // Si no hay o no coincide, asegurar 100%
-      document.documentElement.style.fontSize = "100%";
-    } catch {
-      // Ignorar errores en modo privado/incógnito
-    }
-  }, []);
-
-  const applyFontSize = (index: number) => {
-    const clampedIndex = Math.max(0, Math.min(FONT_STEPS.length - 1, index));
-    setStepIndex(clampedIndex);
-    const chosenStep = FONT_STEPS[clampedIndex];
-
-    try {
-      document.documentElement.style.fontSize = `${chosenStep.value}%`;
-      localStorage.setItem(STORAGE_KEY, `${chosenStep.value}%`);
-    } catch {
-      // Fallback si localStorage falla
-    }
-  };
+  const { stepIndex, currentStep, mounted, setFontSizeIndex, resetFontSize } =
+    useFontSize();
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    applyFontSize(Number(e.target.value));
+    setFontSizeIndex(Number(e.target.value));
   };
-
-  const handleReset = () => {
-    applyFontSize(2); // Volver al centro: 100%
-  };
-
-  const currentStep = FONT_STEPS[stepIndex];
 
   return (
     <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm space-y-6">
@@ -89,7 +35,7 @@ export function PreferenciasVisuales() {
               type="button"
               variant="outline"
               size="sm"
-              onClick={handleReset}
+              onClick={resetFontSize}
               className="text-xs"
             >
               Restablecer
@@ -112,13 +58,13 @@ export function PreferenciasVisuales() {
             min={0}
             max={FONT_STEPS.length - 1}
             step={1}
-            value={mounted ? stepIndex : 2}
+            value={mounted ? stepIndex : DEFAULT_FONT_STEP_INDEX}
             onChange={handleSliderChange}
             aria-label="Escala de tamaño de fuente"
             className="w-full h-2.5 bg-surface-hover rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none focus:ring-2 focus:ring-primary"
           />
 
-          {/* Marcas de posición (75%, 90%, 100%, 125%, 150%) */}
+          {/* Marcas de posición (90%, 100%, 105%, 110%, 120%, 150%) */}
           <div className="flex justify-between items-center mt-3 pt-1">
             {FONT_STEPS.map((step, idx) => {
               const isSelected = idx === stepIndex;
@@ -128,7 +74,7 @@ export function PreferenciasVisuales() {
                 <button
                   key={step.value}
                   type="button"
-                  onClick={() => applyFontSize(idx)}
+                  onClick={() => setFontSizeIndex(idx)}
                   className={`flex flex-col items-center transition-all cursor-pointer group ${isSelected ? "text-primary scale-105" : "text-content-muted hover:text-content"
                     }`}
                 >

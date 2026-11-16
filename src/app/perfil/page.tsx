@@ -37,6 +37,13 @@ export default async function PerfilPage() {
   const usuario = await prisma.usuario.findUnique({
     where: { id: sessionUser.id },
     include: {
+      sucursal: {
+        select: {
+          id: true,
+          barrio: true,
+          direccion: true,
+        },
+      },
       plan: {
         select: {
           id: true,
@@ -107,6 +114,14 @@ export default async function PerfilPage() {
                 <span>DNI: {usuario.dni}</span>
                 <span>•</span>
                 <span>Tel: {usuario.telefono}</span>
+                {usuario.sucursal && (
+                  <>
+                    <span>•</span>
+                    <span className="font-semibold text-content">
+                      📍 Sucursal {usuario.sucursal.barrio} ({usuario.sucursal.direccion})
+                    </span>
+                  </>
+                )}
                 {usuario.plan && (
                   <>
                     <span>•</span>

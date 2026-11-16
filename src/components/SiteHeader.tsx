@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
+import { FontSizeSelector } from "./FontSizeSelector";
 import { SessionUser } from "@/lib/auth";
 import { cerrarSesion } from "@/app/login/actions";
 
@@ -34,7 +35,9 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
       { href: "/admin/rutinas", label: "Rutinas" },
       { href: "/admin/ejercicios", label: "Ejercicios" },
       { href: "/admin/usuarios", label: "Usuarios" },
+      { href: "/admin/sucursales", label: "Sucursales" },
       { href: "/admin/plan", label: "Planes" },
+      { href: "/admin/kiosco", label: "Kiosco" },
       { href: "/admin/economia", label: "Economía" },
     ];
   } else if (currentUser?.role === "ENTRENADOR") {
@@ -166,6 +169,7 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
 
         {/* Acciones de la derecha (Desktop) */}
         <div className="hidden md:flex items-center gap-3">
+          <FontSizeSelector />
           <ThemeToggle />
 
           {currentUser ? (
@@ -230,6 +234,7 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
 
         {/* Botón de Menú Hamburguesa (VISIBLE ÚNICAMENTE EN MOBILE) */}
         <div className="flex md:hidden items-center gap-2">
+          <FontSizeSelector />
           <ThemeToggle />
 
           <button

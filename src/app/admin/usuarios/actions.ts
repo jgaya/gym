@@ -12,6 +12,7 @@ export interface GetUsuariosParams {
   search?: string;
   role?: string;
   status?: string;
+  sucursalId?: string;
 }
 
 export interface UsuarioItem {
@@ -28,6 +29,12 @@ export interface UsuarioItem {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  sucursalId: number | null;
+  sucursal: {
+    id: number;
+    barrio: string;
+    direccion: string;
+  } | null;
   planId: number | null;
   plan: {
     id: number;
@@ -59,6 +66,7 @@ export async function getUsuarios({
   search = "",
   role = "ALL",
   status = "ALL",
+  sucursalId = "ALL",
 }: GetUsuariosParams = {}): Promise<GetUsuariosResult> {
   try {
     const sessionUser = await getCurrentUser();
@@ -110,6 +118,14 @@ export async function getUsuarios({
       where.isActive = false;
     }
 
+    if (sucursalId !== "ALL") {
+      if (sucursalId === "NONE") {
+        where.sucursalId = null;
+      } else {
+        where.sucursalId = Number(sucursalId);
+      }
+    }
+
     const [totalItems, usuarios] = await Promise.all([
       prisma.usuario.count({ where }),
       prisma.usuario.findMany({
@@ -118,6 +134,13 @@ export async function getUsuarios({
         skip,
         orderBy: { createdAt: "desc" },
         include: {
+          sucursal: {
+            select: {
+              id: true,
+              barrio: true,
+              direccion: true,
+            },
+          },
           plan: {
             select: {
               id: true,
@@ -181,6 +204,23 @@ export async function getPlanesDisponibles() {
   }
 }
 
+export async function getSucursalesDisponibles() {
+  try {
+    return await prisma.sucursal.findMany({
+      where: { isActive: true },
+      select: {
+        id: true,
+        barrio: true,
+        direccion: true,
+      },
+      orderBy: { id: "asc" },
+    });
+  } catch (error) {
+    console.error("Error al obtener sucursales:", error);
+    return [];
+  }
+}
+
 export interface UsuarioFormData {
   nombre: string;
   apellido: string;
@@ -191,14 +231,27 @@ export interface UsuarioFormData {
   birthDate?: string; // YYYY-MM-DD
   role: Role;
   password?: string;
+  sucursalId?: number | null;
   planId?: number | null;
   isActive?: boolean;
 }
 
 export async function crearUsuario(data: UsuarioFormData) {
   try {
-    const { nombre, apellido, email, telefono, dni, direccion, birthDate, role, password, planId, isActive } =
-      data;
+    const {
+      nombre,
+      apellido,
+      email,
+      telefono,
+      dni,
+      direccion,
+      birthDate,
+      role,
+      password,
+      sucursalId,
+      planId,
+      isActive,
+    } = data;
 
     if (!nombre || !apellido || !email || !telefono || !dni) {
       return { success: false, error: "Todos los campos obligatorios deben completarse" };
@@ -255,12 +308,15 @@ export async function crearUsuario(data: UsuarioFormData) {
         birthDate: birthDate ? new Date(birthDate) : null,
         role: targetRole,
         passwordHash,
+        sucursalId: sucursalId ? Number(sucursalId) : null,
         planId: planId ? Number(planId) : null,
         isActive: isActive !== undefined ? isActive : true,
       },
     });
 
     revalidatePath("/admin/usuarios");
+    revalidatePath("/admin/economia");
+    revalidatePath("/admin/sucursales");
     return { success: true, usuario: nuevoUsuario };
   } catch (error: unknown) {
     console.error("Error al crear usuario:", error);
@@ -271,8 +327,20 @@ export async function crearUsuario(data: UsuarioFormData) {
 
 export async function actualizarUsuario(id: number, data: UsuarioFormData) {
   try {
-    const { nombre, apellido, email, telefono, dni, direccion, birthDate, role, password, planId, isActive } =
-      data;
+    const {
+      nombre,
+      apellido,
+      email,
+      telefono,
+      dni,
+      direccion,
+      birthDate,
+      role,
+      password,
+      sucursalId,
+      planId,
+      isActive,
+    } = data;
 
     // Verificar existencia
     const usuarioExistente = await prisma.usuario.findUnique({ where: { id } });
@@ -327,6 +395,9 @@ export async function actualizarUsuario(id: number, data: UsuarioFormData) {
       direccion: direccion?.trim() || null,
       birthDate: birthDate ? new Date(birthDate) : null,
       role: targetRole,
+      sucursal: sucursalId
+        ? { connect: { id: Number(sucursalId) } }
+        : { disconnect: true },
       plan: planId ? { connect: { id: Number(planId) } } : { disconnect: true },
       isActive: isActive !== undefined ? isActive : usuarioExistente.isActive,
     };

@@ -1,16 +1,28 @@
 "use client";
 
 import React, { useState, useTransition, useMemo } from "react";
+import Link from "next/link";
+import {
+  ActionsMenu,
+  EditIcon,
+  WhatsAppIcon,
+} from "@/components/ui/ActionsMenu";
 import {
   togglePagoMes,
   registrarPagoDetallado,
   getEconomiaData,
   crearLinkCobroOnline,
+  crearGastoOperativo,
+  actualizarGastoOperativo,
+  eliminarGastoOperativo,
+  clonarGastosRecurrentesMesAnterior,
 } from "./actions";
 import {
   MESES_NOMBRES,
+  CATEGORIAS_GASTO,
   type EconomiaDataResponse,
   type UsuarioEconomiaItem,
+  type GastoOperativoItem,
 } from "./types";
 import { exportarBalanceExcel, exportarBalancePDF } from "./exportUtils";
 
@@ -22,6 +34,9 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
   const [data, setData] = useState<EconomiaDataResponse>(initialData);
   const [selectedMes, setSelectedMes] = useState<number>(initialData.metricas.mes);
   const [selectedAnio, setSelectedAnio] = useState<number>(initialData.metricas.anio);
+  const [selectedSucursalId, setSelectedSucursalId] = useState<number | null>(
+    initialData.sucursalSeleccionadaId ?? null
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<
     "todos" | "pagados" | "pendientes" | "vencidos_10" | "vencidos_15"
@@ -62,16 +77,212 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
   const [mostrarConfigBanco, setMostrarConfigBanco] = useState(false);
   const [copiadoWaText, setCopiadoWaText] = useState(false);
 
+  // Estados para Gestión de Gastos Operativos y Margen Neto (Sugerencia 2)
+  const [modalGastoOpen, setModalGastoOpen] = useState(false);
+  const [editandoGasto, setEditandoGasto] = useState<GastoOperativoItem | null>(null);
+  const [gastoSucursalId, setGastoSucursalId] = useState<number>(
+    initialData.sucursalSeleccionadaId ?? initialData.sucursalesResumen[0]?.id ?? 1
+  );
+  const [gastoConcepto, setGastoConcepto] = useState("");
+  const [gastoCategoria, setGastoCategoria] = useState<string>("Alquiler");
+  const [gastoMonto, setGastoMonto] = useState<string>("");
+  const [gastoMetodoPago, setGastoMetodoPago] = useState<string>("Transferencia");
+  const [gastoComprobante, setGastoComprobante] = useState<string>("");
+  const [gastoNotas, setGastoNotas] = useState<string>("");
+  const [gastoRecurrente, setGastoRecurrente] = useState<boolean>(true);
+  const [isSubmittingGasto, setIsSubmittingGasto] = useState(false);
+  const [filtroCategoriaGasto, setFiltroCategoriaGasto] = useState<string>("todas");
+  const [searchGastoQuery, setSearchGastoQuery] = useState<string>("");
+
+  const handleOpenModalNuevoGasto = (categoriaInicial = "Alquiler") => {
+    setEditandoGasto(null);
+    setGastoSucursalId(
+      selectedSucursalId ?? data.sucursalesResumen[0]?.id ?? 1
+    );
+    setGastoConcepto("");
+    setGastoCategoria(categoriaInicial);
+    setGastoMonto("");
+    setGastoMetodoPago("Transferencia");
+    setGastoComprobante("");
+    setGastoNotas("");
+    setGastoRecurrente(
+      categoriaInicial === "Alquiler" ||
+        categoriaInicial === "Profesores" ||
+        categoriaInicial === "Luz y Servicios"
+    );
+    setModalGastoOpen(true);
+  };
+
+  const handleOpenModalEditarGasto = (gasto: GastoOperativoItem) => {
+    setEditandoGasto(gasto);
+    setGastoSucursalId(gasto.sucursalId);
+    setGastoConcepto(gasto.concepto);
+    setGastoCategoria(gasto.categoria);
+    setGastoMonto(String(gasto.monto));
+    setGastoMetodoPago(gasto.metodoPago);
+    setGastoComprobante(gasto.comprobante || "");
+    setGastoNotas(gasto.notas || "");
+    setGastoRecurrente(gasto.esRecurrente);
+    setModalGastoOpen(true);
+  };
+
+  const handleGuardarGasto = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmittingGasto(true);
+    try {
+      const res = editandoGasto
+        ? await actualizarGastoOperativo({
+            id: editandoGasto.id,
+            sucursalId: Number(gastoSucursalId),
+            concepto: gastoConcepto,
+            categoria: gastoCategoria,
+            monto: Number(gastoMonto),
+            metodoPago: gastoMetodoPago,
+            comprobante: gastoComprobante,
+            notas: gastoNotas,
+            esRecurrente: gastoRecurrente,
+          })
+        : await crearGastoOperativo({
+            sucursalId: Number(gastoSucursalId),
+            concepto: gastoConcepto,
+            categoria: gastoCategoria,
+            monto: Number(gastoMonto),
+            metodoPago: gastoMetodoPago,
+            comprobante: gastoComprobante,
+            notas: gastoNotas,
+            esRecurrente: gastoRecurrente,
+            mes: selectedMes,
+            anio: selectedAnio,
+          });
+
+      if (res.success) {
+        const updated = await getEconomiaData({
+          mes: selectedMes,
+          anio: selectedAnio,
+          sucursalId: selectedSucursalId,
+        });
+        setData(updated);
+        setModalGastoOpen(false);
+        setFeedbackMsg({
+          type: "success",
+          text: editandoGasto
+            ? "Gasto operativo actualizado correctamente."
+            : "Gasto operativo registrado y descontado del margen neto.",
+        });
+        setTimeout(() => setFeedbackMsg(null), 4000);
+      } else {
+        setFeedbackMsg({
+          type: "error",
+          text: res.error || "Error al guardar el gasto operativo.",
+        });
+        setTimeout(() => setFeedbackMsg(null), 4000);
+      }
+    } finally {
+      setIsSubmittingGasto(false);
+    }
+  };
+
+  const handleEliminarGasto = (gasto: GastoOperativoItem) => {
+    startTransition(async () => {
+      const res = await eliminarGastoOperativo(gasto.id);
+      if (res.success) {
+        const updated = await getEconomiaData({
+          mes: selectedMes,
+          anio: selectedAnio,
+          sucursalId: selectedSucursalId,
+        });
+        setData(updated);
+        setFeedbackMsg({
+          type: "success",
+          text: `Gasto "${gasto.concepto}" eliminado.`,
+        });
+        setTimeout(() => setFeedbackMsg(null), 4000);
+      } else {
+        setFeedbackMsg({
+          type: "error",
+          text: res.error || "No se pudo eliminar el gasto.",
+        });
+        setTimeout(() => setFeedbackMsg(null), 4000);
+      }
+    });
+  };
+
+  const handleClonarGastosMesAnterior = () => {
+    startTransition(async () => {
+      const res = await clonarGastosRecurrentesMesAnterior({
+        mes: selectedMes,
+        anio: selectedAnio,
+        sucursalId: selectedSucursalId,
+      });
+      if (res.success) {
+        const updated = await getEconomiaData({
+          mes: selectedMes,
+          anio: selectedAnio,
+          sucursalId: selectedSucursalId,
+        });
+        setData(updated);
+        setFeedbackMsg({
+          type: "success",
+          text: `Se copiaron ${res.cantidadCopiados} gastos fijos del mes anterior.`,
+        });
+        setTimeout(() => setFeedbackMsg(null), 4000);
+      } else {
+        setFeedbackMsg({
+          type: "error",
+          text: res.error || "No se pudieron copiar los gastos fijos.",
+        });
+        setTimeout(() => setFeedbackMsg(null), 4000);
+      }
+    });
+  };
+
+  const gastosFiltrados = useMemo(() => {
+    const lista = data.gastosOperativos || [];
+    return lista.filter((g) => {
+      const matchCat =
+        filtroCategoriaGasto === "todas" || g.categoria === filtroCategoriaGasto;
+      const q = searchGastoQuery.toLowerCase().trim();
+      const matchText =
+        !q ||
+        g.concepto.toLowerCase().includes(q) ||
+        g.categoria.toLowerCase().includes(q) ||
+        g.sucursal.barrio.toLowerCase().includes(q) ||
+        (g.notas && g.notas.toLowerCase().includes(q));
+      return matchCat && matchText;
+    });
+  }, [data.gastosOperativos, filtroCategoriaGasto, searchGastoQuery]);
+
   // Cambio de Mes / Año
   const handleCambiarPeriodo = (nuevoMes: number, nuevoAnio: number) => {
     setSelectedMes(nuevoMes);
     setSelectedAnio(nuevoAnio);
     startTransition(async () => {
       try {
-        const newData = await getEconomiaData({ mes: nuevoMes, anio: nuevoAnio });
+        const newData = await getEconomiaData({
+          mes: nuevoMes,
+          anio: nuevoAnio,
+          sucursalId: selectedSucursalId,
+        });
         setData(newData);
       } catch (err) {
         console.error("Error al cargar período:", err);
+      }
+    });
+  };
+
+  // Cambio de Vista: Global (null) o por Sucursal (id)
+  const handleCambiarSucursal = (nuevaSucursalId: number | null) => {
+    setSelectedSucursalId(nuevaSucursalId);
+    startTransition(async () => {
+      try {
+        const newData = await getEconomiaData({
+          mes: selectedMes,
+          anio: selectedAnio,
+          sucursalId: nuevaSucursalId,
+        });
+        setData(newData);
+      } catch (err) {
+        console.error("Error al cambiar vista de sucursal:", err);
       }
     });
   };
@@ -87,7 +298,11 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
 
       if (res.success) {
         // Refrescar datos
-        const updated = await getEconomiaData({ mes: selectedMes, anio: selectedAnio });
+        const updated = await getEconomiaData({
+          mes: selectedMes,
+          anio: selectedAnio,
+          sucursalId: selectedSucursalId,
+        });
         setData(updated);
         setFeedbackMsg({
           type: "success",
@@ -136,7 +351,11 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
       });
 
       if (res.success) {
-        const updated = await getEconomiaData({ mes: selectedMes, anio: selectedAnio });
+        const updated = await getEconomiaData({
+          mes: selectedMes,
+          anio: selectedAnio,
+          sucursalId: selectedSucursalId,
+        });
         setData(updated);
         setModalPagoUsuario(null);
         setFeedbackMsg({
@@ -425,6 +644,87 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
         </div>
       )}
 
+      {/* SELECTOR DE VISTA ECONÓMICA: GLOBAL (SUMATORIA DE TODAS LAS SUCURSALES) vs. POR SUCURSAL */}
+      <div className="bg-surface border border-border rounded-2xl p-4 sm:p-5 space-y-4 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            <span className="text-xs font-semibold text-primary uppercase tracking-wider">
+              Alcance Financiero
+            </span>
+            <h2 className="text-base sm:text-lg font-bold text-content">
+              {selectedSucursalId === null
+                ? "🌐 Vista Global — Sumatoria de todas las sucursales"
+                : (() => {
+                    const suc = data.sucursalesResumen.find(
+                      (s) => s.id === selectedSucursalId
+                    );
+                    return suc
+                      ? `📍 Vista por Sucursal: ${suc.barrio} (${suc.direccion})`
+                      : "📍 Vista por Sucursal";
+                  })()}
+            </h2>
+          </div>
+
+          {selectedSucursalId !== null && (
+            <button
+              type="button"
+              onClick={() => handleCambiarSucursal(null)}
+              disabled={isPending}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-primary/40 bg-primary/10 hover:bg-primary/20 text-primary text-xs font-bold transition-colors cursor-pointer self-start sm:self-auto"
+            >
+              <span>🌐</span>
+              <span>Volver a Vista Global (Sumatoria Total)</span>
+            </button>
+          )}
+        </div>
+
+        {/* Pestañas de selección de vista */}
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          <button
+            type="button"
+            onClick={() => handleCambiarSucursal(null)}
+            disabled={isPending}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              selectedSucursalId === null
+                ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                : "border-border bg-background text-content hover:bg-surface-hover"
+            }`}
+          >
+            <span>🌐</span>
+            <span>Vista Global (Todas las Sucursales)</span>
+          </button>
+
+          {data.sucursalesResumen.map((suc) => {
+            const isSelected = selectedSucursalId === suc.id;
+            return (
+              <button
+                key={suc.id}
+                type="button"
+                onClick={() => handleCambiarSucursal(suc.id)}
+                disabled={isPending}
+                className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                  isSelected
+                    ? "border-primary bg-primary text-primary-foreground font-bold shadow-sm"
+                    : "border-border bg-background text-content hover:bg-surface-hover"
+                }`}
+              >
+                <span>📍</span>
+                <span>{suc.barrio}</span>
+                <span
+                  className={`text-[11px] px-1.5 py-0.5 rounded-md font-bold ${
+                    isSelected
+                      ? "bg-black/20 text-primary-foreground"
+                      : "bg-emerald-500/10 text-emerald-400"
+                  }`}
+                >
+                  {formatMoney(suc.recaudacionTotalConKiosco)}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Selector de Período (Mes y Año) */}
       <div className="bg-surface border border-border rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
         <div className="flex items-center gap-3">
@@ -518,20 +818,244 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
         </div>
       </div>
 
-      {/* TARJETAS KPI RECAUDACIÓN Y COBRANZAS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* DESGLOSE POR SUCURSAL Y SUMATORIA GLOBAL (Visible en Vista Global) */}
+      {selectedSucursalId === null && data.sucursalesResumen.length > 0 && (
+        <div className="bg-surface border border-border rounded-2xl p-5 shadow-sm space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+                Comparativa de Sedes ({metricas.nombreMes} {metricas.anio})
+              </span>
+              <h3 className="text-base sm:text-lg font-bold text-content">
+                Balance por Sucursal y Sumatoria Global
+              </h3>
+            </div>
+            <span className="text-xs text-content-muted">
+              Hacé clic en cualquier sucursal para filtrar todo el tablero por esa sede
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {data.sucursalesResumen.map((suc) => (
+              <div
+                key={suc.id}
+                onClick={() => handleCambiarSucursal(suc.id)}
+                className="group rounded-xl border border-border bg-background p-4 hover:border-primary/50 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between space-y-3"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <span className="inline-flex items-center gap-1 text-xs font-extrabold uppercase tracking-wider text-primary">
+                        <span>📍</span>
+                        <span>{suc.barrio}</span>
+                      </span>
+                      <p className="text-xs text-content-muted mt-0.5">
+                        {suc.direccion}
+                      </p>
+                    </div>
+                    <span className="rounded-lg bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-400">
+                      {suc.porcentajeCobrado}% cobrado
+                    </span>
+                  </div>
+
+                  <div className="pt-2 border-t border-border/60 grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <span className="text-content-muted block text-[11px]">
+                        Cuotas Cobradas
+                      </span>
+                      <span className="text-base font-black text-emerald-400">
+                        {formatMoney(suc.recaudacionHastaAhora)}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-content-muted block text-[11px]">
+                        Potencial Cuotas
+                      </span>
+                      <span className="text-base font-bold text-content">
+                        {formatMoney(suc.recaudacionTotalPotencial)}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-content-muted block text-[11px]">
+                        Pendiente
+                      </span>
+                      <span className="font-bold text-amber-400">
+                        {formatMoney(suc.pendienteCobro)}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-content-muted block text-[11px]">
+                        Socios al Día
+                      </span>
+                      <span className="font-bold text-content">
+                        {suc.miembrosPagados} / {suc.totalMiembrosConPlan}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Resumen de Kiosco de la sucursal */}
+                  <div className="pt-2 border-t border-border/60 flex items-center justify-between text-xs">
+                    {suc.tieneKiosco ? (
+                      <>
+                        <div>
+                          <span className="text-content-muted block text-[11px]">
+                            🥤 Ventas Kiosco ({suc.cantidadVentasKiosco})
+                          </span>
+                          <span className="font-bold text-cyan-400">
+                            {formatMoney(suc.ingresosKiosco)}{" "}
+                            <span className="text-[11px] font-semibold text-emerald-400">
+                              (Ganancia: {formatMoney(suc.gananciaNetaKiosco)})
+                            </span>
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-content-muted block text-[10px]">
+                            Total Caja
+                          </span>
+                          <span className="font-black text-content">
+                            {formatMoney(suc.recaudacionTotalConKiosco)}
+                          </span>
+                        </div>
+                      </>
+                    ) : (
+                      <span className="text-[11px] text-content-muted italic">
+                        🚫 Sucursal sin Kiosco habilitado
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Resumen de Gastos Operativos y Beneficio Neto Real de la sucursal */}
+                  <div className="pt-2 border-t border-border/60 flex items-center justify-between text-xs">
+                    <div>
+                      <span className="text-content-muted block text-[11px]">
+                        📉 Gastos Operativos ({suc.cantidadGastosOperativos})
+                      </span>
+                      <span className="font-bold text-rose-400">
+                        -{formatMoney(suc.totalGastosOperativos)}
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-content-muted block text-[10px]">
+                        Beneficio Neto Real ({suc.margenNetoPorcentaje}%)
+                      </span>
+                      <span
+                        className={`font-black ${
+                          suc.beneficioNetoReal >= 0
+                            ? "text-emerald-400"
+                            : "text-rose-400"
+                        }`}
+                      >
+                        {suc.beneficioNetoReal >= 0 ? "+" : ""}
+                        {formatMoney(suc.beneficioNetoReal)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 pt-1">
+                  <div className="w-full bg-surface rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className="bg-emerald-500 h-full rounded-full transition-all duration-500"
+                      style={{
+                        width: `${Math.min(100, suc.porcentajeCobrado)}%`,
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] font-semibold text-primary group-hover:underline">
+                    <span>Ver vista exclusiva de {suc.barrio}</span>
+                    <span>→</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Fila de Sumatoria Global */}
+          <div className="rounded-xl border border-primary/30 bg-primary/5 p-3.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2 font-bold text-content">
+              <span>🌐</span>
+              <span>
+                SUMATORIA GLOBAL ({data.sucursalesResumen.length} sucursales):
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-4">
+              <span>
+                Cuotas Cobradas:{" "}
+                <strong className="text-emerald-400 font-black">
+                  {formatMoney(metricas.recaudacionHastaAhora)}
+                </strong>
+              </span>
+              <span>•</span>
+              <span>
+                🥤 Ventas Kiosco:{" "}
+                <strong className="text-cyan-400 font-black">
+                  {formatMoney(metricas.ingresosKiosco)}
+                </strong>{" "}
+                <span className="text-emerald-400 font-semibold">
+                  (Ganancia Neta: {formatMoney(metricas.gananciaNetaKiosco)})
+                </span>
+              </span>
+              <span>•</span>
+              <span>
+                Total Caja (Cuotas + Kiosco):{" "}
+                <strong className="text-primary font-black">
+                  {formatMoney(metricas.recaudacionTotalConKiosco)}
+                </strong>
+              </span>
+              <span>•</span>
+              <span>
+                📉 Gastos Operativos:{" "}
+                <strong className="text-rose-400 font-black">
+                  -{formatMoney(metricas.totalGastosOperativos)}
+                </strong>
+              </span>
+              <span>•</span>
+              <span>
+                📊 Beneficio Neto Real:{" "}
+                <strong
+                  className={`font-black ${
+                    metricas.beneficioNetoReal >= 0
+                      ? "text-emerald-400"
+                      : "text-rose-400"
+                  }`}
+                >
+                  {metricas.beneficioNetoReal >= 0 ? "+" : ""}
+                  {formatMoney(metricas.beneficioNetoReal)} ({metricas.margenNetoPorcentaje}%)
+                </strong>
+              </span>
+              <span>•</span>
+              <span>
+                Pendiente Cuotas:{" "}
+                <strong className="text-amber-400 font-black">
+                  {formatMoney(metricas.pendienteCobro)}
+                </strong>
+              </span>
+              <span>•</span>
+              <span>
+                Socios al Día:{" "}
+                <strong className="text-content font-black">
+                  {metricas.miembrosPagados} / {metricas.totalMiembrosConPlan}
+                </strong>
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TARJETAS KPI RECAUDACIÓN, GASTOS, MARGEN NETO Y COBRANZAS */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         {/* Recaudado hasta ahora */}
         <div className="bg-surface border border-border rounded-2xl p-5 relative overflow-hidden shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-content-muted">
-              Recaudación Hasta Ahora
+              Cuotas Cobradas
             </span>
             <span className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-sm font-bold">
               💰
             </span>
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-black text-content tracking-tight">
+            <span className="text-2xl font-black text-content tracking-tight">
               {formatMoney(metricas.recaudacionHastaAhora)}
             </span>
           </div>
@@ -539,12 +1063,97 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
             <span>{metricas.porcentajeCobrado}% del potencial mensual</span>
           </div>
+          {metricas.ingresosKiosco > 0 && (
+            <div className="mt-1.5 text-[11px] font-bold text-primary">
+              Total c/ Kiosco: {formatMoney(metricas.recaudacionTotalConKiosco)}
+            </div>
+          )}
           {/* Barra de progreso visual */}
           <div className="w-full bg-background rounded-full h-1.5 mt-3 overflow-hidden">
             <div
               className="bg-emerald-500 h-full rounded-full transition-all duration-500"
               style={{ width: `${Math.min(100, metricas.porcentajeCobrado)}%` }}
             />
+          </div>
+        </div>
+
+        {/* Ventas Kiosco / Mostrador */}
+        <div className="bg-surface border border-cyan-500/30 rounded-2xl p-5 relative overflow-hidden shadow-sm flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-wider text-cyan-400">
+                Ventas Kiosco
+              </span>
+              <span className="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-sm font-bold">
+                🥤
+              </span>
+            </div>
+            <div className="mt-3 flex items-baseline gap-2">
+              <span className="text-2xl font-black text-content tracking-tight">
+                {formatMoney(metricas.ingresosKiosco)}
+              </span>
+            </div>
+            <div className="mt-1.5 text-xs text-emerald-400 font-bold">
+              Ganancia Neta: {formatMoney(metricas.gananciaNetaKiosco)}
+            </div>
+            <div className="text-[11px] text-content-muted mt-0.5">
+              Costo mercadería: {formatMoney(metricas.costoKiosco)} ({metricas.cantidadVentasKiosco} ventas)
+            </div>
+          </div>
+          <div className="pt-2.5 mt-2 border-t border-border/60">
+            <Link
+              href={
+                selectedSucursalId !== null
+                  ? `/admin/kiosco?sucursalId=${selectedSucursalId}`
+                  : "/admin/kiosco"
+              }
+              className="inline-flex items-center justify-between w-full text-[11px] font-bold text-cyan-400 hover:underline"
+            >
+              <span>Ir a Mostrador / Stock</span>
+              <span>→</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Gastos Operativos y Beneficio Neto Real (Ingresos vs Egresos) */}
+        <div className="bg-surface border border-violet-500/30 rounded-2xl p-5 relative overflow-hidden shadow-sm flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-wider text-violet-400">
+                Beneficio Neto Real
+              </span>
+              <span className="w-8 h-8 rounded-lg bg-violet-500/10 text-violet-400 flex items-center justify-center text-sm font-bold">
+                📉
+              </span>
+            </div>
+            <div className="mt-3 flex items-baseline gap-2">
+              <span
+                className={`text-2xl font-black tracking-tight ${
+                  metricas.beneficioNetoReal >= 0
+                    ? "text-emerald-400"
+                    : "text-rose-400"
+                }`}
+              >
+                {metricas.beneficioNetoReal >= 0 ? "+" : ""}
+                {formatMoney(metricas.beneficioNetoReal)}
+              </span>
+            </div>
+            <div className="mt-1.5 text-xs text-rose-400 font-bold">
+              Gastos Operativos: -{formatMoney(metricas.totalGastosOperativos)}
+            </div>
+            <div className="text-[11px] text-content-muted mt-0.5">
+              Margen Neto: <strong className="text-content">{metricas.margenNetoPorcentaje}%</strong> ({metricas.cantidadGastosOperativos} gastos)
+            </div>
+          </div>
+          <div className="pt-2.5 mt-2 border-t border-border/60">
+            <button
+              type="button"
+              onClick={() => handleOpenModalNuevoGasto()}
+              className="inline-flex items-center justify-between w-full text-[11px] font-bold text-violet-400 hover:underline cursor-pointer"
+            >
+              <span>+ Cargar Gasto Operativo</span>
+              <span>→</span>
+            </button>
           </div>
         </div>
 
@@ -890,6 +1499,351 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
         </div>
       )}
 
+      {/* SECCIÓN DE GESTIÓN DE GASTOS OPERATIVOS Y MARGEN NETO (INGRESOS VS EGRESOS) */}
+      <div
+        id="seccion-gastos-margen"
+        className="bg-surface border border-border rounded-2xl p-5 sm:p-6 shadow-sm space-y-6"
+      >
+        {/* Cabecera y botones rápidos */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-wider text-violet-400">
+              Estado de Resultados (P&amp;L) — {metricas.nombreMes} {metricas.anio}
+            </span>
+            <h3 className="text-lg sm:text-xl font-bold text-content mt-0.5 flex items-center gap-2">
+              <span>📉</span>
+              <span>
+                Gestión de Gastos Operativos y Margen Neto{" "}
+                {selectedSucursalId === null
+                  ? "(Vista Global)"
+                  : (() => {
+                      const s = data.sucursalesResumen.find(
+                        (suc) => suc.id === selectedSucursalId
+                      );
+                      return s ? `— Sede ${s.barrio}` : "";
+                    })()}
+              </span>
+            </h3>
+            <p className="text-xs text-content-muted mt-1">
+              Registrá alquiler, honorarios de profesores, luz/servicios y reposición de máquinas para conocer en tiempo real el beneficio neto real del gimnasio.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={handleClonarGastosMesAnterior}
+              disabled={isPending}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-border bg-background hover:bg-surface-hover text-content text-xs font-bold transition-colors cursor-pointer disabled:opacity-50"
+              title="Copia automáticamente los gastos marcados como fijos/recurrentes del mes anterior"
+            >
+              <span>🔄</span>
+              <span>Copiar Gastos Fijos Mes Anterior</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleOpenModalNuevoGasto()}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-violet-500 hover:bg-violet-400 text-white font-extrabold text-xs transition-colors shadow-sm cursor-pointer"
+            >
+              <span>+</span>
+              <span>Registrar Gasto Operativo</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Ecuación de Beneficio Neto Real (Ingresos vs Egresos) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 bg-background border border-border rounded-xl p-4">
+          <div className="p-2.5 rounded-lg bg-surface/60 border border-border/60">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-content-muted block">
+              1. Ingresos Cuotas
+            </span>
+            <span className="text-lg font-black text-emerald-400 mt-1 block">
+              +{formatMoney(metricas.recaudacionHastaAhora)}
+            </span>
+            <span className="text-[10px] text-content-muted">
+              {metricas.miembrosPagados} cuotas cobradas
+            </span>
+          </div>
+
+          <div className="p-2.5 rounded-lg bg-surface/60 border border-border/60">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-content-muted block">
+              2. Ventas Kiosco (Bruto)
+            </span>
+            <span className="text-lg font-black text-cyan-400 mt-1 block">
+              +{formatMoney(metricas.ingresosKiosco)}
+            </span>
+            <span className="text-[10px] text-content-muted">
+              Costo mercadería: -{formatMoney(metricas.costoKiosco)}
+            </span>
+          </div>
+
+          <div className="p-2.5 rounded-lg bg-surface/60 border border-border/60">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-content-muted block">
+              3. Total Ingresos Caja
+            </span>
+            <span className="text-lg font-black text-content mt-1 block">
+              {formatMoney(metricas.recaudacionTotalConKiosco)}
+            </span>
+            <span className="text-[10px] text-content-muted">
+              Cuotas + Kiosco mostrador
+            </span>
+          </div>
+
+          <div className="p-2.5 rounded-lg bg-rose-500/5 border border-rose-500/20">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-rose-400 block">
+              4. Total Egresos
+            </span>
+            <span className="text-lg font-black text-rose-400 mt-1 block">
+              -{formatMoney(metricas.egresosTotales)}
+            </span>
+            <span className="text-[10px] text-content-muted">
+              Gastos Op.: {formatMoney(metricas.totalGastosOperativos)} + Costo Kiosco: {formatMoney(metricas.costoKiosco)}
+            </span>
+          </div>
+
+          <div
+            className={`p-2.5 rounded-lg border ${
+              metricas.beneficioNetoReal >= 0
+                ? "bg-emerald-500/10 border-emerald-500/30"
+                : "bg-rose-500/10 border-rose-500/30"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-content">
+                5. Beneficio Neto Real
+              </span>
+              <span
+                className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded ${
+                  metricas.beneficioNetoReal >= 0
+                    ? "bg-emerald-500/20 text-emerald-400"
+                    : "bg-rose-500/20 text-rose-400"
+                }`}
+              >
+                {metricas.margenNetoPorcentaje}% margen
+              </span>
+            </div>
+            <span
+              className={`text-xl font-black mt-1 block ${
+                metricas.beneficioNetoReal >= 0
+                  ? "text-emerald-400"
+                  : "text-rose-400"
+              }`}
+            >
+              {metricas.beneficioNetoReal >= 0 ? "+" : ""}
+              {formatMoney(metricas.beneficioNetoReal)}
+            </span>
+            <span className="text-[10px] text-content-muted">
+              Resultado limpio en bolsillo
+            </span>
+          </div>
+        </div>
+
+        {/* Botones rápidos de carga por rubro típico + Desglose por categoría */}
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-content-muted">
+              Carga rápida por categoría o filtro de rubros:
+            </span>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {[
+                { label: "🏢 + Alquiler", cat: "Alquiler" },
+                { label: "🏋️ + Profesores", cat: "Profesores" },
+                { label: "💡 + Luz y Servicios", cat: "Luz y Servicios" },
+                { label: "🔧 + Reposición Máquinas", cat: "Reposición de Máquinas" },
+              ].map((btn) => (
+                <button
+                  key={btn.cat}
+                  type="button"
+                  onClick={() => handleOpenModalNuevoGasto(btn.cat)}
+                  className="px-2.5 py-1 rounded-lg border border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 text-violet-300 text-xs font-semibold transition-colors cursor-pointer"
+                >
+                  {btn.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {data.categoriasGastoDesglose && data.categoriasGastoDesglose.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-1">
+              {data.categoriasGastoDesglose.map((c) => {
+                const isSelectedCat = filtroCategoriaGasto === c.categoria;
+                return (
+                  <button
+                    key={c.categoria}
+                    type="button"
+                    onClick={() =>
+                      setFiltroCategoriaGasto(
+                        isSelectedCat ? "todas" : c.categoria
+                      )
+                    }
+                    className={`text-left rounded-xl p-3 border transition-all cursor-pointer ${
+                      isSelectedCat
+                        ? "border-violet-500 bg-violet-500/10 shadow-sm"
+                        : "border-border bg-background hover:border-violet-500/40"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-bold text-content truncate">
+                        {c.categoria}
+                      </span>
+                      <span className="text-[11px] font-bold text-rose-400">
+                        {c.porcentaje}%
+                      </span>
+                    </div>
+                    <div className="mt-1.5 text-base font-black text-rose-400">
+                      -{formatMoney(c.total)}
+                    </div>
+                    <div className="w-full bg-surface rounded-full h-1.5 mt-2 overflow-hidden">
+                      <div
+                        className="bg-rose-500 h-full rounded-full"
+                        style={{ width: `${Math.min(100, c.porcentaje)}%` }}
+                      />
+                    </div>
+                    <div className="mt-1 text-[10px] text-content-muted flex items-center justify-between">
+                      <span>
+                        {c.cantidad} {c.cantidad === 1 ? "gasto" : "gastos"}
+                      </span>
+                      <span>{isSelectedCat ? "Quitar filtro ✕" : "Filtrar"}</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Filtros y Tabla de Gastos Operativos */}
+        <div className="space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={searchGastoQuery}
+                onChange={(e) => setSearchGastoQuery(e.target.value)}
+                placeholder="Buscar gasto por concepto, sede o nota..."
+                className="px-3 py-2 rounded-xl border border-border bg-background text-content text-xs w-full sm:w-72 focus:outline-none focus:ring-2 focus:ring-violet-500"
+              />
+              <select
+                value={filtroCategoriaGasto}
+                onChange={(e) => setFiltroCategoriaGasto(e.target.value)}
+                className="px-3 py-2 rounded-xl border border-border bg-background text-content text-xs font-medium focus:outline-none focus:ring-2 focus:ring-violet-500"
+              >
+                <option value="todas">Todas las categorías</option>
+                {CATEGORIAS_GASTO.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <span className="text-xs text-content-muted">
+              Mostrando <strong>{gastosFiltrados.length}</strong> de{" "}
+              <strong>{data.gastosOperativos?.length || 0}</strong> gastos operativos
+            </span>
+          </div>
+
+          <div className="overflow-x-auto rounded-xl border border-border">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-border bg-background/70 text-[11px] font-bold uppercase tracking-wider text-content-muted">
+                  <th className="py-3 px-4">Fecha</th>
+                  <th className="py-3 px-4">Sucursal</th>
+                  <th className="py-3 px-4">Concepto / Detalle</th>
+                  <th className="py-3 px-4">Categoría</th>
+                  <th className="py-3 px-4">Tipo</th>
+                  <th className="py-3 px-4">Medio de Pago</th>
+                  <th className="py-3 px-4 text-right">Monto Egreso</th>
+                  <th className="py-3 px-4 text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border text-xs">
+                {gastosFiltrados.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={8}
+                      className="py-8 text-center text-content-muted"
+                    >
+                      No hay gastos operativos registrados para este filtro en{" "}
+                      {metricas.nombreMes} {metricas.anio}.
+                    </td>
+                  </tr>
+                ) : (
+                  gastosFiltrados.map((g) => (
+                    <tr
+                      key={g.id}
+                      className="hover:bg-background/50 transition-colors"
+                    >
+                      <td className="py-3 px-4 whitespace-nowrap text-content-muted">
+                        {new Date(g.fechaGasto).toLocaleDateString("es-AR")}
+                      </td>
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-primary/10 text-primary border border-primary/20">
+                          <span>📍</span>
+                          <span>{g.sucursal.barrio}</span>
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="font-bold text-content">{g.concepto}</div>
+                        {(g.notas || g.comprobante) && (
+                          <div className="text-[11px] text-content-muted mt-0.5">
+                            {g.comprobante ? `Comp: ${g.comprobante} ` : ""}
+                            {g.notas ? `• ${g.notas}` : ""}
+                          </div>
+                        )}
+                      </td>
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-violet-500/10 text-violet-300 border border-violet-500/20">
+                          {g.categoria}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        {g.esRecurrente ? (
+                          <span className="text-[11px] font-semibold text-sky-400">
+                            🔄 Fijo mensual
+                          </span>
+                        ) : (
+                          <span className="text-[11px] text-content-muted">
+                            Eventual
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3 px-4 whitespace-nowrap text-content-muted">
+                        {g.metodoPago}
+                      </td>
+                      <td className="py-3 px-4 whitespace-nowrap text-right font-black text-rose-400">
+                        -{formatMoney(g.monto)}
+                      </td>
+                      <td className="py-3 px-4 whitespace-nowrap text-right">
+                        <div className="inline-flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => handleOpenModalEditarGasto(g)}
+                            className="px-2 py-1 rounded-lg border border-border bg-background hover:bg-surface text-content text-[11px] font-semibold transition-colors cursor-pointer"
+                            title="Editar gasto"
+                          >
+                            ✏️ Editar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleEliminarGasto(g)}
+                            disabled={isPending}
+                            className="px-2 py-1 rounded-lg border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-[11px] font-semibold transition-colors cursor-pointer disabled:opacity-50"
+                            title="Eliminar gasto"
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       {/* TABLA DE MIEMBROS Y ESTADO DE PAGO */}
       <div className="bg-surface border border-border rounded-2xl shadow-sm overflow-hidden">
         {/* Cabecera y Filtros */}
@@ -1013,6 +1967,7 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
             <thead>
               <tr className="border-b border-border bg-background/50 text-content-muted text-xs uppercase tracking-wider">
                 <th className="py-3 px-4 font-semibold">Socio</th>
+                <th className="py-3 px-4 font-semibold">Sucursal</th>
                 <th className="py-3 px-4 font-semibold">Plan Asignado</th>
                 <th className="py-3 px-4 font-semibold">Importe Cuota</th>
                 <th className="py-3 px-4 font-semibold text-center">Estado del Mes</th>
@@ -1023,7 +1978,7 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
             <tbody className="divide-y divide-border">
               {filteredUsuarios.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-content-muted">
+                  <td colSpan={7} className="py-12 text-center text-content-muted">
                     <div className="text-3xl mb-2">📋</div>
                     <p className="font-medium text-content">
                       No se encontraron miembros con los filtros seleccionados
@@ -1043,35 +1998,48 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                       key={u.id}
                       className="hover:bg-background/40 transition-colors group"
                     >
-                      {/* Nombre y Contacto */}
+                      {/* Nombre y Contacto (sin avatar de iniciales para ahorrar espacio) */}
                       <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-primary/15 text-primary flex items-center justify-center font-bold text-sm shrink-0">
-                            {u.nombre.charAt(0)}
-                            {u.apellido.charAt(0)}
-                          </div>
-                          <div>
-                            <div className="font-bold text-content flex items-center gap-2">
-                              <span>
-                                {u.nombre} {u.apellido}
+                        <div>
+                          <div className="font-bold text-content flex items-center gap-2">
+                            <span>
+                              {u.nombre} {u.apellido}
+                            </span>
+                            {!u.isActive && (
+                              <span className="text-[10px] bg-red-500/10 text-red-400 px-1.5 py-0.5 rounded font-normal">
+                                Inactivo
                               </span>
-                              {!u.isActive && (
-                                <span className="text-[10px] bg-red-500/10 text-red-400 px-1.5 py-0.5 rounded font-normal">
-                                  Inactivo
-                                </span>
-                              )}
-                            </div>
-                            <div className="text-xs text-content-muted flex items-center gap-2 mt-0.5">
-                              {u.dni && <span>DNI: {u.dni}</span>}
-                              {u.telefono && (
-                                <>
-                                  <span>•</span>
-                                  <span>{u.telefono}</span>
-                                </>
-                              )}
-                            </div>
+                            )}
+                          </div>
+                          <div className="text-xs text-content-muted flex items-center gap-2 mt-0.5">
+                            {u.dni && <span>DNI: {u.dni}</span>}
+                            {u.telefono && (
+                              <>
+                                <span>•</span>
+                                <span>{u.telefono}</span>
+                              </>
+                            )}
                           </div>
                         </div>
+                      </td>
+
+                      {/* Sucursal */}
+                      <td className="py-3.5 px-4">
+                        {u.sucursal ? (
+                          <div>
+                            <div className="font-semibold text-content text-xs flex items-center gap-1">
+                              <span>📍</span>
+                              <span>{u.sucursal.barrio}</span>
+                            </div>
+                            <div className="text-[11px] text-content-muted">
+                              {u.sucursal.direccion}
+                            </div>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-content-muted italic">
+                            Sin sucursal
+                          </span>
+                        )}
                       </td>
 
                       {/* Plan */}
@@ -1153,60 +2121,48 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
 
                       {/* Acciones */}
                       <td className="py-3.5 px-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          {/* Botón rápido Toggle */}
-                          <button
-                            onClick={() => handleTogglePago(u)}
-                            disabled={isPending}
-                            title={
-                              u.haPagado
-                                ? "Hacer clic para anular / desmarcar pago"
-                                : "Hacer clic para marcar como pagado"
-                            }
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all disabled:opacity-50 ${u.haPagado
-                              ? "bg-background hover:bg-red-500/15 text-content-muted hover:text-red-400 border border-border"
-                              : "bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold shadow-sm hover:shadow-emerald-500/25"
-                              }`}
-                          >
-                            {u.haPagado ? "Desmarcar" : "Marcar Pagado"}
-                          </button>
-
-                          {/* Botón Recordatorio WhatsApp (1-click) */}
-                          <button
-                            onClick={() => handleEnviarWhatsAppDirecto(u)}
-                            className={`p-1.5 px-2 rounded-lg border font-bold text-xs transition-colors flex items-center gap-1 ${
-                              !u.haPagado
-                                ? "border-emerald-500/40 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 shadow-sm"
-                                : "border-border bg-background hover:bg-surface text-content-muted hover:text-content"
-                            }`}
-                            title={
-                              !u.haPagado
-                                ? `Enviar recordatorio de cuota pendiente por WhatsApp a ${u.nombre}`
-                                : `Enviar mensaje informativo / comprobante por WhatsApp a ${u.nombre}`
-                            }
-                          >
-                            <span>💬</span>
-                            <span className="hidden sm:inline">WhatsApp</span>
-                          </button>
-
-                          {/* Botón Mercado Pago / Cobro Online */}
-                          <button
-                            onClick={() => handleOpenMpModal(u)}
-                            className="p-1.5 px-2 rounded-lg border border-sky-500/30 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 font-bold text-xs transition-colors flex items-center gap-1"
-                            title="Generar link de cobro o suscripción de Mercado Pago para este socio"
-                          >
-                            <span>💳</span>
-                            <span className="hidden sm:inline">MP</span>
-                          </button>
-
-                          {/* Botón Detalles / Editar Cobro */}
-                          <button
-                            onClick={() => handleOpenModal(u)}
-                            className="p-1.5 rounded-lg border border-border text-content-muted hover:text-content hover:bg-background transition-colors text-xs"
-                            title="Editar comprobante, medio de pago o monto"
-                          >
-                            ⚙️
-                          </button>
+                        <div className="flex items-center justify-end">
+                          <ActionsMenu
+                            buttonTitle={`Acciones de cobro para ${u.nombre} ${u.apellido}`}
+                            items={[
+                              {
+                                label: u.haPagado
+                                  ? "Desmarcar / Anular Pago"
+                                  : "Marcar como Pagado",
+                                icon: <span>{u.haPagado ? "↩️" : "✅"}</span>,
+                                onClick: () => handleTogglePago(u),
+                                disabled: isPending,
+                                variant: u.haPagado ? "warning" : "success",
+                                title: u.haPagado
+                                  ? "Anular o desmarcar el pago del mes"
+                                  : "Marcar cuota como pagada en 1 clic",
+                              },
+                              {
+                                label: "Editar / Detallar Cobro",
+                                icon: <EditIcon />,
+                                onClick: () => handleOpenModal(u),
+                                title: "Editar comprobante, medio de pago o monto",
+                              },
+                              {
+                                label: "Cobrar con Mercado Pago",
+                                icon: <span>💳</span>,
+                                onClick: () => handleOpenMpModal(u),
+                                title:
+                                  "Generar link de cobro o suscripción de Mercado Pago",
+                              },
+                              {
+                                label: !u.haPagado
+                                  ? "Enviar Recordatorio WhatsApp"
+                                  : "Enviar WhatsApp",
+                                icon: <WhatsAppIcon />,
+                                onClick: () => handleEnviarWhatsAppDirecto(u),
+                                variant: !u.haPagado ? "success" : "default",
+                                title: !u.haPagado
+                                  ? `Enviar recordatorio de cuota pendiente por WhatsApp a ${u.nombre}`
+                                  : `Enviar mensaje por WhatsApp a ${u.nombre}`,
+                              },
+                            ]}
+                          />
                         </div>
                       </td>
                     </tr>
@@ -1269,14 +2225,34 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
           </div>
 
           {/* Sugerencia 2: Módulo de Gastos Fijos y Flujo de Caja (P&L) */}
-          <div className="bg-surface/80 border border-border rounded-xl p-4 space-y-2 hover:border-primary/40 transition-colors">
-            <div className="flex items-center gap-2 font-bold text-sm text-content">
-              <span>📉</span>
-              <span>Gestión de Gastos y Margen Neto</span>
+          <div className="bg-surface/80 border border-violet-500/30 rounded-xl p-4 space-y-3 hover:border-violet-500/60 transition-colors bg-gradient-to-br from-surface to-violet-500/5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 font-bold text-sm text-content">
+                <span>📉</span>
+                <span>Gestión de Gastos y Margen Neto</span>
+              </div>
+              <span className="text-[10px] font-bold bg-violet-500/20 text-violet-300 px-2 py-0.5 rounded-full border border-violet-500/30">
+                ¡Disponible!
+              </span>
             </div>
             <p className="text-xs text-content-muted leading-relaxed">
-              Carga de gastos operativos (alquiler, profesores, luz, reposición de máquinas) para calcular en tiempo real el beneficio neto real del gimnasio (Ingresos vs Egresos).
+              Carga de gastos operativos (alquiler, profesores, luz, reposición de máquinas) por sucursal y global para calcular en tiempo real el beneficio neto real (Ingresos vs Egresos).
             </p>
+            <div className="flex items-center gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => handleOpenModalNuevoGasto()}
+                className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg bg-violet-500/15 hover:bg-violet-500/25 text-violet-300 font-bold text-xs border border-violet-500/30 transition-colors cursor-pointer"
+              >
+                <span>+ Cargar Gasto</span>
+              </button>
+              <a
+                href="#seccion-gastos-margen"
+                className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg bg-background hover:bg-surface text-content text-xs font-semibold border border-border transition-colors"
+              >
+                <span>📊 Ver P&amp;L Neto</span>
+              </a>
+            </div>
           </div>
 
           {/* Sugerencia 3: Alertas de Vencimiento y Morosidad (Semáforo) */}
@@ -1374,14 +2350,31 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
           </div>
 
           {/* Sugerencia 6: Tarifas Promocionales y Venta de Productos */}
-          <div className="bg-surface/80 border border-border rounded-xl p-4 space-y-2 hover:border-primary/40 transition-colors">
-            <div className="flex items-center gap-2 font-bold text-sm text-content">
-              <span>🥤</span>
-              <span>Kiosco & Suplementación del Gym</span>
+          <div className="bg-surface/80 border border-cyan-500/30 rounded-xl p-4 space-y-3 hover:border-cyan-500/60 transition-colors bg-gradient-to-br from-surface to-cyan-500/5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 font-bold text-sm text-content">
+                <span>🥤</span>
+                <span>Kiosco & Suplementación del Gym</span>
+              </div>
+              <span className="text-[10px] font-bold bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded-full border border-cyan-500/30">
+                ¡Disponible!
+              </span>
             </div>
             <p className="text-xs text-content-muted leading-relaxed">
-              Registro de ventas rápidas adicionales en mostrador (bebidas isotónicas, proteínas, indumentaria, toallas) para aumentar el ticket promedio por socio.
+              Registro de ventas rápidas adicionales en mostrador (bebidas isotónicas, proteínas, indumentaria, toallas), manejo de stock con precios de compra/venta y habilitación por sucursal.
             </p>
+            <div className="pt-1">
+              <Link
+                href={
+                  selectedSucursalId !== null
+                    ? `/admin/kiosco?sucursalId=${selectedSucursalId}`
+                    : "/admin/kiosco"
+                }
+                className="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-400 font-bold text-xs border border-cyan-500/30 transition-colors"
+              >
+                <span>⚡ Ir a Kiosco / Mostrador y Stock</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -1891,6 +2884,187 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                 Guardar y Aplicar
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 3: REGISTRAR / EDITAR GASTO OPERATIVO (ALQUILER, PROFESORES, LUZ, MÁQUINAS) */}
+      {modalGastoOpen && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-surface border border-border rounded-2xl w-full max-w-lg p-6 shadow-2xl relative animate-in fade-in zoom-in-95">
+            <button
+              type="button"
+              onClick={() => setModalGastoOpen(false)}
+              className="absolute right-4 top-4 text-content-muted hover:text-content text-sm cursor-pointer"
+            >
+              ✕
+            </button>
+
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-violet-500/15 text-violet-400 flex items-center justify-center font-bold text-lg">
+                📉
+              </div>
+              <div>
+                <h3 className="font-bold text-content text-base">
+                  {editandoGasto
+                    ? "Editar Gasto Operativo"
+                    : "Registrar Gasto Operativo"}
+                </h3>
+                <p className="text-xs text-content-muted">
+                  Período {metricas.nombreMes} {metricas.anio} — Se descuenta automáticamente del margen neto
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleGuardarGasto} className="space-y-3.5 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-content-muted uppercase tracking-wider mb-1">
+                    Sucursal Correspondiente *
+                  </label>
+                  <select
+                    value={gastoSucursalId}
+                    onChange={(e) => setGastoSucursalId(Number(e.target.value))}
+                    required
+                    className="w-full px-3 py-2 rounded-xl border border-border bg-background text-content text-xs font-bold focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  >
+                    {data.sucursalesResumen.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        📍 {s.barrio} ({s.direccion})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-content-muted uppercase tracking-wider mb-1">
+                    Categoría / Rubro *
+                  </label>
+                  <select
+                    value={gastoCategoria}
+                    onChange={(e) => setGastoCategoria(e.target.value)}
+                    required
+                    className="w-full px-3 py-2 rounded-xl border border-border bg-background text-content text-xs font-bold focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  >
+                    {CATEGORIAS_GASTO.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-content-muted uppercase tracking-wider mb-1">
+                  Concepto del Gasto *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={gastoConcepto}
+                  onChange={(e) => setGastoConcepto(e.target.value)}
+                  placeholder="Ej: Alquiler mensual local, Honorarios Profesores, Factura Luz, Cable polea..."
+                  className="w-full px-3 py-2 rounded-xl border border-border bg-background text-content text-xs focus:outline-none focus:ring-2 focus:ring-violet-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-content-muted uppercase tracking-wider mb-1">
+                    Monto ($ ARS) *
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    step="0.01"
+                    required
+                    value={gastoMonto}
+                    onChange={(e) => setGastoMonto(e.target.value)}
+                    placeholder="Ej: 150000"
+                    className="w-full px-3 py-2 rounded-xl border border-border bg-background text-content text-xs font-bold focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-content-muted uppercase tracking-wider mb-1">
+                    Medio de Pago
+                  </label>
+                  <select
+                    value={gastoMetodoPago}
+                    onChange={(e) => setGastoMetodoPago(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-border bg-background text-content text-xs focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  >
+                    <option value="Transferencia">Transferencia</option>
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Débito Automático">Débito Automático</option>
+                    <option value="Mercado Pago">Mercado Pago</option>
+                    <option value="Tarjeta">Tarjeta</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-content-muted uppercase tracking-wider mb-1">
+                    N° Comprobante / Factura (Opcional)
+                  </label>
+                  <input
+                    type="text"
+                    value={gastoComprobante}
+                    onChange={(e) => setGastoComprobante(e.target.value)}
+                    placeholder="Ej: FAC-000124"
+                    className="w-full px-3 py-2 rounded-xl border border-border bg-background text-content text-xs focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-content-muted uppercase tracking-wider mb-1">
+                    Notas / Detalle (Opcional)
+                  </label>
+                  <input
+                    type="text"
+                    value={gastoNotas}
+                    onChange={(e) => setGastoNotas(e.target.value)}
+                    placeholder="Observaciones adicionales..."
+                    className="w-full px-3 py-2 rounded-xl border border-border bg-background text-content text-xs focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  />
+                </div>
+              </div>
+
+              <label className="flex items-center gap-2.5 p-3 rounded-xl border border-border bg-background cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={gastoRecurrente}
+                  onChange={(e) => setGastoRecurrente(e.target.checked)}
+                  className="rounded border-border text-violet-500 focus:ring-violet-500"
+                />
+                <span className="text-xs text-content">
+                  <strong>Gasto Fijo Mensual Recurrente</strong> (permite copiarlo con 1 clic en los meses siguientes)
+                </span>
+              </label>
+
+              <div className="mt-5 pt-3 border-t border-border flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setModalGastoOpen(false)}
+                  className="px-4 py-2 rounded-xl border border-border text-content-muted hover:text-content text-xs font-semibold cursor-pointer"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmittingGasto}
+                  className="px-4 py-2 rounded-xl bg-violet-500 hover:bg-violet-400 text-white font-extrabold text-xs transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  {isSubmittingGasto
+                    ? "Guardando..."
+                    : editandoGasto
+                      ? "Guardar Cambios"
+                      : "Registrar Gasto"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

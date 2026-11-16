@@ -21,6 +21,31 @@ enum Role {
 }
 
 // -----------------------------------------------------------------------------
+// SUCURSAL DEL GIMNASIO
+// -----------------------------------------------------------------------------
+model Sucursal {
+  id           Int       @id @default(autoincrement())
+  telefono     String
+  direccion    String
+  barrio       String
+  imagen       String?
+  urlInstagram String?
+  urlTiktok    String?
+  horarios     String    @db.Text
+  tieneKiosco  Boolean   @default(true) // Habilita o deshabilita el kiosco/mostrador para esta sucursal
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  usuarios         Usuario[]
+  productosKiosco  ProductoKiosco[]
+  ventasKiosco     VentaKiosco[]
+  gastosOperativos GastoOperativo[]
+
+  @@map("sucursal")
+}
+
+// -----------------------------------------------------------------------------
 // PLAN DEL GIMNASIO (1 a 7 días por semana)
 // -----------------------------------------------------------------------------
 model Plan {
@@ -80,6 +105,10 @@ model Usuario {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
+  // Sucursal a la que pertenece el usuario (cada usuario pertenece a una sola sucursal)
+  sucursalId Int?
+  sucursal   Sucursal? @relation(fields: [sucursalId], references: [id], onDelete: SetNull)
+
   // Plan asociado (determina cuántos días puede entrenar el usuario)
   planId Int?
   plan   Plan? @relation(fields: [planId], references: [id], onDelete: SetNull)
@@ -103,6 +132,10 @@ model Usuario {
   medidas MedidaCorporal[]
   tiposMedidaPersonalizados TipoMedidaPersonalizada[]
 
+  // Compras opcionales en kiosco / mostrador
+  ventasKiosco VentaKiosco[]
+
+  @@index([sucursalId])
   @@index([planId])
   @@map("usuario")
 }
@@ -396,5 +429,92 @@ model TipoMedidaPersonalizada {
   @@index([usuarioId])
   @@map("tipo_medida_personalizada")
 }
+
+// -----------------------------------------------------------------------------
+// KIOSCO Y SUPLEMENTACIÓN EN MOSTRADOR (POR SUCURSAL)
+// -----------------------------------------------------------------------------
+model ProductoKiosco {
+  id           Int      @id @default(autoincrement())
+  sucursalId   Int
+  sucursal     Sucursal @relation(fields: [sucursalId], references: [id], onDelete: Cascade)
+
+  nombre       String   // Ej: "Bebida Isotónica 500ml", "Barra Proteica", "Whey Scoop"
+  categoria    String   @default("Bebidas") // "Bebidas", "Suplementos", "Snacks", "Indumentaria", "Accesorios"
+  precioCompra Decimal  @db.Decimal(10, 2) // Costo unitario de compra
+  precioVenta  Decimal  @db.Decimal(10, 2) // Precio unitario de venta en mostrador
+  stock        Int      @default(0)        // Stock disponible en esta sucursal
+  stockMinimo  Int      @default(5)        // Umbral para alerta de reposición
+  isActive     Boolean  @default(true)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  ventas       VentaKiosco[]
+
+  @@index([sucursalId])
+  @@map("producto_kiosco")
+}
+
+model VentaKiosco {
+  id                   Int            @id @default(autoincrement())
+  sucursalId           Int
+  sucursal             Sucursal       @relation(fields: [sucursalId], references: [id], onDelete: Cascade)
+  productoId           Int
+  producto             ProductoKiosco @relation(fields: [productoId], references: [id], onDelete: Cascade)
+
+  // Socio comprador opcional (puede ser venta de mostrador al paso sin identificar socio)
+  usuarioId            Int?
+  usuario              Usuario?       @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
+
+  cantidad             Int            @default(1)
+  precioCompraUnitario Decimal        @db.Decimal(10, 2)
+  precioVentaUnitario  Decimal        @db.Decimal(10, 2)
+  totalCosto           Decimal        @db.Decimal(10, 2)
+  totalVenta           Decimal        @db.Decimal(10, 2)
+  gananciaNeta         Decimal        @db.Decimal(10, 2)
+
+  metodoPago           String         @default("Efectivo") // "Efectivo", "Transferencia", "Mercado Pago", "Tarjeta de Débito"
+  notas                String?
+  fechaVenta           DateTime       @default(now())
+  mes                  Int            // 1 al 12
+  anio                 Int            // Ej: 2026
+
+  createdAt            DateTime       @default(now())
+
+  @@index([sucursalId, anio, mes])
+  @@index([productoId])
+  @@index([usuarioId])
+  @@map("venta_kiosco")
+}
+
+// -----------------------------------------------------------------------------
+// GASTOS OPERATIVOS Y EGRESOS (POR SUCURSAL)
+// -----------------------------------------------------------------------------
+model GastoOperativo {
+  id           Int      @id @default(autoincrement())
+  sucursalId   Int
+  sucursal     Sucursal @relation(fields: [sucursalId], references: [id], onDelete: Cascade)
+
+  concepto     String   // Ej: "Alquiler mensual local", "Honorarios Profesores", "Factura Luz", "Reposición polea"
+  categoria    String   @default("Alquiler") // "Alquiler", "Profesores", "Luz y Servicios", "Reposición de Máquinas", "Limpieza e Insumos", "Impuestos", "Marketing", "Otros"
+  monto        Decimal  @db.Decimal(10, 2)
+  metodoPago   String   @default("Transferencia") // "Efectivo", "Transferencia", "Mercado Pago", "Débito Automático"
+  comprobante  String?
+  notas        String?  @db.Text
+  esRecurrente Boolean  @default(false) // Si es un gasto fijo mensual (alquiler, sueldos, etc.)
+
+  fechaGasto   DateTime @default(now())
+  mes          Int      // 1 al 12
+  anio         Int      // Ej: 2026
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([sucursalId, anio, mes])
+  @@index([categoria])
+  @@map("gasto_operativo")
+}
+
+
 
 

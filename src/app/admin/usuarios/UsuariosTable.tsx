@@ -91,6 +91,7 @@ export function UsuariosTable({
             <TableHead>Miembro</TableHead>
             <TableHead>DNI</TableHead>
             <TableHead>Contacto</TableHead>
+            <TableHead>Sucursal</TableHead>
             <TableHead>Plan</TableHead>
             <TableHead>Rol</TableHead>
             <TableHead>Estado</TableHead>
@@ -100,7 +101,7 @@ export function UsuariosTable({
         <TableBody>
           {isLoading ? (
             <tr>
-              <td colSpan={7} className="px-6 py-12 text-center text-content-muted">
+              <td colSpan={8} className="px-6 py-12 text-center text-content-muted">
                 <div className="flex items-center justify-center gap-2">
                   <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
                   Cargando miembros...
@@ -109,7 +110,7 @@ export function UsuariosTable({
             </tr>
           ) : usuarios.length === 0 ? (
             <TableEmpty
-              colSpan={7}
+              colSpan={8}
               message="No se encontraron usuarios coincidentes"
             />
           ) : (
@@ -156,6 +157,25 @@ export function UsuariosTable({
                       </a>
                     )}
                   </div>
+                </TableCell>
+
+                {/* Sucursal */}
+                <TableCell>
+                  {user.sucursal ? (
+                    <div className="flex flex-col">
+                      <span className="inline-flex items-center gap-1 text-xs font-bold text-content">
+                        <span>📍</span>
+                        <span>{user.sucursal.barrio}</span>
+                      </span>
+                      <span className="text-[11px] text-content-muted">
+                        {user.sucursal.direccion}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-xs text-content-muted italic">
+                      Sin sucursal
+                    </span>
+                  )}
                 </TableCell>
 
                 {/* Plan y Rutina */}

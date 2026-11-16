@@ -19,11 +19,18 @@ interface PlanOption {
   diasPorSemana: number;
 }
 
+interface SucursalOption {
+  id: number;
+  barrio: string;
+  direccion: string;
+}
+
 interface UsuarioFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   usuario?: UsuarioItem | null;
   planes: PlanOption[];
+  sucursales: SucursalOption[];
   isSuperAdmin?: boolean;
   isEntrenador?: boolean;
   onSuccess: () => void;
@@ -34,6 +41,7 @@ export function UsuarioFormModal({
   onClose,
   usuario,
   planes,
+  sucursales,
   isSuperAdmin = false,
   isEntrenador = false,
   onSuccess,
@@ -50,6 +58,7 @@ export function UsuarioFormModal({
     birthDate: "",
     role: Role.USER,
     password: "",
+    sucursalId: null,
     planId: null,
     isActive: true,
   });
@@ -73,6 +82,7 @@ export function UsuarioFormModal({
           : "",
         role: usuario.role || Role.USER,
         password: "",
+        sucursalId: usuario.sucursalId || null,
         planId: usuario.planId || null,
         isActive: usuario.isActive ?? true,
       });
@@ -87,13 +97,14 @@ export function UsuarioFormModal({
         birthDate: "",
         role: Role.USER,
         password: "",
+        sucursalId: sucursales.length > 0 ? sucursales[0].id : null,
         planId: null,
         isActive: true,
       });
     }
     setErrors({});
     setGeneralError(null);
-  }, [usuario, isOpen]);
+  }, [usuario, isOpen, sucursales]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -106,6 +117,11 @@ export function UsuarioFormModal({
       setFormData((prev) => ({
         ...prev,
         planId: value ? Number(value) : null,
+      }));
+    } else if (name === "sucursalId") {
+      setFormData((prev) => ({
+        ...prev,
+        sucursalId: value ? Number(value) : null,
       }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -273,20 +289,19 @@ export function UsuarioFormModal({
           placeholder="Ej: Av. Santa Fe 1234, CABA"
         />
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <Select
-            label="Rol de Usuario"
-            name="role"
-            value={formData.role}
+            label="Sucursal Asignada"
+            name="sucursalId"
+            value={formData.sucursalId ?? ""}
             onChange={handleChange}
-            disabled={isEntrenador}
           >
-            <option value={Role.USER}>Usuario (Miembro del Gym)</option>
-            <option value={Role.ENTRENADOR}>Entrenador</option>
-            {!isEntrenador && <option value={Role.ADMIN}>Administrador</option>}
-            {isSuperAdmin && (
-              <option value={Role.SUPERADMIN}>Super Administrador</option>
-            )}
+            <option value="">Seleccionar sucursal...</option>
+            {sucursales.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.barrio} — {s.direccion}
+              </option>
+            ))}
           </Select>
 
           <Select
@@ -301,6 +316,21 @@ export function UsuarioFormModal({
                 {p.nombre} ({p.diasPorSemana} días/sem)
               </option>
             ))}
+          </Select>
+
+          <Select
+            label="Rol de Usuario"
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            disabled={isEntrenador}
+          >
+            <option value={Role.USER}>Usuario (Miembro del Gym)</option>
+            <option value={Role.ENTRENADOR}>Entrenador</option>
+            {!isEntrenador && <option value={Role.ADMIN}>Administrador</option>}
+            {isSuperAdmin && (
+              <option value={Role.SUPERADMIN}>Super Administrador</option>
+            )}
           </Select>
         </div>
 

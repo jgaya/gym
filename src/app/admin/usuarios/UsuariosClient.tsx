@@ -19,9 +19,16 @@ interface PlanOption {
   diasPorSemana: number;
 }
 
+interface SucursalOption {
+  id: number;
+  barrio: string;
+  direccion: string;
+}
+
 interface UsuariosClientProps {
   initialData: GetUsuariosResult;
   planes: PlanOption[];
+  sucursales: SucursalOption[];
   isSuperAdmin?: boolean;
   isEntrenador?: boolean;
 }
@@ -29,6 +36,7 @@ interface UsuariosClientProps {
 export function UsuariosClient({
   initialData,
   planes,
+  sucursales,
   isSuperAdmin = false,
   isEntrenador = false,
 }: UsuariosClientProps) {
@@ -37,6 +45,7 @@ export function UsuariosClient({
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [sucursalFilter, setSucursalFilter] = useState("ALL");
   const [page, setPage] = useState(initialData.currentPage);
   const [pageSize] = useState(10);
   const [isPending, startTransition] = useTransition();
@@ -64,10 +73,11 @@ export function UsuariosClient({
         search: debouncedSearch,
         role: roleFilter,
         status: statusFilter,
+        sucursalId: sucursalFilter,
       });
       setData(res);
     });
-  }, [page, pageSize, debouncedSearch, roleFilter, statusFilter]);
+  }, [page, pageSize, debouncedSearch, roleFilter, statusFilter, sucursalFilter]);
 
   useEffect(() => {
     fetchData();
@@ -91,7 +101,7 @@ export function UsuariosClient({
     <div className="space-y-6">
       {/* Barra de Controles: Búsqueda, Filtros y Botón de Acción */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center flex-wrap">
           <SearchBar
             value={search}
             onChange={setSearch}
@@ -99,7 +109,24 @@ export function UsuariosClient({
             className="sm:max-w-xs md:max-w-sm"
           />
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Select
+              value={sucursalFilter}
+              onChange={(e) => {
+                setSucursalFilter(e.target.value);
+                setPage(1);
+              }}
+              className="w-44 text-xs"
+            >
+              <option value="ALL">Todas las sucursales</option>
+              {sucursales.map((s) => (
+                <option key={s.id} value={String(s.id)}>
+                  📍 {s.barrio}
+                </option>
+              ))}
+              <option value="NONE">Sin sucursal</option>
+            </Select>
+
             <Select
               value={roleFilter}
               onChange={(e) => {
@@ -172,6 +199,7 @@ export function UsuariosClient({
         onClose={() => setIsModalOpen(false)}
         usuario={selectedUser}
         planes={planes}
+        sucursales={sucursales}
         isSuperAdmin={isSuperAdmin}
         isEntrenador={isEntrenador}
         onSuccess={fetchData}

@@ -35,10 +35,13 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(memberUrl);
     }
 
-    // El rol ENTRENADOR NO tiene acceso a la parte económica ni a planes comerciales
+    // El rol ENTRENADOR NO tiene acceso a la parte económica ni a planes comerciales / sucursales / kiosco
     if (
       session.role === "ENTRENADOR" &&
-      (pathname.startsWith("/admin/economia") || pathname.startsWith("/admin/plan"))
+      (pathname.startsWith("/admin/economia") ||
+        pathname.startsWith("/admin/plan") ||
+        pathname.startsWith("/admin/sucursales") ||
+        pathname.startsWith("/admin/kiosco"))
     ) {
       const trainerUrl = new URL("/admin/rutinas", request.url);
       trainerUrl.searchParams.set("error", "acceso_economia_denegado");

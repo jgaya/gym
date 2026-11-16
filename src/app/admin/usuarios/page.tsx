@@ -1,7 +1,11 @@
 import { Metadata } from "next";
 import { getCurrentUser } from "@/lib/auth";
 import { Role } from "@lib/generated/prisma/enums";
-import { getUsuarios, getPlanesDisponibles } from "./actions";
+import {
+  getUsuarios,
+  getPlanesDisponibles,
+  getSucursalesDisponibles,
+} from "./actions";
 import { UsuariosClient } from "./UsuariosClient";
 
 export const metadata: Metadata = {
@@ -11,10 +15,11 @@ export const metadata: Metadata = {
 
 export default async function AdminUsuariosPage() {
   // Carga inicial en el servidor para velocidad y SEO
-  const [currentUser, initialData, planes] = await Promise.all([
+  const [currentUser, initialData, planes, sucursales] = await Promise.all([
     getCurrentUser(),
     getUsuarios({ page: 1, pageSize: 10 }),
     getPlanesDisponibles(),
+    getSucursalesDisponibles(),
   ]);
 
   const isSuperAdmin = currentUser?.role === Role.SUPERADMIN;
@@ -34,7 +39,7 @@ export default async function AdminUsuariosPage() {
             Miembros del Gimnasio
           </h1>
           <p className="text-sm text-content-muted mt-1">
-            Administrá altas, modificaciones, asignación de rutinas y planes de los usuarios.
+            Administrá altas, modificaciones, sucursal, asignación de rutinas y planes de los usuarios.
           </p>
         </div>
       </div>
@@ -43,6 +48,7 @@ export default async function AdminUsuariosPage() {
       <UsuariosClient
         initialData={initialData}
         planes={planes}
+        sucursales={sucursales}
         isSuperAdmin={isSuperAdmin}
         isEntrenador={isEntrenador}
       />

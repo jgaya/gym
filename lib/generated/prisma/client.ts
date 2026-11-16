@@ -31,8 +31,8 @@ export * from "./enums.ts"
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Plans
- * const plans = await prisma.plan.findMany()
+ * // Fetch zero or more Sucursals
+ * const sucursals = await prisma.sucursal.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -41,6 +41,11 @@ export const PrismaClient = $Class.getPrismaClientClass()
 export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts extends Prisma.PrismaClientOptions["omit"] = Prisma.PrismaClientOptions["omit"], ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
 export { Prisma }
 
+/**
+ * Model Sucursal
+ * 
+ */
+export type Sucursal = Prisma.SucursalModel
 /**
  * Model Plan
  * 
@@ -111,3 +116,18 @@ export type MedidaCorporal = Prisma.MedidaCorporalModel
  * 
  */
 export type TipoMedidaPersonalizada = Prisma.TipoMedidaPersonalizadaModel
+/**
+ * Model ProductoKiosco
+ * 
+ */
+export type ProductoKiosco = Prisma.ProductoKioscoModel
+/**
+ * Model VentaKiosco
+ * 
+ */
+export type VentaKiosco = Prisma.VentaKioscoModel
+/**
+ * Model GastoOperativo
+ * 
+ */
+export type GastoOperativo = Prisma.GastoOperativoModel

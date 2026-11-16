@@ -18,6 +18,11 @@ export { Prisma }
 export * as $Enums from './enums.ts'
 export * from './enums.ts';
 /**
+ * Model Sucursal
+ * 
+ */
+export type Sucursal = Prisma.SucursalModel
+/**
  * Model Plan
  * 
  */
@@ -87,3 +92,18 @@ export type MedidaCorporal = Prisma.MedidaCorporalModel
  * 
  */
 export type TipoMedidaPersonalizada = Prisma.TipoMedidaPersonalizadaModel
+/**
+ * Model ProductoKiosco
+ * 
+ */
+export type ProductoKiosco = Prisma.ProductoKioscoModel
+/**
+ * Model VentaKiosco
+ * 
+ */
+export type VentaKiosco = Prisma.VentaKioscoModel
+/**
+ * Model GastoOperativo
+ * 
+ */
+export type GastoOperativo = Prisma.GastoOperativoModel

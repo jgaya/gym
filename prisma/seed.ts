@@ -7,6 +7,87 @@ async function main() {
   console.log("🌱 Iniciando seed de la base de datos de Gym Meraki...");
 
   // ---------------------------------------------------------------------------
+  // 0. SUCURSALES DE MERAKI
+  // ---------------------------------------------------------------------------
+  console.log("Creando sucursales...");
+  const sucursal1 = await prisma.sucursal.upsert({
+    where: { id: 1 },
+    update: {
+      telefono: "+54 9 249 412-3451",
+      direccion: "Av. Lunghi 2176",
+      barrio: "El Tropezon",
+      imagen: "/hero-gym.jpg",
+      urlInstagram: "https://www.instagram.com/merakicentrodeentrenamiento/",
+      urlTiktok: "https://www.tiktok.com/@merakisport.tandil",
+      horarios: "Lun a Vie: 06:30 a 11:30 | 14:30 a 21:00",
+      isActive: true,
+    },
+    create: {
+      id: 1,
+      telefono: "+54 9 249 412-3451",
+      direccion: "Av. Lunghi 2176",
+      barrio: "El Tropezon",
+      imagen: "/hero-gym.jpg",
+      urlInstagram: "https://www.instagram.com/merakicentrodeentrenamiento/",
+      urlTiktok: "https://www.tiktok.com/@merakisport.tandil",
+      horarios: "Lun a Vie: 06:30 a 11:30 | 14:30 a 21:00",
+      isActive: true,
+    },
+  });
+
+  const sucursal2 = await prisma.sucursal.upsert({
+    where: { id: 2 },
+    update: {
+      telefono: "+54 9 249 412-3452",
+      direccion: "Quintana 658",
+      barrio: "Villa Italia",
+      imagen: "/hero-gym.jpg",
+      urlInstagram: "https://www.instagram.com/merakicentrodeentrenamiento/",
+      urlTiktok: "https://www.tiktok.com/@merakisport.tandil",
+      horarios: "Lun, Mie, Vie: 07:00 a 12:00 | Lun a Vie: 14:30 a 21:00",
+      isActive: true,
+    },
+    create: {
+      id: 2,
+      telefono: "+54 9 249 412-3452",
+      direccion: "Quintana 658",
+      barrio: "Villa Italia",
+      imagen: "/hero-gym.jpg",
+      urlInstagram: "https://www.instagram.com/merakicentrodeentrenamiento/",
+      urlTiktok: "https://www.tiktok.com/@merakisport.tandil",
+      horarios: "Lun, Mie, Vie: 07:00 a 12:00 | Lun a Vie: 14:30 a 21:00",
+      isActive: true,
+    },
+  });
+
+  const sucursal3 = await prisma.sucursal.upsert({
+    where: { id: 3 },
+    update: {
+      telefono: "+54 9 249 412-3453",
+      direccion: "Av. Del Valle 1380",
+      barrio: "Gardey",
+      imagen: "/hero-gym.jpg",
+      urlInstagram: "https://www.instagram.com/merakicentrodeentrenamiento/",
+      urlTiktok: "https://www.tiktok.com/@merakisport.tandil",
+      horarios: "Lun a Vie: 07:30 a 21:30 | Sáb: 09:00 a 13:00",
+      isActive: true,
+    },
+    create: {
+      id: 3,
+      telefono: "+54 9 249 412-3453",
+      direccion: "Av. Del Valle 1380",
+      barrio: "Gardey",
+      imagen: "/hero-gym.jpg",
+      urlInstagram: "https://www.instagram.com/merakicentrodeentrenamiento/",
+      urlTiktok: "https://www.tiktok.com/@merakisport.tandil",
+      horarios: "Lun a Vie: 07:30 a 21:30 | Sáb: 09:00 a 13:00",
+      isActive: true,
+    },
+  });
+
+  console.log(`✓ Sucursales listas: ${sucursal1.barrio}, ${sucursal2.barrio}, ${sucursal3.barrio}`);
+
+  // ---------------------------------------------------------------------------
   // 1. PLANES DE MEMBRESÍA
   // ---------------------------------------------------------------------------
   console.log("Creando planes de membresía...");
@@ -147,6 +228,7 @@ async function main() {
       birthDate: new Date("1996-05-18"),
       role: Role.USER,
       planId: plan3Dias.id,
+      sucursalId: sucursal1.id,
       isActive: true,
     },
     create: {
@@ -159,6 +241,7 @@ async function main() {
       birthDate: new Date("1996-05-18"),
       role: Role.USER,
       planId: plan3Dias.id,
+      sucursalId: sucursal1.id,
       isActive: true,
     },
   });

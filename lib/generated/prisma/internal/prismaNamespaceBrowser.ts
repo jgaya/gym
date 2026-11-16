@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Sucursal: 'Sucursal',
   Plan: 'Plan',
   Usuario: 'Usuario',
   UsuarioRutinaDia: 'UsuarioRutinaDia',
@@ -64,7 +65,10 @@ export const ModelName = {
   HistorialEjercicio: 'HistorialEjercicio',
   Pago: 'Pago',
   MedidaCorporal: 'MedidaCorporal',
-  TipoMedidaPersonalizada: 'TipoMedidaPersonalizada'
+  TipoMedidaPersonalizada: 'TipoMedidaPersonalizada',
+  ProductoKiosco: 'ProductoKiosco',
+  VentaKiosco: 'VentaKiosco',
+  GastoOperativo: 'GastoOperativo'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -81,6 +85,24 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const SucursalScalarFieldEnum = {
+  id: 'id',
+  telefono: 'telefono',
+  direccion: 'direccion',
+  barrio: 'barrio',
+  imagen: 'imagen',
+  urlInstagram: 'urlInstagram',
+  urlTiktok: 'urlTiktok',
+  horarios: 'horarios',
+  tieneKiosco: 'tieneKiosco',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SucursalScalarFieldEnum = (typeof SucursalScalarFieldEnum)[keyof typeof SucursalScalarFieldEnum]
 
 
 export const PlanScalarFieldEnum = {
@@ -127,6 +149,7 @@ export const UsuarioScalarFieldEnum = {
   objetivoOtro: 'objetivoOtro',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  sucursalId: 'sucursalId',
   planId: 'planId'
 } as const
 
@@ -311,6 +334,65 @@ export const TipoMedidaPersonalizadaScalarFieldEnum = {
 export type TipoMedidaPersonalizadaScalarFieldEnum = (typeof TipoMedidaPersonalizadaScalarFieldEnum)[keyof typeof TipoMedidaPersonalizadaScalarFieldEnum]
 
 
+export const ProductoKioscoScalarFieldEnum = {
+  id: 'id',
+  sucursalId: 'sucursalId',
+  nombre: 'nombre',
+  categoria: 'categoria',
+  precioCompra: 'precioCompra',
+  precioVenta: 'precioVenta',
+  stock: 'stock',
+  stockMinimo: 'stockMinimo',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProductoKioscoScalarFieldEnum = (typeof ProductoKioscoScalarFieldEnum)[keyof typeof ProductoKioscoScalarFieldEnum]
+
+
+export const VentaKioscoScalarFieldEnum = {
+  id: 'id',
+  sucursalId: 'sucursalId',
+  productoId: 'productoId',
+  usuarioId: 'usuarioId',
+  cantidad: 'cantidad',
+  precioCompraUnitario: 'precioCompraUnitario',
+  precioVentaUnitario: 'precioVentaUnitario',
+  totalCosto: 'totalCosto',
+  totalVenta: 'totalVenta',
+  gananciaNeta: 'gananciaNeta',
+  metodoPago: 'metodoPago',
+  notas: 'notas',
+  fechaVenta: 'fechaVenta',
+  mes: 'mes',
+  anio: 'anio',
+  createdAt: 'createdAt'
+} as const
+
+export type VentaKioscoScalarFieldEnum = (typeof VentaKioscoScalarFieldEnum)[keyof typeof VentaKioscoScalarFieldEnum]
+
+
+export const GastoOperativoScalarFieldEnum = {
+  id: 'id',
+  sucursalId: 'sucursalId',
+  concepto: 'concepto',
+  categoria: 'categoria',
+  monto: 'monto',
+  metodoPago: 'metodoPago',
+  comprobante: 'comprobante',
+  notas: 'notas',
+  esRecurrente: 'esRecurrente',
+  fechaGasto: 'fechaGasto',
+  mes: 'mes',
+  anio: 'anio',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GastoOperativoScalarFieldEnum = (typeof GastoOperativoScalarFieldEnum)[keyof typeof GastoOperativoScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -325,6 +407,19 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const SucursalOrderByRelevanceFieldEnum = {
+  telefono: 'telefono',
+  direccion: 'direccion',
+  barrio: 'barrio',
+  imagen: 'imagen',
+  urlInstagram: 'urlInstagram',
+  urlTiktok: 'urlTiktok',
+  horarios: 'horarios'
+} as const
+
+export type SucursalOrderByRelevanceFieldEnum = (typeof SucursalOrderByRelevanceFieldEnum)[keyof typeof SucursalOrderByRelevanceFieldEnum]
 
 
 export const PlanOrderByRelevanceFieldEnum = {
@@ -458,4 +553,31 @@ export const TipoMedidaPersonalizadaOrderByRelevanceFieldEnum = {
 } as const
 
 export type TipoMedidaPersonalizadaOrderByRelevanceFieldEnum = (typeof TipoMedidaPersonalizadaOrderByRelevanceFieldEnum)[keyof typeof TipoMedidaPersonalizadaOrderByRelevanceFieldEnum]
+
+
+export const ProductoKioscoOrderByRelevanceFieldEnum = {
+  nombre: 'nombre',
+  categoria: 'categoria'
+} as const
+
+export type ProductoKioscoOrderByRelevanceFieldEnum = (typeof ProductoKioscoOrderByRelevanceFieldEnum)[keyof typeof ProductoKioscoOrderByRelevanceFieldEnum]
+
+
+export const VentaKioscoOrderByRelevanceFieldEnum = {
+  metodoPago: 'metodoPago',
+  notas: 'notas'
+} as const
+
+export type VentaKioscoOrderByRelevanceFieldEnum = (typeof VentaKioscoOrderByRelevanceFieldEnum)[keyof typeof VentaKioscoOrderByRelevanceFieldEnum]
+
+
+export const GastoOperativoOrderByRelevanceFieldEnum = {
+  concepto: 'concepto',
+  categoria: 'categoria',
+  metodoPago: 'metodoPago',
+  comprobante: 'comprobante',
+  notas: 'notas'
+} as const
+
+export type GastoOperativoOrderByRelevanceFieldEnum = (typeof GastoOperativoOrderByRelevanceFieldEnum)[keyof typeof GastoOperativoOrderByRelevanceFieldEnum]
 

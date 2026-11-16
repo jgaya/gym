@@ -397,6 +397,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  Sucursal: 'Sucursal',
   Plan: 'Plan',
   Usuario: 'Usuario',
   UsuarioRutinaDia: 'UsuarioRutinaDia',
@@ -410,7 +411,10 @@ export const ModelName = {
   HistorialEjercicio: 'HistorialEjercicio',
   Pago: 'Pago',
   MedidaCorporal: 'MedidaCorporal',
-  TipoMedidaPersonalizada: 'TipoMedidaPersonalizada'
+  TipoMedidaPersonalizada: 'TipoMedidaPersonalizada',
+  ProductoKiosco: 'ProductoKiosco',
+  VentaKiosco: 'VentaKiosco',
+  GastoOperativo: 'GastoOperativo'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -426,10 +430,76 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "plan" | "usuario" | "usuarioRutinaDia" | "rutina" | "planRutinaTemplate" | "planRutinaTemplateDia" | "ejercicio" | "rutinaEjercicio" | "usuarioEjercicio" | "sesionEntrenamiento" | "historialEjercicio" | "pago" | "medidaCorporal" | "tipoMedidaPersonalizada"
+    modelProps: "sucursal" | "plan" | "usuario" | "usuarioRutinaDia" | "rutina" | "planRutinaTemplate" | "planRutinaTemplateDia" | "ejercicio" | "rutinaEjercicio" | "usuarioEjercicio" | "sesionEntrenamiento" | "historialEjercicio" | "pago" | "medidaCorporal" | "tipoMedidaPersonalizada" | "productoKiosco" | "ventaKiosco" | "gastoOperativo"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    Sucursal: {
+      payload: Prisma.$SucursalPayload<ExtArgs>
+      fields: Prisma.SucursalFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SucursalFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SucursalPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SucursalFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SucursalPayload>
+        }
+        findFirst: {
+          args: Prisma.SucursalFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SucursalPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SucursalFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SucursalPayload>
+        }
+        findMany: {
+          args: Prisma.SucursalFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SucursalPayload>[]
+        }
+        create: {
+          args: Prisma.SucursalCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SucursalPayload>
+        }
+        createMany: {
+          args: Prisma.SucursalCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.SucursalDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SucursalPayload>
+        }
+        update: {
+          args: Prisma.SucursalUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SucursalPayload>
+        }
+        deleteMany: {
+          args: Prisma.SucursalDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SucursalUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.SucursalUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SucursalPayload>
+        }
+        aggregate: {
+          args: Prisma.SucursalAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSucursal>
+        }
+        groupBy: {
+          args: Prisma.SucursalGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SucursalGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SucursalCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SucursalCountAggregateOutputType> | number
+        }
+      }
+    }
     Plan: {
       payload: Prisma.$PlanPayload<ExtArgs>
       fields: Prisma.PlanFieldRefs
@@ -1354,6 +1424,204 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ProductoKiosco: {
+      payload: Prisma.$ProductoKioscoPayload<ExtArgs>
+      fields: Prisma.ProductoKioscoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProductoKioscoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductoKioscoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProductoKioscoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductoKioscoPayload>
+        }
+        findFirst: {
+          args: Prisma.ProductoKioscoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductoKioscoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProductoKioscoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductoKioscoPayload>
+        }
+        findMany: {
+          args: Prisma.ProductoKioscoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductoKioscoPayload>[]
+        }
+        create: {
+          args: Prisma.ProductoKioscoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductoKioscoPayload>
+        }
+        createMany: {
+          args: Prisma.ProductoKioscoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ProductoKioscoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductoKioscoPayload>
+        }
+        update: {
+          args: Prisma.ProductoKioscoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductoKioscoPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProductoKioscoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProductoKioscoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ProductoKioscoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductoKioscoPayload>
+        }
+        aggregate: {
+          args: Prisma.ProductoKioscoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProductoKiosco>
+        }
+        groupBy: {
+          args: Prisma.ProductoKioscoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductoKioscoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProductoKioscoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductoKioscoCountAggregateOutputType> | number
+        }
+      }
+    }
+    VentaKiosco: {
+      payload: Prisma.$VentaKioscoPayload<ExtArgs>
+      fields: Prisma.VentaKioscoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VentaKioscoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentaKioscoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VentaKioscoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentaKioscoPayload>
+        }
+        findFirst: {
+          args: Prisma.VentaKioscoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentaKioscoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VentaKioscoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentaKioscoPayload>
+        }
+        findMany: {
+          args: Prisma.VentaKioscoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentaKioscoPayload>[]
+        }
+        create: {
+          args: Prisma.VentaKioscoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentaKioscoPayload>
+        }
+        createMany: {
+          args: Prisma.VentaKioscoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.VentaKioscoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentaKioscoPayload>
+        }
+        update: {
+          args: Prisma.VentaKioscoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentaKioscoPayload>
+        }
+        deleteMany: {
+          args: Prisma.VentaKioscoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VentaKioscoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.VentaKioscoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VentaKioscoPayload>
+        }
+        aggregate: {
+          args: Prisma.VentaKioscoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVentaKiosco>
+        }
+        groupBy: {
+          args: Prisma.VentaKioscoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VentaKioscoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VentaKioscoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VentaKioscoCountAggregateOutputType> | number
+        }
+      }
+    }
+    GastoOperativo: {
+      payload: Prisma.$GastoOperativoPayload<ExtArgs>
+      fields: Prisma.GastoOperativoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GastoOperativoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoOperativoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GastoOperativoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoOperativoPayload>
+        }
+        findFirst: {
+          args: Prisma.GastoOperativoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoOperativoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GastoOperativoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoOperativoPayload>
+        }
+        findMany: {
+          args: Prisma.GastoOperativoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoOperativoPayload>[]
+        }
+        create: {
+          args: Prisma.GastoOperativoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoOperativoPayload>
+        }
+        createMany: {
+          args: Prisma.GastoOperativoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.GastoOperativoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoOperativoPayload>
+        }
+        update: {
+          args: Prisma.GastoOperativoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoOperativoPayload>
+        }
+        deleteMany: {
+          args: Prisma.GastoOperativoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GastoOperativoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.GastoOperativoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GastoOperativoPayload>
+        }
+        aggregate: {
+          args: Prisma.GastoOperativoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGastoOperativo>
+        }
+        groupBy: {
+          args: Prisma.GastoOperativoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GastoOperativoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GastoOperativoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GastoOperativoCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1391,6 +1659,24 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const SucursalScalarFieldEnum = {
+  id: 'id',
+  telefono: 'telefono',
+  direccion: 'direccion',
+  barrio: 'barrio',
+  imagen: 'imagen',
+  urlInstagram: 'urlInstagram',
+  urlTiktok: 'urlTiktok',
+  horarios: 'horarios',
+  tieneKiosco: 'tieneKiosco',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SucursalScalarFieldEnum = (typeof SucursalScalarFieldEnum)[keyof typeof SucursalScalarFieldEnum]
 
 
 export const PlanScalarFieldEnum = {
@@ -1437,6 +1723,7 @@ export const UsuarioScalarFieldEnum = {
   objetivoOtro: 'objetivoOtro',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  sucursalId: 'sucursalId',
   planId: 'planId'
 } as const
 
@@ -1621,6 +1908,65 @@ export const TipoMedidaPersonalizadaScalarFieldEnum = {
 export type TipoMedidaPersonalizadaScalarFieldEnum = (typeof TipoMedidaPersonalizadaScalarFieldEnum)[keyof typeof TipoMedidaPersonalizadaScalarFieldEnum]
 
 
+export const ProductoKioscoScalarFieldEnum = {
+  id: 'id',
+  sucursalId: 'sucursalId',
+  nombre: 'nombre',
+  categoria: 'categoria',
+  precioCompra: 'precioCompra',
+  precioVenta: 'precioVenta',
+  stock: 'stock',
+  stockMinimo: 'stockMinimo',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProductoKioscoScalarFieldEnum = (typeof ProductoKioscoScalarFieldEnum)[keyof typeof ProductoKioscoScalarFieldEnum]
+
+
+export const VentaKioscoScalarFieldEnum = {
+  id: 'id',
+  sucursalId: 'sucursalId',
+  productoId: 'productoId',
+  usuarioId: 'usuarioId',
+  cantidad: 'cantidad',
+  precioCompraUnitario: 'precioCompraUnitario',
+  precioVentaUnitario: 'precioVentaUnitario',
+  totalCosto: 'totalCosto',
+  totalVenta: 'totalVenta',
+  gananciaNeta: 'gananciaNeta',
+  metodoPago: 'metodoPago',
+  notas: 'notas',
+  fechaVenta: 'fechaVenta',
+  mes: 'mes',
+  anio: 'anio',
+  createdAt: 'createdAt'
+} as const
+
+export type VentaKioscoScalarFieldEnum = (typeof VentaKioscoScalarFieldEnum)[keyof typeof VentaKioscoScalarFieldEnum]
+
+
+export const GastoOperativoScalarFieldEnum = {
+  id: 'id',
+  sucursalId: 'sucursalId',
+  concepto: 'concepto',
+  categoria: 'categoria',
+  monto: 'monto',
+  metodoPago: 'metodoPago',
+  comprobante: 'comprobante',
+  notas: 'notas',
+  esRecurrente: 'esRecurrente',
+  fechaGasto: 'fechaGasto',
+  mes: 'mes',
+  anio: 'anio',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GastoOperativoScalarFieldEnum = (typeof GastoOperativoScalarFieldEnum)[keyof typeof GastoOperativoScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1635,6 +1981,19 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const SucursalOrderByRelevanceFieldEnum = {
+  telefono: 'telefono',
+  direccion: 'direccion',
+  barrio: 'barrio',
+  imagen: 'imagen',
+  urlInstagram: 'urlInstagram',
+  urlTiktok: 'urlTiktok',
+  horarios: 'horarios'
+} as const
+
+export type SucursalOrderByRelevanceFieldEnum = (typeof SucursalOrderByRelevanceFieldEnum)[keyof typeof SucursalOrderByRelevanceFieldEnum]
 
 
 export const PlanOrderByRelevanceFieldEnum = {
@@ -1770,6 +2129,33 @@ export const TipoMedidaPersonalizadaOrderByRelevanceFieldEnum = {
 export type TipoMedidaPersonalizadaOrderByRelevanceFieldEnum = (typeof TipoMedidaPersonalizadaOrderByRelevanceFieldEnum)[keyof typeof TipoMedidaPersonalizadaOrderByRelevanceFieldEnum]
 
 
+export const ProductoKioscoOrderByRelevanceFieldEnum = {
+  nombre: 'nombre',
+  categoria: 'categoria'
+} as const
+
+export type ProductoKioscoOrderByRelevanceFieldEnum = (typeof ProductoKioscoOrderByRelevanceFieldEnum)[keyof typeof ProductoKioscoOrderByRelevanceFieldEnum]
+
+
+export const VentaKioscoOrderByRelevanceFieldEnum = {
+  metodoPago: 'metodoPago',
+  notas: 'notas'
+} as const
+
+export type VentaKioscoOrderByRelevanceFieldEnum = (typeof VentaKioscoOrderByRelevanceFieldEnum)[keyof typeof VentaKioscoOrderByRelevanceFieldEnum]
+
+
+export const GastoOperativoOrderByRelevanceFieldEnum = {
+  concepto: 'concepto',
+  categoria: 'categoria',
+  metodoPago: 'metodoPago',
+  comprobante: 'comprobante',
+  notas: 'notas'
+} as const
+
+export type GastoOperativoOrderByRelevanceFieldEnum = (typeof GastoOperativoOrderByRelevanceFieldEnum)[keyof typeof GastoOperativoOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -1791,13 +2177,6 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
 
 
 /**
- * Reference to a field of type 'Decimal'
- */
-export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
-
-
-/**
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -1808,6 +2187,13 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
     
 
 
@@ -1975,6 +2361,7 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
  */
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
+  sucursal?: Prisma.SucursalOmit
   plan?: Prisma.PlanOmit
   usuario?: Prisma.UsuarioOmit
   usuarioRutinaDia?: Prisma.UsuarioRutinaDiaOmit
@@ -1989,6 +2376,9 @@ export type GlobalOmitConfig = {
   pago?: Prisma.PagoOmit
   medidaCorporal?: Prisma.MedidaCorporalOmit
   tipoMedidaPersonalizada?: Prisma.TipoMedidaPersonalizadaOmit
+  productoKiosco?: Prisma.ProductoKioscoOmit
+  ventaKiosco?: Prisma.VentaKioscoOmit
+  gastoOperativo?: Prisma.GastoOperativoOmit
 }
 
 /* Types for Logging */

@@ -8,6 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/Sucursal.ts'
 export type * from './models/Plan.ts'
 export type * from './models/Usuario.ts'
 export type * from './models/UsuarioRutinaDia.ts'
@@ -22,4 +23,7 @@ export type * from './models/HistorialEjercicio.ts'
 export type * from './models/Pago.ts'
 export type * from './models/MedidaCorporal.ts'
 export type * from './models/TipoMedidaPersonalizada.ts'
+export type * from './models/ProductoKiosco.ts'
+export type * from './models/VentaKiosco.ts'
+export type * from './models/GastoOperativo.ts'
 export type * from './commonInputTypes.ts'

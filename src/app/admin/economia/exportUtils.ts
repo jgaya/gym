@@ -21,23 +21,102 @@ export function exportarBalanceExcel(data: EconomiaDataResponse) {
 
   const lines: string[] = [];
 
+  const sucursalActual =
+    data.sucursalSeleccionadaId !== null
+      ? data.sucursalesResumen?.find((s) => s.id === data.sucursalSeleccionadaId)
+      : null;
+
   // Encabezado del reporte
   lines.push(`"REPORTE ECONÓMICO Y BALANCE DE CAJA - GYM MERAKI"`);
+  lines.push(
+    `"Vista:","${
+      sucursalActual
+        ? `Sucursal ${sucursalActual.barrio} (${sucursalActual.direccion})`
+        : "Vista Global (Sumatoria de todas las sucursales)"
+    }"`
+  );
   lines.push(`"Período:","${metricas.nombreMes} ${metricas.anio}"`);
   lines.push(`"Fecha de Emisión:","${new Date().toLocaleString("es-AR")}"`);
   lines.push("");
 
   // 1. Resumen de Métricas / Balance
-  lines.push(`"--- RESUMEN EJECUTIVO DE CAJA ---"`);
+  lines.push(`"--- RESUMEN EJECUTIVO DE CAJA Y ESTADO DE RESULTADOS (P&L) ---"`);
   lines.push(`"Concepto","Valor"`);
-  lines.push(`"Total Potencial Mensual",${metricas.recaudacionTotalPotencial}`);
-  lines.push(`"Recaudación Cobrada Hasta Ahora",${metricas.recaudacionHastaAhora}`);
-  lines.push(`"Saldo Pendiente de Cobro",${metricas.pendienteCobro}`);
+  lines.push(`"Total Potencial Mensual (Cuotas)",${metricas.recaudacionTotalPotencial}`);
+  lines.push(`"Recaudación Cuotas Cobradas",${metricas.recaudacionHastaAhora}`);
+  lines.push(`"Saldo Pendiente de Cobro (Cuotas)",${metricas.pendienteCobro}`);
   lines.push(`"Porcentaje de Cobranza Cumplido","${metricas.porcentajeCobrado}%"`);
+  lines.push(`"Ventas Kiosco / Mostrador (Bruto)",${metricas.ingresosKiosco}`);
+  lines.push(`"Costo Mercadería Kiosco",${metricas.costoKiosco}`);
+  lines.push(`"Ganancia Neta Kiosco",${metricas.gananciaNetaKiosco}`);
+  lines.push(`"Cantidad de Ventas Kiosco",${metricas.cantidadVentasKiosco}`);
+  lines.push(`"Recaudación Total Caja (Cuotas + Kiosco)",${metricas.recaudacionTotalConKiosco}`);
+  lines.push(`"Gastos Operativos del Mes (Alquiler, Profesores, Luz, Máquinas)",${metricas.totalGastosOperativos}`);
+  lines.push(`"Egresos Totales (Gastos Operativos + Costo Kiosco)",${metricas.egresosTotales}`);
+  lines.push(`"Beneficio Neto Real (Ingresos - Egresos)",${metricas.beneficioNetoReal}`);
+  lines.push(`"Margen Neto Real (%)","${metricas.margenNetoPorcentaje}%"`);
   lines.push(`"Total Miembros Activos con Plan",${metricas.totalMiembrosConPlan}`);
   lines.push(`"Miembros con Cuota Pagada",${metricas.miembrosPagados}`);
   lines.push(`"Miembros con Cuota Pendiente",${metricas.miembrosPendientes}`);
   lines.push("");
+
+  // 1.b Desglose por sucursal cuando es Vista Global
+  if (
+    data.sucursalSeleccionadaId === null &&
+    data.sucursalesResumen &&
+    data.sucursalesResumen.length > 0
+  ) {
+    lines.push(`"--- DESGLOSE POR SUCURSAL ---"`);
+    lines.push(
+      `"Sucursal (Barrio)","Dirección","Kiosco Habilitado","Recaudado Cuotas","Ventas Kiosco","Ganancia Neta Kiosco","Total Caja (Cuotas + Kiosco)","Gastos Operativos","Beneficio Neto Real","Margen Neto %","Potencial Cuotas","Pendiente Cuotas","% Cobrado","Socios Pagados","Socios Pendientes"`
+    );
+    data.sucursalesResumen.forEach((s) => {
+      lines.push(
+        [
+          escapeCsv(s.barrio),
+          escapeCsv(s.direccion),
+          escapeCsv(s.tieneKiosco ? "SÍ" : "NO"),
+          s.recaudacionHastaAhora,
+          s.ingresosKiosco,
+          s.gananciaNetaKiosco,
+          s.recaudacionTotalConKiosco,
+          s.totalGastosOperativos,
+          s.beneficioNetoReal,
+          `"${s.margenNetoPorcentaje}%"`,
+          s.recaudacionTotalPotencial,
+          s.pendienteCobro,
+          `"${s.porcentajeCobrado}%"`,
+          s.miembrosPagados,
+          s.miembrosPendientes,
+        ].join(",")
+      );
+    });
+    lines.push("");
+  }
+
+  // 1.c Detalle de Gastos Operativos del Mes
+  if (data.gastosOperativos && data.gastosOperativos.length > 0) {
+    lines.push(`"--- DETALLE DE GASTOS OPERATIVOS (${metricas.nombreMes} ${metricas.anio}) ---"`);
+    lines.push(
+      `"Fecha","Sucursal","Categoría","Concepto","Tipo","Medio de Pago","Comprobante","Monto","Notas"`
+    );
+    data.gastosOperativos.forEach((g) => {
+      lines.push(
+        [
+          escapeCsv(new Date(g.fechaGasto).toLocaleDateString("es-AR")),
+          escapeCsv(g.sucursal.barrio),
+          escapeCsv(g.categoria),
+          escapeCsv(g.concepto),
+          escapeCsv(g.esRecurrente ? "Fijo Mensual" : "Eventual"),
+          escapeCsv(g.metodoPago),
+          escapeCsv(g.comprobante || ""),
+          g.monto,
+          escapeCsv(g.notas || ""),
+        ].join(",")
+      );
+    });
+    lines.push("");
+  }
 
   // 2. Desglose por método de pago
   if (metodosPagoDesglose && metodosPagoDesglose.length > 0) {
@@ -61,6 +140,7 @@ export function exportarBalanceExcel(data: EconomiaDataResponse) {
       `"DNI"`,
       `"Email"`,
       `"Teléfono"`,
+      `"Sucursal"`,
       `"Plan Asignado"`,
       `"Importe Cuota Plan"`,
       `"Estado Cuota"`,
@@ -82,6 +162,9 @@ export function exportarBalanceExcel(data: EconomiaDataResponse) {
     const metodo = u.pagoMesActual?.metodoPago || "";
     const comprobante = u.pagoMesActual?.comprobante || "";
     const notas = u.pagoMesActual?.notas || "";
+    const sucursalNombre = u.sucursal
+      ? `${u.sucursal.barrio} (${u.sucursal.direccion})`
+      : "Sin sucursal";
 
     lines.push(
       [
@@ -91,6 +174,7 @@ export function exportarBalanceExcel(data: EconomiaDataResponse) {
         escapeCsv(u.dni),
         escapeCsv(u.email),
         escapeCsv(u.telefono),
+        escapeCsv(sucursalNombre),
         escapeCsv(u.plan ? u.plan.nombre : "Sin Plan"),
         importePlan,
         escapeCsv(estado),
@@ -333,28 +417,77 @@ export function exportarBalancePDF(data: EconomiaDataResponse) {
   </div>
 
   <!-- KPI SUMMARY -->
-  <div class="kpi-grid">
+  <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr);">
     <div class="kpi-card">
-      <div class="kpi-title">Recaudado Hasta Ahora</div>
+      <div class="kpi-title">Cuotas Cobradas</div>
       <div class="kpi-value" style="color: #16a34a;">${formatMoney(metricas.recaudacionHastaAhora)}</div>
-      <div class="kpi-sub">${metricas.porcentajeCobrado}% del potencial total</div>
+      <div class="kpi-sub">${metricas.porcentajeCobrado}% del potencial (${formatMoney(metricas.recaudacionTotalPotencial)})</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-title">Total Potencial Mensual</div>
-      <div class="kpi-value">${formatMoney(metricas.recaudacionTotalPotencial)}</div>
-      <div class="kpi-sub">Cuotas al 100% socios activos</div>
+      <div class="kpi-title">Ventas Kiosco (Bruto)</div>
+      <div class="kpi-value" style="color: #0284c7;">${formatMoney(metricas.ingresosKiosco)}</div>
+      <div class="kpi-sub">Ganancia Neta: ${formatMoney(metricas.gananciaNetaKiosco)} (Costo: ${formatMoney(metricas.costoKiosco)})</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-title">Total Ingresos Caja</div>
+      <div class="kpi-value">${formatMoney(metricas.recaudacionTotalConKiosco)}</div>
+      <div class="kpi-sub">Cuotas cobradas + Ventas Kiosco</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-title">Gastos Operativos</div>
+      <div class="kpi-value" style="color: #e11d48;">-${formatMoney(metricas.totalGastosOperativos)}</div>
+      <div class="kpi-sub">Egresos totales (c/ costo kiosco): -${formatMoney(metricas.egresosTotales)}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-title">Beneficio Neto Real</div>
+      <div class="kpi-value" style="color: ${metricas.beneficioNetoReal >= 0 ? "#16a34a" : "#e11d48"};">${metricas.beneficioNetoReal >= 0 ? "+" : ""}${formatMoney(metricas.beneficioNetoReal)}</div>
+      <div class="kpi-sub">Margen Neto: ${metricas.margenNetoPorcentaje}% (Ingresos vs Egresos)</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-title">Pendiente de Cobro</div>
       <div class="kpi-value" style="color: #d97706;">${formatMoney(metricas.pendienteCobro)}</div>
-      <div class="kpi-sub">${metricas.miembrosPendientes} socios morosos</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-title">Cumplimiento de Cobro</div>
-      <div class="kpi-value">${metricas.miembrosPagados} / ${metricas.totalMiembrosConPlan}</div>
-      <div class="kpi-sub">${metricas.totalMiembrosConPlan > 0 ? Math.round((metricas.miembrosPagados / metricas.totalMiembrosConPlan) * 100) : 0}% socios al día</div>
+      <div class="kpi-sub">${metricas.miembrosPagados}/${metricas.totalMiembrosConPlan} socios al día</div>
     </div>
   </div>
+
+  <!-- DETALLE DE GASTOS OPERATIVOS -->
+  ${
+    data.gastosOperativos && data.gastosOperativos.length > 0
+      ? `
+  <div class="section-title">Detalle de Gastos Operativos (${data.gastosOperativos.length} Registros)</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Sucursal</th>
+        <th>Categoría</th>
+        <th>Concepto</th>
+        <th>Tipo</th>
+        <th>Medio de Pago</th>
+        <th class="text-right">Monto Egreso</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${data.gastosOperativos
+        .map(
+          (g) => `
+        <tr>
+          <td>${new Date(g.fechaGasto).toLocaleDateString("es-AR")}</td>
+          <td><strong>${g.sucursal.barrio}</strong></td>
+          <td>${g.categoria}</td>
+          <td>${g.concepto}${g.notas ? `<br><span style="font-size: 8.5px; color: #64748b;">${g.notas}</span>` : ""}</td>
+          <td>${g.esRecurrente ? "Fijo Mensual" : "Eventual"}</td>
+          <td>${g.metodoPago}</td>
+          <td class="text-right" style="color: #e11d48;"><strong>-${formatMoney(g.monto)}</strong></td>
+        </tr>
+      `
+        )
+        .join("")}
+    </tbody>
+  </table>
+  `
+      : ""
+  }
 
   <!-- DESGLOSE MEDIOS DE PAGO -->
   ${

@@ -28,11 +28,13 @@ export type AggregateUsuario = {
 
 export type UsuarioAvgAggregateOutputType = {
   id: number | null
+  sucursalId: number | null
   planId: number | null
 }
 
 export type UsuarioSumAggregateOutputType = {
   id: number | null
+  sucursalId: number | null
   planId: number | null
 }
 
@@ -66,6 +68,7 @@ export type UsuarioMinAggregateOutputType = {
   objetivoOtro: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  sucursalId: number | null
   planId: number | null
 }
 
@@ -99,6 +102,7 @@ export type UsuarioMaxAggregateOutputType = {
   objetivoOtro: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  sucursalId: number | null
   planId: number | null
 }
 
@@ -132,6 +136,7 @@ export type UsuarioCountAggregateOutputType = {
   objetivoOtro: number
   createdAt: number
   updatedAt: number
+  sucursalId: number
   planId: number
   _all: number
 }
@@ -139,11 +144,13 @@ export type UsuarioCountAggregateOutputType = {
 
 export type UsuarioAvgAggregateInputType = {
   id?: true
+  sucursalId?: true
   planId?: true
 }
 
 export type UsuarioSumAggregateInputType = {
   id?: true
+  sucursalId?: true
   planId?: true
 }
 
@@ -177,6 +184,7 @@ export type UsuarioMinAggregateInputType = {
   objetivoOtro?: true
   createdAt?: true
   updatedAt?: true
+  sucursalId?: true
   planId?: true
 }
 
@@ -210,6 +218,7 @@ export type UsuarioMaxAggregateInputType = {
   objetivoOtro?: true
   createdAt?: true
   updatedAt?: true
+  sucursalId?: true
   planId?: true
 }
 
@@ -243,6 +252,7 @@ export type UsuarioCountAggregateInputType = {
   objetivoOtro?: true
   createdAt?: true
   updatedAt?: true
+  sucursalId?: true
   planId?: true
   _all?: true
 }
@@ -363,6 +373,7 @@ export type UsuarioGroupByOutputType = {
   objetivoOtro: string | null
   createdAt: Date
   updatedAt: Date
+  sucursalId: number | null
   planId: number | null
   _count: UsuarioCountAggregateOutputType | null
   _avg: UsuarioAvgAggregateOutputType | null
@@ -419,7 +430,9 @@ export type UsuarioWhereInput = {
   objetivoOtro?: Prisma.StringNullableFilter<"Usuario"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
+  sucursalId?: Prisma.IntNullableFilter<"Usuario"> | number | null
   planId?: Prisma.IntNullableFilter<"Usuario"> | number | null
+  sucursal?: Prisma.XOR<Prisma.SucursalNullableScalarRelationFilter, Prisma.SucursalWhereInput> | null
   plan?: Prisma.XOR<Prisma.PlanNullableScalarRelationFilter, Prisma.PlanWhereInput> | null
   rutinasDias?: Prisma.UsuarioRutinaDiaListRelationFilter
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioListRelationFilter
@@ -428,6 +441,7 @@ export type UsuarioWhereInput = {
   pagos?: Prisma.PagoListRelationFilter
   medidas?: Prisma.MedidaCorporalListRelationFilter
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaListRelationFilter
+  ventasKiosco?: Prisma.VentaKioscoListRelationFilter
 }
 
 export type UsuarioOrderByWithRelationInput = {
@@ -460,7 +474,9 @@ export type UsuarioOrderByWithRelationInput = {
   objetivoOtro?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  sucursalId?: Prisma.SortOrderInput | Prisma.SortOrder
   planId?: Prisma.SortOrderInput | Prisma.SortOrder
+  sucursal?: Prisma.SucursalOrderByWithRelationInput
   plan?: Prisma.PlanOrderByWithRelationInput
   rutinasDias?: Prisma.UsuarioRutinaDiaOrderByRelationAggregateInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioOrderByRelationAggregateInput
@@ -469,6 +485,7 @@ export type UsuarioOrderByWithRelationInput = {
   pagos?: Prisma.PagoOrderByRelationAggregateInput
   medidas?: Prisma.MedidaCorporalOrderByRelationAggregateInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaOrderByRelationAggregateInput
+  ventasKiosco?: Prisma.VentaKioscoOrderByRelationAggregateInput
   _relevance?: Prisma.UsuarioOrderByRelevanceInput
 }
 
@@ -505,7 +522,9 @@ export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
   objetivoOtro?: Prisma.StringNullableFilter<"Usuario"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
+  sucursalId?: Prisma.IntNullableFilter<"Usuario"> | number | null
   planId?: Prisma.IntNullableFilter<"Usuario"> | number | null
+  sucursal?: Prisma.XOR<Prisma.SucursalNullableScalarRelationFilter, Prisma.SucursalWhereInput> | null
   plan?: Prisma.XOR<Prisma.PlanNullableScalarRelationFilter, Prisma.PlanWhereInput> | null
   rutinasDias?: Prisma.UsuarioRutinaDiaListRelationFilter
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioListRelationFilter
@@ -514,6 +533,7 @@ export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
   pagos?: Prisma.PagoListRelationFilter
   medidas?: Prisma.MedidaCorporalListRelationFilter
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaListRelationFilter
+  ventasKiosco?: Prisma.VentaKioscoListRelationFilter
 }, "id" | "email" | "dni">
 
 export type UsuarioOrderByWithAggregationInput = {
@@ -546,6 +566,7 @@ export type UsuarioOrderByWithAggregationInput = {
   objetivoOtro?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  sucursalId?: Prisma.SortOrderInput | Prisma.SortOrder
   planId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UsuarioCountOrderByAggregateInput
   _avg?: Prisma.UsuarioAvgOrderByAggregateInput
@@ -587,6 +608,7 @@ export type UsuarioScalarWhereWithAggregatesInput = {
   objetivoOtro?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Usuario"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Usuario"> | Date | string
+  sucursalId?: Prisma.IntNullableWithAggregatesFilter<"Usuario"> | number | null
   planId?: Prisma.IntNullableWithAggregatesFilter<"Usuario"> | number | null
 }
 
@@ -619,6 +641,7 @@ export type UsuarioCreateInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursal?: Prisma.SucursalCreateNestedOneWithoutUsuariosInput
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
   rutinasDias?: Prisma.UsuarioRutinaDiaCreateNestedManyWithoutUsuarioInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioCreateNestedManyWithoutUsuarioInput
@@ -627,6 +650,7 @@ export type UsuarioCreateInput = {
   pagos?: Prisma.PagoCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioUncheckedCreateInput = {
@@ -659,6 +683,7 @@ export type UsuarioUncheckedCreateInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursalId?: number | null
   planId?: number | null
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedCreateNestedManyWithoutUsuarioInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedCreateNestedManyWithoutUsuarioInput
@@ -667,6 +692,7 @@ export type UsuarioUncheckedCreateInput = {
   pagos?: Prisma.PagoUncheckedCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalUncheckedCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioUpdateInput = {
@@ -698,6 +724,7 @@ export type UsuarioUpdateInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursal?: Prisma.SucursalUpdateOneWithoutUsuariosNestedInput
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
   rutinasDias?: Prisma.UsuarioRutinaDiaUpdateManyWithoutUsuarioNestedInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUpdateManyWithoutUsuarioNestedInput
@@ -706,6 +733,7 @@ export type UsuarioUpdateInput = {
   pagos?: Prisma.PagoUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioUncheckedUpdateInput = {
@@ -738,6 +766,7 @@ export type UsuarioUncheckedUpdateInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursalId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -746,6 +775,7 @@ export type UsuarioUncheckedUpdateInput = {
   pagos?: Prisma.PagoUncheckedUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUncheckedUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioCreateManyInput = {
@@ -778,6 +808,7 @@ export type UsuarioCreateManyInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursalId?: number | null
   planId?: number | null
 }
 
@@ -842,6 +873,7 @@ export type UsuarioUncheckedUpdateManyInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursalId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
@@ -891,11 +923,13 @@ export type UsuarioCountOrderByAggregateInput = {
   objetivoOtro?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  sucursalId?: Prisma.SortOrder
   planId?: Prisma.SortOrder
 }
 
 export type UsuarioAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  sucursalId?: Prisma.SortOrder
   planId?: Prisma.SortOrder
 }
 
@@ -929,6 +963,7 @@ export type UsuarioMaxOrderByAggregateInput = {
   objetivoOtro?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  sucursalId?: Prisma.SortOrder
   planId?: Prisma.SortOrder
 }
 
@@ -962,17 +997,66 @@ export type UsuarioMinOrderByAggregateInput = {
   objetivoOtro?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  sucursalId?: Prisma.SortOrder
   planId?: Prisma.SortOrder
 }
 
 export type UsuarioSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  sucursalId?: Prisma.SortOrder
   planId?: Prisma.SortOrder
 }
 
 export type UsuarioScalarRelationFilter = {
   is?: Prisma.UsuarioWhereInput
   isNot?: Prisma.UsuarioWhereInput
+}
+
+export type UsuarioNullableScalarRelationFilter = {
+  is?: Prisma.UsuarioWhereInput | null
+  isNot?: Prisma.UsuarioWhereInput | null
+}
+
+export type UsuarioCreateNestedManyWithoutSucursalInput = {
+  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutSucursalInput, Prisma.UsuarioUncheckedCreateWithoutSucursalInput> | Prisma.UsuarioCreateWithoutSucursalInput[] | Prisma.UsuarioUncheckedCreateWithoutSucursalInput[]
+  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutSucursalInput | Prisma.UsuarioCreateOrConnectWithoutSucursalInput[]
+  createMany?: Prisma.UsuarioCreateManySucursalInputEnvelope
+  connect?: Prisma.UsuarioWhereUniqueInput | Prisma.UsuarioWhereUniqueInput[]
+}
+
+export type UsuarioUncheckedCreateNestedManyWithoutSucursalInput = {
+  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutSucursalInput, Prisma.UsuarioUncheckedCreateWithoutSucursalInput> | Prisma.UsuarioCreateWithoutSucursalInput[] | Prisma.UsuarioUncheckedCreateWithoutSucursalInput[]
+  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutSucursalInput | Prisma.UsuarioCreateOrConnectWithoutSucursalInput[]
+  createMany?: Prisma.UsuarioCreateManySucursalInputEnvelope
+  connect?: Prisma.UsuarioWhereUniqueInput | Prisma.UsuarioWhereUniqueInput[]
+}
+
+export type UsuarioUpdateManyWithoutSucursalNestedInput = {
+  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutSucursalInput, Prisma.UsuarioUncheckedCreateWithoutSucursalInput> | Prisma.UsuarioCreateWithoutSucursalInput[] | Prisma.UsuarioUncheckedCreateWithoutSucursalInput[]
+  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutSucursalInput | Prisma.UsuarioCreateOrConnectWithoutSucursalInput[]
+  upsert?: Prisma.UsuarioUpsertWithWhereUniqueWithoutSucursalInput | Prisma.UsuarioUpsertWithWhereUniqueWithoutSucursalInput[]
+  createMany?: Prisma.UsuarioCreateManySucursalInputEnvelope
+  set?: Prisma.UsuarioWhereUniqueInput | Prisma.UsuarioWhereUniqueInput[]
+  disconnect?: Prisma.UsuarioWhereUniqueInput | Prisma.UsuarioWhereUniqueInput[]
+  delete?: Prisma.UsuarioWhereUniqueInput | Prisma.UsuarioWhereUniqueInput[]
+  connect?: Prisma.UsuarioWhereUniqueInput | Prisma.UsuarioWhereUniqueInput[]
+  update?: Prisma.UsuarioUpdateWithWhereUniqueWithoutSucursalInput | Prisma.UsuarioUpdateWithWhereUniqueWithoutSucursalInput[]
+  updateMany?: Prisma.UsuarioUpdateManyWithWhereWithoutSucursalInput | Prisma.UsuarioUpdateManyWithWhereWithoutSucursalInput[]
+  deleteMany?: Prisma.UsuarioScalarWhereInput | Prisma.UsuarioScalarWhereInput[]
+}
+
+export type UsuarioUncheckedUpdateManyWithoutSucursalNestedInput = {
+  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutSucursalInput, Prisma.UsuarioUncheckedCreateWithoutSucursalInput> | Prisma.UsuarioCreateWithoutSucursalInput[] | Prisma.UsuarioUncheckedCreateWithoutSucursalInput[]
+  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutSucursalInput | Prisma.UsuarioCreateOrConnectWithoutSucursalInput[]
+  upsert?: Prisma.UsuarioUpsertWithWhereUniqueWithoutSucursalInput | Prisma.UsuarioUpsertWithWhereUniqueWithoutSucursalInput[]
+  createMany?: Prisma.UsuarioCreateManySucursalInputEnvelope
+  set?: Prisma.UsuarioWhereUniqueInput | Prisma.UsuarioWhereUniqueInput[]
+  disconnect?: Prisma.UsuarioWhereUniqueInput | Prisma.UsuarioWhereUniqueInput[]
+  delete?: Prisma.UsuarioWhereUniqueInput | Prisma.UsuarioWhereUniqueInput[]
+  connect?: Prisma.UsuarioWhereUniqueInput | Prisma.UsuarioWhereUniqueInput[]
+  update?: Prisma.UsuarioUpdateWithWhereUniqueWithoutSucursalInput | Prisma.UsuarioUpdateWithWhereUniqueWithoutSucursalInput[]
+  updateMany?: Prisma.UsuarioUpdateManyWithWhereWithoutSucursalInput | Prisma.UsuarioUpdateManyWithWhereWithoutSucursalInput[]
+  deleteMany?: Prisma.UsuarioScalarWhereInput | Prisma.UsuarioScalarWhereInput[]
 }
 
 export type UsuarioCreateNestedManyWithoutPlanInput = {
@@ -1131,7 +1215,23 @@ export type UsuarioUpdateOneRequiredWithoutTiposMedidaPersonalizadosNestedInput 
   update?: Prisma.XOR<Prisma.XOR<Prisma.UsuarioUpdateToOneWithWhereWithoutTiposMedidaPersonalizadosInput, Prisma.UsuarioUpdateWithoutTiposMedidaPersonalizadosInput>, Prisma.UsuarioUncheckedUpdateWithoutTiposMedidaPersonalizadosInput>
 }
 
-export type UsuarioCreateWithoutPlanInput = {
+export type UsuarioCreateNestedOneWithoutVentasKioscoInput = {
+  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutVentasKioscoInput, Prisma.UsuarioUncheckedCreateWithoutVentasKioscoInput>
+  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutVentasKioscoInput
+  connect?: Prisma.UsuarioWhereUniqueInput
+}
+
+export type UsuarioUpdateOneWithoutVentasKioscoNestedInput = {
+  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutVentasKioscoInput, Prisma.UsuarioUncheckedCreateWithoutVentasKioscoInput>
+  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutVentasKioscoInput
+  upsert?: Prisma.UsuarioUpsertWithoutVentasKioscoInput
+  disconnect?: Prisma.UsuarioWhereInput | boolean
+  delete?: Prisma.UsuarioWhereInput | boolean
+  connect?: Prisma.UsuarioWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsuarioUpdateToOneWithWhereWithoutVentasKioscoInput, Prisma.UsuarioUpdateWithoutVentasKioscoInput>, Prisma.UsuarioUncheckedUpdateWithoutVentasKioscoInput>
+}
+
+export type UsuarioCreateWithoutSucursalInput = {
   email: string
   passwordHash?: string | null
   nombre: string
@@ -1160,6 +1260,7 @@ export type UsuarioCreateWithoutPlanInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
   rutinasDias?: Prisma.UsuarioRutinaDiaCreateNestedManyWithoutUsuarioInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioCreateNestedManyWithoutUsuarioInput
   historialEjercicios?: Prisma.HistorialEjercicioCreateNestedManyWithoutUsuarioInput
@@ -1167,9 +1268,10 @@ export type UsuarioCreateWithoutPlanInput = {
   pagos?: Prisma.PagoCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoCreateNestedManyWithoutUsuarioInput
 }
 
-export type UsuarioUncheckedCreateWithoutPlanInput = {
+export type UsuarioUncheckedCreateWithoutSucursalInput = {
   id?: number
   email: string
   passwordHash?: string | null
@@ -1199,6 +1301,7 @@ export type UsuarioUncheckedCreateWithoutPlanInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  planId?: number | null
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedCreateNestedManyWithoutUsuarioInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedCreateNestedManyWithoutUsuarioInput
   historialEjercicios?: Prisma.HistorialEjercicioUncheckedCreateNestedManyWithoutUsuarioInput
@@ -1206,32 +1309,33 @@ export type UsuarioUncheckedCreateWithoutPlanInput = {
   pagos?: Prisma.PagoUncheckedCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalUncheckedCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
-export type UsuarioCreateOrConnectWithoutPlanInput = {
+export type UsuarioCreateOrConnectWithoutSucursalInput = {
   where: Prisma.UsuarioWhereUniqueInput
-  create: Prisma.XOR<Prisma.UsuarioCreateWithoutPlanInput, Prisma.UsuarioUncheckedCreateWithoutPlanInput>
+  create: Prisma.XOR<Prisma.UsuarioCreateWithoutSucursalInput, Prisma.UsuarioUncheckedCreateWithoutSucursalInput>
 }
 
-export type UsuarioCreateManyPlanInputEnvelope = {
-  data: Prisma.UsuarioCreateManyPlanInput | Prisma.UsuarioCreateManyPlanInput[]
+export type UsuarioCreateManySucursalInputEnvelope = {
+  data: Prisma.UsuarioCreateManySucursalInput | Prisma.UsuarioCreateManySucursalInput[]
   skipDuplicates?: boolean
 }
 
-export type UsuarioUpsertWithWhereUniqueWithoutPlanInput = {
+export type UsuarioUpsertWithWhereUniqueWithoutSucursalInput = {
   where: Prisma.UsuarioWhereUniqueInput
-  update: Prisma.XOR<Prisma.UsuarioUpdateWithoutPlanInput, Prisma.UsuarioUncheckedUpdateWithoutPlanInput>
-  create: Prisma.XOR<Prisma.UsuarioCreateWithoutPlanInput, Prisma.UsuarioUncheckedCreateWithoutPlanInput>
+  update: Prisma.XOR<Prisma.UsuarioUpdateWithoutSucursalInput, Prisma.UsuarioUncheckedUpdateWithoutSucursalInput>
+  create: Prisma.XOR<Prisma.UsuarioCreateWithoutSucursalInput, Prisma.UsuarioUncheckedCreateWithoutSucursalInput>
 }
 
-export type UsuarioUpdateWithWhereUniqueWithoutPlanInput = {
+export type UsuarioUpdateWithWhereUniqueWithoutSucursalInput = {
   where: Prisma.UsuarioWhereUniqueInput
-  data: Prisma.XOR<Prisma.UsuarioUpdateWithoutPlanInput, Prisma.UsuarioUncheckedUpdateWithoutPlanInput>
+  data: Prisma.XOR<Prisma.UsuarioUpdateWithoutSucursalInput, Prisma.UsuarioUncheckedUpdateWithoutSucursalInput>
 }
 
-export type UsuarioUpdateManyWithWhereWithoutPlanInput = {
+export type UsuarioUpdateManyWithWhereWithoutSucursalInput = {
   where: Prisma.UsuarioScalarWhereInput
-  data: Prisma.XOR<Prisma.UsuarioUpdateManyMutationInput, Prisma.UsuarioUncheckedUpdateManyWithoutPlanInput>
+  data: Prisma.XOR<Prisma.UsuarioUpdateManyMutationInput, Prisma.UsuarioUncheckedUpdateManyWithoutSucursalInput>
 }
 
 export type UsuarioScalarWhereInput = {
@@ -1267,7 +1371,115 @@ export type UsuarioScalarWhereInput = {
   objetivoOtro?: Prisma.StringNullableFilter<"Usuario"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
+  sucursalId?: Prisma.IntNullableFilter<"Usuario"> | number | null
   planId?: Prisma.IntNullableFilter<"Usuario"> | number | null
+}
+
+export type UsuarioCreateWithoutPlanInput = {
+  email: string
+  passwordHash?: string | null
+  nombre: string
+  apellido: string
+  telefono: string
+  dni: string
+  direccion?: string | null
+  birthDate?: Date | string | null
+  avatarUrl?: string | null
+  imageUrl?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sucursal?: Prisma.SucursalCreateNestedOneWithoutUsuariosInput
+  rutinasDias?: Prisma.UsuarioRutinaDiaCreateNestedManyWithoutUsuarioInput
+  ejerciciosPersonalizados?: Prisma.UsuarioEjercicioCreateNestedManyWithoutUsuarioInput
+  historialEjercicios?: Prisma.HistorialEjercicioCreateNestedManyWithoutUsuarioInput
+  sesiones?: Prisma.SesionEntrenamientoCreateNestedManyWithoutUsuarioInput
+  pagos?: Prisma.PagoCreateNestedManyWithoutUsuarioInput
+  medidas?: Prisma.MedidaCorporalCreateNestedManyWithoutUsuarioInput
+  tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoCreateNestedManyWithoutUsuarioInput
+}
+
+export type UsuarioUncheckedCreateWithoutPlanInput = {
+  id?: number
+  email: string
+  passwordHash?: string | null
+  nombre: string
+  apellido: string
+  telefono: string
+  dni: string
+  direccion?: string | null
+  birthDate?: Date | string | null
+  avatarUrl?: string | null
+  imageUrl?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sucursalId?: number | null
+  rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedCreateNestedManyWithoutUsuarioInput
+  ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedCreateNestedManyWithoutUsuarioInput
+  historialEjercicios?: Prisma.HistorialEjercicioUncheckedCreateNestedManyWithoutUsuarioInput
+  sesiones?: Prisma.SesionEntrenamientoUncheckedCreateNestedManyWithoutUsuarioInput
+  pagos?: Prisma.PagoUncheckedCreateNestedManyWithoutUsuarioInput
+  medidas?: Prisma.MedidaCorporalUncheckedCreateNestedManyWithoutUsuarioInput
+  tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type UsuarioCreateOrConnectWithoutPlanInput = {
+  where: Prisma.UsuarioWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsuarioCreateWithoutPlanInput, Prisma.UsuarioUncheckedCreateWithoutPlanInput>
+}
+
+export type UsuarioCreateManyPlanInputEnvelope = {
+  data: Prisma.UsuarioCreateManyPlanInput | Prisma.UsuarioCreateManyPlanInput[]
+  skipDuplicates?: boolean
+}
+
+export type UsuarioUpsertWithWhereUniqueWithoutPlanInput = {
+  where: Prisma.UsuarioWhereUniqueInput
+  update: Prisma.XOR<Prisma.UsuarioUpdateWithoutPlanInput, Prisma.UsuarioUncheckedUpdateWithoutPlanInput>
+  create: Prisma.XOR<Prisma.UsuarioCreateWithoutPlanInput, Prisma.UsuarioUncheckedCreateWithoutPlanInput>
+}
+
+export type UsuarioUpdateWithWhereUniqueWithoutPlanInput = {
+  where: Prisma.UsuarioWhereUniqueInput
+  data: Prisma.XOR<Prisma.UsuarioUpdateWithoutPlanInput, Prisma.UsuarioUncheckedUpdateWithoutPlanInput>
+}
+
+export type UsuarioUpdateManyWithWhereWithoutPlanInput = {
+  where: Prisma.UsuarioScalarWhereInput
+  data: Prisma.XOR<Prisma.UsuarioUpdateManyMutationInput, Prisma.UsuarioUncheckedUpdateManyWithoutPlanInput>
 }
 
 export type UsuarioCreateWithoutRutinasDiasInput = {
@@ -1299,6 +1511,7 @@ export type UsuarioCreateWithoutRutinasDiasInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursal?: Prisma.SucursalCreateNestedOneWithoutUsuariosInput
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioCreateNestedManyWithoutUsuarioInput
   historialEjercicios?: Prisma.HistorialEjercicioCreateNestedManyWithoutUsuarioInput
@@ -1306,6 +1519,7 @@ export type UsuarioCreateWithoutRutinasDiasInput = {
   pagos?: Prisma.PagoCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioUncheckedCreateWithoutRutinasDiasInput = {
@@ -1338,6 +1552,7 @@ export type UsuarioUncheckedCreateWithoutRutinasDiasInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursalId?: number | null
   planId?: number | null
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedCreateNestedManyWithoutUsuarioInput
   historialEjercicios?: Prisma.HistorialEjercicioUncheckedCreateNestedManyWithoutUsuarioInput
@@ -1345,6 +1560,7 @@ export type UsuarioUncheckedCreateWithoutRutinasDiasInput = {
   pagos?: Prisma.PagoUncheckedCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalUncheckedCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioCreateOrConnectWithoutRutinasDiasInput = {
@@ -1392,6 +1608,7 @@ export type UsuarioUpdateWithoutRutinasDiasInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursal?: Prisma.SucursalUpdateOneWithoutUsuariosNestedInput
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUpdateManyWithoutUsuarioNestedInput
   historialEjercicios?: Prisma.HistorialEjercicioUpdateManyWithoutUsuarioNestedInput
@@ -1399,6 +1616,7 @@ export type UsuarioUpdateWithoutRutinasDiasInput = {
   pagos?: Prisma.PagoUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioUncheckedUpdateWithoutRutinasDiasInput = {
@@ -1431,6 +1649,7 @@ export type UsuarioUncheckedUpdateWithoutRutinasDiasInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursalId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedUpdateManyWithoutUsuarioNestedInput
   historialEjercicios?: Prisma.HistorialEjercicioUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -1438,6 +1657,7 @@ export type UsuarioUncheckedUpdateWithoutRutinasDiasInput = {
   pagos?: Prisma.PagoUncheckedUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUncheckedUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioCreateWithoutEjerciciosPersonalizadosInput = {
@@ -1469,6 +1689,7 @@ export type UsuarioCreateWithoutEjerciciosPersonalizadosInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursal?: Prisma.SucursalCreateNestedOneWithoutUsuariosInput
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
   rutinasDias?: Prisma.UsuarioRutinaDiaCreateNestedManyWithoutUsuarioInput
   historialEjercicios?: Prisma.HistorialEjercicioCreateNestedManyWithoutUsuarioInput
@@ -1476,6 +1697,7 @@ export type UsuarioCreateWithoutEjerciciosPersonalizadosInput = {
   pagos?: Prisma.PagoCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioUncheckedCreateWithoutEjerciciosPersonalizadosInput = {
@@ -1508,6 +1730,7 @@ export type UsuarioUncheckedCreateWithoutEjerciciosPersonalizadosInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursalId?: number | null
   planId?: number | null
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedCreateNestedManyWithoutUsuarioInput
   historialEjercicios?: Prisma.HistorialEjercicioUncheckedCreateNestedManyWithoutUsuarioInput
@@ -1515,6 +1738,7 @@ export type UsuarioUncheckedCreateWithoutEjerciciosPersonalizadosInput = {
   pagos?: Prisma.PagoUncheckedCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalUncheckedCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioCreateOrConnectWithoutEjerciciosPersonalizadosInput = {
@@ -1562,6 +1786,7 @@ export type UsuarioUpdateWithoutEjerciciosPersonalizadosInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursal?: Prisma.SucursalUpdateOneWithoutUsuariosNestedInput
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
   rutinasDias?: Prisma.UsuarioRutinaDiaUpdateManyWithoutUsuarioNestedInput
   historialEjercicios?: Prisma.HistorialEjercicioUpdateManyWithoutUsuarioNestedInput
@@ -1569,6 +1794,7 @@ export type UsuarioUpdateWithoutEjerciciosPersonalizadosInput = {
   pagos?: Prisma.PagoUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioUncheckedUpdateWithoutEjerciciosPersonalizadosInput = {
@@ -1601,6 +1827,7 @@ export type UsuarioUncheckedUpdateWithoutEjerciciosPersonalizadosInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursalId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
   historialEjercicios?: Prisma.HistorialEjercicioUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -1608,6 +1835,7 @@ export type UsuarioUncheckedUpdateWithoutEjerciciosPersonalizadosInput = {
   pagos?: Prisma.PagoUncheckedUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUncheckedUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioCreateWithoutSesionesInput = {
@@ -1639,6 +1867,7 @@ export type UsuarioCreateWithoutSesionesInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursal?: Prisma.SucursalCreateNestedOneWithoutUsuariosInput
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
   rutinasDias?: Prisma.UsuarioRutinaDiaCreateNestedManyWithoutUsuarioInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioCreateNestedManyWithoutUsuarioInput
@@ -1646,6 +1875,7 @@ export type UsuarioCreateWithoutSesionesInput = {
   pagos?: Prisma.PagoCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioUncheckedCreateWithoutSesionesInput = {
@@ -1678,6 +1908,7 @@ export type UsuarioUncheckedCreateWithoutSesionesInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursalId?: number | null
   planId?: number | null
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedCreateNestedManyWithoutUsuarioInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedCreateNestedManyWithoutUsuarioInput
@@ -1685,6 +1916,7 @@ export type UsuarioUncheckedCreateWithoutSesionesInput = {
   pagos?: Prisma.PagoUncheckedCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalUncheckedCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioCreateOrConnectWithoutSesionesInput = {
@@ -1732,6 +1964,7 @@ export type UsuarioUpdateWithoutSesionesInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursal?: Prisma.SucursalUpdateOneWithoutUsuariosNestedInput
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
   rutinasDias?: Prisma.UsuarioRutinaDiaUpdateManyWithoutUsuarioNestedInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUpdateManyWithoutUsuarioNestedInput
@@ -1739,6 +1972,7 @@ export type UsuarioUpdateWithoutSesionesInput = {
   pagos?: Prisma.PagoUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioUncheckedUpdateWithoutSesionesInput = {
@@ -1771,6 +2005,7 @@ export type UsuarioUncheckedUpdateWithoutSesionesInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursalId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -1778,6 +2013,7 @@ export type UsuarioUncheckedUpdateWithoutSesionesInput = {
   pagos?: Prisma.PagoUncheckedUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUncheckedUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioCreateWithoutHistorialEjerciciosInput = {
@@ -1809,6 +2045,7 @@ export type UsuarioCreateWithoutHistorialEjerciciosInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursal?: Prisma.SucursalCreateNestedOneWithoutUsuariosInput
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
   rutinasDias?: Prisma.UsuarioRutinaDiaCreateNestedManyWithoutUsuarioInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioCreateNestedManyWithoutUsuarioInput
@@ -1816,6 +2053,7 @@ export type UsuarioCreateWithoutHistorialEjerciciosInput = {
   pagos?: Prisma.PagoCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioUncheckedCreateWithoutHistorialEjerciciosInput = {
@@ -1848,6 +2086,7 @@ export type UsuarioUncheckedCreateWithoutHistorialEjerciciosInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursalId?: number | null
   planId?: number | null
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedCreateNestedManyWithoutUsuarioInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedCreateNestedManyWithoutUsuarioInput
@@ -1855,6 +2094,7 @@ export type UsuarioUncheckedCreateWithoutHistorialEjerciciosInput = {
   pagos?: Prisma.PagoUncheckedCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalUncheckedCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioCreateOrConnectWithoutHistorialEjerciciosInput = {
@@ -1902,6 +2142,7 @@ export type UsuarioUpdateWithoutHistorialEjerciciosInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursal?: Prisma.SucursalUpdateOneWithoutUsuariosNestedInput
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
   rutinasDias?: Prisma.UsuarioRutinaDiaUpdateManyWithoutUsuarioNestedInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUpdateManyWithoutUsuarioNestedInput
@@ -1909,6 +2150,7 @@ export type UsuarioUpdateWithoutHistorialEjerciciosInput = {
   pagos?: Prisma.PagoUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioUncheckedUpdateWithoutHistorialEjerciciosInput = {
@@ -1941,6 +2183,7 @@ export type UsuarioUncheckedUpdateWithoutHistorialEjerciciosInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursalId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -1948,6 +2191,7 @@ export type UsuarioUncheckedUpdateWithoutHistorialEjerciciosInput = {
   pagos?: Prisma.PagoUncheckedUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUncheckedUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioCreateWithoutPagosInput = {
@@ -1979,6 +2223,7 @@ export type UsuarioCreateWithoutPagosInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursal?: Prisma.SucursalCreateNestedOneWithoutUsuariosInput
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
   rutinasDias?: Prisma.UsuarioRutinaDiaCreateNestedManyWithoutUsuarioInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioCreateNestedManyWithoutUsuarioInput
@@ -1986,6 +2231,7 @@ export type UsuarioCreateWithoutPagosInput = {
   sesiones?: Prisma.SesionEntrenamientoCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioUncheckedCreateWithoutPagosInput = {
@@ -2018,6 +2264,7 @@ export type UsuarioUncheckedCreateWithoutPagosInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursalId?: number | null
   planId?: number | null
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedCreateNestedManyWithoutUsuarioInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedCreateNestedManyWithoutUsuarioInput
@@ -2025,6 +2272,7 @@ export type UsuarioUncheckedCreateWithoutPagosInput = {
   sesiones?: Prisma.SesionEntrenamientoUncheckedCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalUncheckedCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioCreateOrConnectWithoutPagosInput = {
@@ -2072,6 +2320,7 @@ export type UsuarioUpdateWithoutPagosInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursal?: Prisma.SucursalUpdateOneWithoutUsuariosNestedInput
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
   rutinasDias?: Prisma.UsuarioRutinaDiaUpdateManyWithoutUsuarioNestedInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUpdateManyWithoutUsuarioNestedInput
@@ -2079,6 +2328,7 @@ export type UsuarioUpdateWithoutPagosInput = {
   sesiones?: Prisma.SesionEntrenamientoUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioUncheckedUpdateWithoutPagosInput = {
@@ -2111,6 +2361,7 @@ export type UsuarioUncheckedUpdateWithoutPagosInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursalId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -2118,6 +2369,7 @@ export type UsuarioUncheckedUpdateWithoutPagosInput = {
   sesiones?: Prisma.SesionEntrenamientoUncheckedUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUncheckedUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioCreateWithoutMedidasInput = {
@@ -2149,6 +2401,7 @@ export type UsuarioCreateWithoutMedidasInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursal?: Prisma.SucursalCreateNestedOneWithoutUsuariosInput
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
   rutinasDias?: Prisma.UsuarioRutinaDiaCreateNestedManyWithoutUsuarioInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioCreateNestedManyWithoutUsuarioInput
@@ -2156,6 +2409,7 @@ export type UsuarioCreateWithoutMedidasInput = {
   sesiones?: Prisma.SesionEntrenamientoCreateNestedManyWithoutUsuarioInput
   pagos?: Prisma.PagoCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioUncheckedCreateWithoutMedidasInput = {
@@ -2188,6 +2442,7 @@ export type UsuarioUncheckedCreateWithoutMedidasInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursalId?: number | null
   planId?: number | null
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedCreateNestedManyWithoutUsuarioInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedCreateNestedManyWithoutUsuarioInput
@@ -2195,6 +2450,7 @@ export type UsuarioUncheckedCreateWithoutMedidasInput = {
   sesiones?: Prisma.SesionEntrenamientoUncheckedCreateNestedManyWithoutUsuarioInput
   pagos?: Prisma.PagoUncheckedCreateNestedManyWithoutUsuarioInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioCreateOrConnectWithoutMedidasInput = {
@@ -2242,6 +2498,7 @@ export type UsuarioUpdateWithoutMedidasInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursal?: Prisma.SucursalUpdateOneWithoutUsuariosNestedInput
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
   rutinasDias?: Prisma.UsuarioRutinaDiaUpdateManyWithoutUsuarioNestedInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUpdateManyWithoutUsuarioNestedInput
@@ -2249,6 +2506,7 @@ export type UsuarioUpdateWithoutMedidasInput = {
   sesiones?: Prisma.SesionEntrenamientoUpdateManyWithoutUsuarioNestedInput
   pagos?: Prisma.PagoUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioUncheckedUpdateWithoutMedidasInput = {
@@ -2281,6 +2539,7 @@ export type UsuarioUncheckedUpdateWithoutMedidasInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursalId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -2288,6 +2547,7 @@ export type UsuarioUncheckedUpdateWithoutMedidasInput = {
   sesiones?: Prisma.SesionEntrenamientoUncheckedUpdateManyWithoutUsuarioNestedInput
   pagos?: Prisma.PagoUncheckedUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioCreateWithoutTiposMedidaPersonalizadosInput = {
@@ -2319,6 +2579,7 @@ export type UsuarioCreateWithoutTiposMedidaPersonalizadosInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursal?: Prisma.SucursalCreateNestedOneWithoutUsuariosInput
   plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
   rutinasDias?: Prisma.UsuarioRutinaDiaCreateNestedManyWithoutUsuarioInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioCreateNestedManyWithoutUsuarioInput
@@ -2326,6 +2587,7 @@ export type UsuarioCreateWithoutTiposMedidaPersonalizadosInput = {
   sesiones?: Prisma.SesionEntrenamientoCreateNestedManyWithoutUsuarioInput
   pagos?: Prisma.PagoCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioUncheckedCreateWithoutTiposMedidaPersonalizadosInput = {
@@ -2358,6 +2620,7 @@ export type UsuarioUncheckedCreateWithoutTiposMedidaPersonalizadosInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursalId?: number | null
   planId?: number | null
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedCreateNestedManyWithoutUsuarioInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedCreateNestedManyWithoutUsuarioInput
@@ -2365,6 +2628,7 @@ export type UsuarioUncheckedCreateWithoutTiposMedidaPersonalizadosInput = {
   sesiones?: Prisma.SesionEntrenamientoUncheckedCreateNestedManyWithoutUsuarioInput
   pagos?: Prisma.PagoUncheckedCreateNestedManyWithoutUsuarioInput
   medidas?: Prisma.MedidaCorporalUncheckedCreateNestedManyWithoutUsuarioInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioCreateOrConnectWithoutTiposMedidaPersonalizadosInput = {
@@ -2412,6 +2676,7 @@ export type UsuarioUpdateWithoutTiposMedidaPersonalizadosInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursal?: Prisma.SucursalUpdateOneWithoutUsuariosNestedInput
   plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
   rutinasDias?: Prisma.UsuarioRutinaDiaUpdateManyWithoutUsuarioNestedInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUpdateManyWithoutUsuarioNestedInput
@@ -2419,9 +2684,302 @@ export type UsuarioUpdateWithoutTiposMedidaPersonalizadosInput = {
   sesiones?: Prisma.SesionEntrenamientoUpdateManyWithoutUsuarioNestedInput
   pagos?: Prisma.PagoUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioUncheckedUpdateWithoutTiposMedidaPersonalizadosInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  telefono?: Prisma.StringFieldUpdateOperationsInput | string
+  dni?: Prisma.StringFieldUpdateOperationsInput | string
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursalId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
+  ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedUpdateManyWithoutUsuarioNestedInput
+  historialEjercicios?: Prisma.HistorialEjercicioUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesiones?: Prisma.SesionEntrenamientoUncheckedUpdateManyWithoutUsuarioNestedInput
+  pagos?: Prisma.PagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  medidas?: Prisma.MedidaCorporalUncheckedUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type UsuarioCreateWithoutVentasKioscoInput = {
+  email: string
+  passwordHash?: string | null
+  nombre: string
+  apellido: string
+  telefono: string
+  dni: string
+  direccion?: string | null
+  birthDate?: Date | string | null
+  avatarUrl?: string | null
+  imageUrl?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sucursal?: Prisma.SucursalCreateNestedOneWithoutUsuariosInput
+  plan?: Prisma.PlanCreateNestedOneWithoutUsuariosInput
+  rutinasDias?: Prisma.UsuarioRutinaDiaCreateNestedManyWithoutUsuarioInput
+  ejerciciosPersonalizados?: Prisma.UsuarioEjercicioCreateNestedManyWithoutUsuarioInput
+  historialEjercicios?: Prisma.HistorialEjercicioCreateNestedManyWithoutUsuarioInput
+  sesiones?: Prisma.SesionEntrenamientoCreateNestedManyWithoutUsuarioInput
+  pagos?: Prisma.PagoCreateNestedManyWithoutUsuarioInput
+  medidas?: Prisma.MedidaCorporalCreateNestedManyWithoutUsuarioInput
+  tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaCreateNestedManyWithoutUsuarioInput
+}
+
+export type UsuarioUncheckedCreateWithoutVentasKioscoInput = {
+  id?: number
+  email: string
+  passwordHash?: string | null
+  nombre: string
+  apellido: string
+  telefono: string
+  dni: string
+  direccion?: string | null
+  birthDate?: Date | string | null
+  avatarUrl?: string | null
+  imageUrl?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sucursalId?: number | null
+  planId?: number | null
+  rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedCreateNestedManyWithoutUsuarioInput
+  ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedCreateNestedManyWithoutUsuarioInput
+  historialEjercicios?: Prisma.HistorialEjercicioUncheckedCreateNestedManyWithoutUsuarioInput
+  sesiones?: Prisma.SesionEntrenamientoUncheckedCreateNestedManyWithoutUsuarioInput
+  pagos?: Prisma.PagoUncheckedCreateNestedManyWithoutUsuarioInput
+  medidas?: Prisma.MedidaCorporalUncheckedCreateNestedManyWithoutUsuarioInput
+  tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type UsuarioCreateOrConnectWithoutVentasKioscoInput = {
+  where: Prisma.UsuarioWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsuarioCreateWithoutVentasKioscoInput, Prisma.UsuarioUncheckedCreateWithoutVentasKioscoInput>
+}
+
+export type UsuarioUpsertWithoutVentasKioscoInput = {
+  update: Prisma.XOR<Prisma.UsuarioUpdateWithoutVentasKioscoInput, Prisma.UsuarioUncheckedUpdateWithoutVentasKioscoInput>
+  create: Prisma.XOR<Prisma.UsuarioCreateWithoutVentasKioscoInput, Prisma.UsuarioUncheckedCreateWithoutVentasKioscoInput>
+  where?: Prisma.UsuarioWhereInput
+}
+
+export type UsuarioUpdateToOneWithWhereWithoutVentasKioscoInput = {
+  where?: Prisma.UsuarioWhereInput
+  data: Prisma.XOR<Prisma.UsuarioUpdateWithoutVentasKioscoInput, Prisma.UsuarioUncheckedUpdateWithoutVentasKioscoInput>
+}
+
+export type UsuarioUpdateWithoutVentasKioscoInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  telefono?: Prisma.StringFieldUpdateOperationsInput | string
+  dni?: Prisma.StringFieldUpdateOperationsInput | string
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursal?: Prisma.SucursalUpdateOneWithoutUsuariosNestedInput
+  plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
+  rutinasDias?: Prisma.UsuarioRutinaDiaUpdateManyWithoutUsuarioNestedInput
+  ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUpdateManyWithoutUsuarioNestedInput
+  historialEjercicios?: Prisma.HistorialEjercicioUpdateManyWithoutUsuarioNestedInput
+  sesiones?: Prisma.SesionEntrenamientoUpdateManyWithoutUsuarioNestedInput
+  pagos?: Prisma.PagoUpdateManyWithoutUsuarioNestedInput
+  medidas?: Prisma.MedidaCorporalUpdateManyWithoutUsuarioNestedInput
+  tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUpdateManyWithoutUsuarioNestedInput
+}
+
+export type UsuarioUncheckedUpdateWithoutVentasKioscoInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  telefono?: Prisma.StringFieldUpdateOperationsInput | string
+  dni?: Prisma.StringFieldUpdateOperationsInput | string
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursalId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
+  ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedUpdateManyWithoutUsuarioNestedInput
+  historialEjercicios?: Prisma.HistorialEjercicioUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesiones?: Prisma.SesionEntrenamientoUncheckedUpdateManyWithoutUsuarioNestedInput
+  pagos?: Prisma.PagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  medidas?: Prisma.MedidaCorporalUncheckedUpdateManyWithoutUsuarioNestedInput
+  tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type UsuarioCreateManySucursalInput = {
+  id?: number
+  email: string
+  passwordHash?: string | null
+  nombre: string
+  apellido: string
+  telefono: string
+  dni: string
+  direccion?: string | null
+  birthDate?: Date | string | null
+  avatarUrl?: string | null
+  imageUrl?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  deletedAt?: Date | string | null
+  tieneLesion?: boolean
+  detalleLesion?: string | null
+  tomaMedicacion?: boolean
+  detalleMedicacion?: string | null
+  tieneRestricciones?: boolean
+  detalleRestricciones?: string | null
+  autorizadoPorMedico?: boolean
+  observacionesSalud?: string | null
+  emergenciaContacto?: string | null
+  emergenciaParentesco?: string | null
+  emergenciaTelefono?: string | null
+  objetivos?: string | null
+  objetivoOtro?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  planId?: number | null
+}
+
+export type UsuarioUpdateWithoutSucursalInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  telefono?: Prisma.StringFieldUpdateOperationsInput | string
+  dni?: Prisma.StringFieldUpdateOperationsInput | string
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.PlanUpdateOneWithoutUsuariosNestedInput
+  rutinasDias?: Prisma.UsuarioRutinaDiaUpdateManyWithoutUsuarioNestedInput
+  ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUpdateManyWithoutUsuarioNestedInput
+  historialEjercicios?: Prisma.HistorialEjercicioUpdateManyWithoutUsuarioNestedInput
+  sesiones?: Prisma.SesionEntrenamientoUpdateManyWithoutUsuarioNestedInput
+  pagos?: Prisma.PagoUpdateManyWithoutUsuarioNestedInput
+  medidas?: Prisma.MedidaCorporalUpdateManyWithoutUsuarioNestedInput
+  tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUpdateManyWithoutUsuarioNestedInput
+}
+
+export type UsuarioUncheckedUpdateWithoutSucursalInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2458,6 +3016,41 @@ export type UsuarioUncheckedUpdateWithoutTiposMedidaPersonalizadosInput = {
   sesiones?: Prisma.SesionEntrenamientoUncheckedUpdateManyWithoutUsuarioNestedInput
   pagos?: Prisma.PagoUncheckedUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUncheckedUpdateManyWithoutUsuarioNestedInput
+  tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type UsuarioUncheckedUpdateManyWithoutSucursalInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  telefono?: Prisma.StringFieldUpdateOperationsInput | string
+  dni?: Prisma.StringFieldUpdateOperationsInput | string
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tieneLesion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleLesion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tomaMedicacion?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleMedicacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tieneRestricciones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  detalleRestricciones?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autorizadoPorMedico?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  observacionesSalud?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaContacto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaParentesco?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergenciaTelefono?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  planId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type UsuarioCreateManyPlanInput = {
@@ -2490,6 +3083,7 @@ export type UsuarioCreateManyPlanInput = {
   objetivoOtro?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  sucursalId?: number | null
 }
 
 export type UsuarioUpdateWithoutPlanInput = {
@@ -2521,6 +3115,7 @@ export type UsuarioUpdateWithoutPlanInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursal?: Prisma.SucursalUpdateOneWithoutUsuariosNestedInput
   rutinasDias?: Prisma.UsuarioRutinaDiaUpdateManyWithoutUsuarioNestedInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUpdateManyWithoutUsuarioNestedInput
   historialEjercicios?: Prisma.HistorialEjercicioUpdateManyWithoutUsuarioNestedInput
@@ -2528,6 +3123,7 @@ export type UsuarioUpdateWithoutPlanInput = {
   pagos?: Prisma.PagoUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioUncheckedUpdateWithoutPlanInput = {
@@ -2560,6 +3156,7 @@ export type UsuarioUncheckedUpdateWithoutPlanInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursalId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rutinasDias?: Prisma.UsuarioRutinaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
   ejerciciosPersonalizados?: Prisma.UsuarioEjercicioUncheckedUpdateManyWithoutUsuarioNestedInput
   historialEjercicios?: Prisma.HistorialEjercicioUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -2567,6 +3164,7 @@ export type UsuarioUncheckedUpdateWithoutPlanInput = {
   pagos?: Prisma.PagoUncheckedUpdateManyWithoutUsuarioNestedInput
   medidas?: Prisma.MedidaCorporalUncheckedUpdateManyWithoutUsuarioNestedInput
   tiposMedidaPersonalizados?: Prisma.TipoMedidaPersonalizadaUncheckedUpdateManyWithoutUsuarioNestedInput
+  ventasKiosco?: Prisma.VentaKioscoUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioUncheckedUpdateManyWithoutPlanInput = {
@@ -2599,6 +3197,7 @@ export type UsuarioUncheckedUpdateManyWithoutPlanInput = {
   objetivoOtro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sucursalId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -2614,6 +3213,7 @@ export type UsuarioCountOutputType = {
   pagos: number
   medidas: number
   tiposMedidaPersonalizados: number
+  ventasKiosco: number
 }
 
 export type UsuarioCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2624,6 +3224,7 @@ export type UsuarioCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   pagos?: boolean | UsuarioCountOutputTypeCountPagosArgs
   medidas?: boolean | UsuarioCountOutputTypeCountMedidasArgs
   tiposMedidaPersonalizados?: boolean | UsuarioCountOutputTypeCountTiposMedidaPersonalizadosArgs
+  ventasKiosco?: boolean | UsuarioCountOutputTypeCountVentasKioscoArgs
 }
 
 /**
@@ -2685,6 +3286,13 @@ export type UsuarioCountOutputTypeCountTiposMedidaPersonalizadosArgs<ExtArgs ext
   where?: Prisma.TipoMedidaPersonalizadaWhereInput
 }
 
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountVentasKioscoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VentaKioscoWhereInput
+}
+
 
 export type UsuarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2716,7 +3324,9 @@ export type UsuarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objetivoOtro?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  sucursalId?: boolean
   planId?: boolean
+  sucursal?: boolean | Prisma.Usuario$sucursalArgs<ExtArgs>
   plan?: boolean | Prisma.Usuario$planArgs<ExtArgs>
   rutinasDias?: boolean | Prisma.Usuario$rutinasDiasArgs<ExtArgs>
   ejerciciosPersonalizados?: boolean | Prisma.Usuario$ejerciciosPersonalizadosArgs<ExtArgs>
@@ -2725,6 +3335,7 @@ export type UsuarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   pagos?: boolean | Prisma.Usuario$pagosArgs<ExtArgs>
   medidas?: boolean | Prisma.Usuario$medidasArgs<ExtArgs>
   tiposMedidaPersonalizados?: boolean | Prisma.Usuario$tiposMedidaPersonalizadosArgs<ExtArgs>
+  ventasKiosco?: boolean | Prisma.Usuario$ventasKioscoArgs<ExtArgs>
   _count?: boolean | Prisma.UsuarioCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["usuario"]>
 
@@ -2760,11 +3371,13 @@ export type UsuarioSelectScalar = {
   objetivoOtro?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  sucursalId?: boolean
   planId?: boolean
 }
 
-export type UsuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "nombre" | "apellido" | "telefono" | "dni" | "direccion" | "birthDate" | "avatarUrl" | "imageUrl" | "role" | "isActive" | "deletedAt" | "tieneLesion" | "detalleLesion" | "tomaMedicacion" | "detalleMedicacion" | "tieneRestricciones" | "detalleRestricciones" | "autorizadoPorMedico" | "observacionesSalud" | "emergenciaContacto" | "emergenciaParentesco" | "emergenciaTelefono" | "objetivos" | "objetivoOtro" | "createdAt" | "updatedAt" | "planId", ExtArgs["result"]["usuario"]>
+export type UsuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "nombre" | "apellido" | "telefono" | "dni" | "direccion" | "birthDate" | "avatarUrl" | "imageUrl" | "role" | "isActive" | "deletedAt" | "tieneLesion" | "detalleLesion" | "tomaMedicacion" | "detalleMedicacion" | "tieneRestricciones" | "detalleRestricciones" | "autorizadoPorMedico" | "observacionesSalud" | "emergenciaContacto" | "emergenciaParentesco" | "emergenciaTelefono" | "objetivos" | "objetivoOtro" | "createdAt" | "updatedAt" | "sucursalId" | "planId", ExtArgs["result"]["usuario"]>
 export type UsuarioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  sucursal?: boolean | Prisma.Usuario$sucursalArgs<ExtArgs>
   plan?: boolean | Prisma.Usuario$planArgs<ExtArgs>
   rutinasDias?: boolean | Prisma.Usuario$rutinasDiasArgs<ExtArgs>
   ejerciciosPersonalizados?: boolean | Prisma.Usuario$ejerciciosPersonalizadosArgs<ExtArgs>
@@ -2773,12 +3386,14 @@ export type UsuarioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   pagos?: boolean | Prisma.Usuario$pagosArgs<ExtArgs>
   medidas?: boolean | Prisma.Usuario$medidasArgs<ExtArgs>
   tiposMedidaPersonalizados?: boolean | Prisma.Usuario$tiposMedidaPersonalizadosArgs<ExtArgs>
+  ventasKiosco?: boolean | Prisma.Usuario$ventasKioscoArgs<ExtArgs>
   _count?: boolean | Prisma.UsuarioCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $UsuarioPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Usuario"
   objects: {
+    sucursal: Prisma.$SucursalPayload<ExtArgs> | null
     plan: Prisma.$PlanPayload<ExtArgs> | null
     rutinasDias: Prisma.$UsuarioRutinaDiaPayload<ExtArgs>[]
     ejerciciosPersonalizados: Prisma.$UsuarioEjercicioPayload<ExtArgs>[]
@@ -2787,6 +3402,7 @@ export type $UsuarioPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     pagos: Prisma.$PagoPayload<ExtArgs>[]
     medidas: Prisma.$MedidaCorporalPayload<ExtArgs>[]
     tiposMedidaPersonalizados: Prisma.$TipoMedidaPersonalizadaPayload<ExtArgs>[]
+    ventasKiosco: Prisma.$VentaKioscoPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2818,6 +3434,7 @@ export type $UsuarioPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     objetivoOtro: string | null
     createdAt: Date
     updatedAt: Date
+    sucursalId: number | null
     planId: number | null
   }, ExtArgs["result"]["usuario"]>
   composites: {}
@@ -3159,6 +3776,7 @@ readonly fields: UsuarioFieldRefs;
  */
 export interface Prisma__UsuarioClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  sucursal<T extends Prisma.Usuario$sucursalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$sucursalArgs<ExtArgs>>): Prisma.Prisma__SucursalClient<runtime.Types.Result.GetResult<Prisma.$SucursalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   plan<T extends Prisma.Usuario$planArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$planArgs<ExtArgs>>): Prisma.Prisma__PlanClient<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   rutinasDias<T extends Prisma.Usuario$rutinasDiasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$rutinasDiasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UsuarioRutinaDiaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ejerciciosPersonalizados<T extends Prisma.Usuario$ejerciciosPersonalizadosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$ejerciciosPersonalizadosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UsuarioEjercicioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3167,6 +3785,7 @@ export interface Prisma__UsuarioClient<T, Null = never, ExtArgs extends runtime.
   pagos<T extends Prisma.Usuario$pagosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$pagosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PagoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   medidas<T extends Prisma.Usuario$medidasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$medidasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MedidaCorporalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tiposMedidaPersonalizados<T extends Prisma.Usuario$tiposMedidaPersonalizadosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$tiposMedidaPersonalizadosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TipoMedidaPersonalizadaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ventasKiosco<T extends Prisma.Usuario$ventasKioscoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$ventasKioscoArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VentaKioscoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3225,6 +3844,7 @@ export interface UsuarioFieldRefs {
   readonly objetivoOtro: Prisma.FieldRef<"Usuario", 'String'>
   readonly createdAt: Prisma.FieldRef<"Usuario", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Usuario", 'DateTime'>
+  readonly sucursalId: Prisma.FieldRef<"Usuario", 'Int'>
   readonly planId: Prisma.FieldRef<"Usuario", 'Int'>
 }
     
@@ -3574,6 +4194,25 @@ export type UsuarioDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
+ * Usuario.sucursal
+ */
+export type Usuario$sucursalArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Sucursal
+   */
+  select?: Prisma.SucursalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Sucursal
+   */
+  omit?: Prisma.SucursalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SucursalInclude<ExtArgs> | null
+  where?: Prisma.SucursalWhereInput
+}
+
+/**
  * Usuario.plan
  */
 export type Usuario$planArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3758,6 +4397,30 @@ export type Usuario$tiposMedidaPersonalizadosArgs<ExtArgs extends runtime.Types.
   take?: number
   skip?: number
   distinct?: Prisma.TipoMedidaPersonalizadaScalarFieldEnum | Prisma.TipoMedidaPersonalizadaScalarFieldEnum[]
+}
+
+/**
+ * Usuario.ventasKiosco
+ */
+export type Usuario$ventasKioscoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VentaKiosco
+   */
+  select?: Prisma.VentaKioscoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the VentaKiosco
+   */
+  omit?: Prisma.VentaKioscoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VentaKioscoInclude<ExtArgs> | null
+  where?: Prisma.VentaKioscoWhereInput
+  orderBy?: Prisma.VentaKioscoOrderByWithRelationInput | Prisma.VentaKioscoOrderByWithRelationInput[]
+  cursor?: Prisma.VentaKioscoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VentaKioscoScalarFieldEnum | Prisma.VentaKioscoScalarFieldEnum[]
 }
 
 /**
