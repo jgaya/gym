@@ -107,8 +107,8 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
     setGastoNotas("");
     setGastoRecurrente(
       categoriaInicial === "Alquiler" ||
-        categoriaInicial === "Profesores" ||
-        categoriaInicial === "Luz y Servicios"
+      categoriaInicial === "Profesores" ||
+      categoriaInicial === "Luz y Servicios"
     );
     setModalGastoOpen(true);
   };
@@ -132,28 +132,28 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
     try {
       const res = editandoGasto
         ? await actualizarGastoOperativo({
-            id: editandoGasto.id,
-            sucursalId: Number(gastoSucursalId),
-            concepto: gastoConcepto,
-            categoria: gastoCategoria,
-            monto: Number(gastoMonto),
-            metodoPago: gastoMetodoPago,
-            comprobante: gastoComprobante,
-            notas: gastoNotas,
-            esRecurrente: gastoRecurrente,
-          })
+          id: editandoGasto.id,
+          sucursalId: Number(gastoSucursalId),
+          concepto: gastoConcepto,
+          categoria: gastoCategoria,
+          monto: Number(gastoMonto),
+          metodoPago: gastoMetodoPago,
+          comprobante: gastoComprobante,
+          notas: gastoNotas,
+          esRecurrente: gastoRecurrente,
+        })
         : await crearGastoOperativo({
-            sucursalId: Number(gastoSucursalId),
-            concepto: gastoConcepto,
-            categoria: gastoCategoria,
-            monto: Number(gastoMonto),
-            metodoPago: gastoMetodoPago,
-            comprobante: gastoComprobante,
-            notas: gastoNotas,
-            esRecurrente: gastoRecurrente,
-            mes: selectedMes,
-            anio: selectedAnio,
-          });
+          sucursalId: Number(gastoSucursalId),
+          concepto: gastoConcepto,
+          categoria: gastoCategoria,
+          monto: Number(gastoMonto),
+          metodoPago: gastoMetodoPago,
+          comprobante: gastoComprobante,
+          notas: gastoNotas,
+          esRecurrente: gastoRecurrente,
+          mes: selectedMes,
+          anio: selectedAnio,
+        });
 
       if (res.success) {
         const updated = await getEconomiaData({
@@ -655,13 +655,13 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
               {selectedSucursalId === null
                 ? "🌐 Vista Global — Sumatoria de todas las sucursales"
                 : (() => {
-                    const suc = data.sucursalesResumen.find(
-                      (s) => s.id === selectedSucursalId
-                    );
-                    return suc
-                      ? `📍 Vista por Sucursal: ${suc.barrio} (${suc.direccion})`
-                      : "📍 Vista por Sucursal";
-                  })()}
+                  const suc = data.sucursalesResumen.find(
+                    (s) => s.id === selectedSucursalId
+                  );
+                  return suc
+                    ? `📍 Vista por Sucursal: ${suc.barrio} (${suc.direccion})`
+                    : "📍 Vista por Sucursal";
+                })()}
             </h2>
           </div>
 
@@ -684,11 +684,10 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
             type="button"
             onClick={() => handleCambiarSucursal(null)}
             disabled={isPending}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-              selectedSucursalId === null
-                ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                : "border-border bg-background text-content hover:bg-surface-hover"
-            }`}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs sm:text-sm font-bold transition-all cursor-pointer ${selectedSucursalId === null
+              ? "border-primary bg-primary text-primary-foreground shadow-sm"
+              : "border-border bg-background text-content hover:bg-surface-hover"
+              }`}
           >
             <span>🌐</span>
             <span>Vista Global (Todas las Sucursales)</span>
@@ -702,20 +701,18 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                 type="button"
                 onClick={() => handleCambiarSucursal(suc.id)}
                 disabled={isPending}
-                className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
-                  isSelected
-                    ? "border-primary bg-primary text-primary-foreground font-bold shadow-sm"
-                    : "border-border bg-background text-content hover:bg-surface-hover"
-                }`}
+                className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-semibold transition-all cursor-pointer ${isSelected
+                  ? "border-primary bg-primary text-primary-foreground font-bold shadow-sm"
+                  : "border-border bg-background text-content hover:bg-surface-hover"
+                  }`}
               >
                 <span>📍</span>
                 <span>{suc.barrio}</span>
                 <span
-                  className={`text-[11px] px-1.5 py-0.5 rounded-md font-bold ${
-                    isSelected
-                      ? "bg-black/20 text-primary-foreground"
-                      : "bg-emerald-500/10 text-emerald-400"
-                  }`}
+                  className={`text-[11px] px-1.5 py-0.5 rounded-md font-bold ${isSelected
+                    ? "bg-black/20 text-primary-foreground"
+                    : "bg-emerald-500/10 text-emerald-400"
+                    }`}
                 >
                   {formatMoney(suc.recaudacionTotalConKiosco)}
                 </span>
@@ -939,11 +936,10 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                         Beneficio Neto Real ({suc.margenNetoPorcentaje}%)
                       </span>
                       <span
-                        className={`font-black ${
-                          suc.beneficioNetoReal >= 0
-                            ? "text-emerald-400"
-                            : "text-rose-400"
-                        }`}
+                        className={`font-black ${suc.beneficioNetoReal >= 0
+                          ? "text-emerald-400"
+                          : "text-rose-400"
+                          }`}
                       >
                         {suc.beneficioNetoReal >= 0 ? "+" : ""}
                         {formatMoney(suc.beneficioNetoReal)}
@@ -1013,11 +1009,10 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
               <span>
                 📊 Beneficio Neto Real:{" "}
                 <strong
-                  className={`font-black ${
-                    metricas.beneficioNetoReal >= 0
-                      ? "text-emerald-400"
-                      : "text-rose-400"
-                  }`}
+                  className={`font-black ${metricas.beneficioNetoReal >= 0
+                    ? "text-emerald-400"
+                    : "text-rose-400"
+                    }`}
                 >
                   {metricas.beneficioNetoReal >= 0 ? "+" : ""}
                   {formatMoney(metricas.beneficioNetoReal)} ({metricas.margenNetoPorcentaje}%)
@@ -1128,11 +1123,10 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
             </div>
             <div className="mt-3 flex items-baseline gap-2">
               <span
-                className={`text-2xl font-black tracking-tight ${
-                  metricas.beneficioNetoReal >= 0
-                    ? "text-emerald-400"
-                    : "text-rose-400"
-                }`}
+                className={`text-2xl font-black tracking-tight ${metricas.beneficioNetoReal >= 0
+                  ? "text-emerald-400"
+                  : "text-rose-400"
+                  }`}
               >
                 {metricas.beneficioNetoReal >= 0 ? "+" : ""}
                 {formatMoney(metricas.beneficioNetoReal)}
@@ -1517,11 +1511,11 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                 {selectedSucursalId === null
                   ? "(Vista Global)"
                   : (() => {
-                      const s = data.sucursalesResumen.find(
-                        (suc) => suc.id === selectedSucursalId
-                      );
-                      return s ? `— Sede ${s.barrio}` : "";
-                    })()}
+                    const s = data.sucursalesResumen.find(
+                      (suc) => suc.id === selectedSucursalId
+                    );
+                    return s ? `— Sede ${s.barrio}` : "";
+                  })()}
               </span>
             </h3>
             <p className="text-xs text-content-muted mt-1">
@@ -1603,32 +1597,29 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
           </div>
 
           <div
-            className={`p-2.5 rounded-lg border ${
-              metricas.beneficioNetoReal >= 0
-                ? "bg-emerald-500/10 border-emerald-500/30"
-                : "bg-rose-500/10 border-rose-500/30"
-            }`}
+            className={`p-2.5 rounded-lg border ${metricas.beneficioNetoReal >= 0
+              ? "bg-emerald-500/10 border-emerald-500/30"
+              : "bg-rose-500/10 border-rose-500/30"
+              }`}
           >
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-content">
                 5. Beneficio Neto Real
               </span>
               <span
-                className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded ${
-                  metricas.beneficioNetoReal >= 0
-                    ? "bg-emerald-500/20 text-emerald-400"
-                    : "bg-rose-500/20 text-rose-400"
-                }`}
+                className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded ${metricas.beneficioNetoReal >= 0
+                  ? "bg-emerald-500/20 text-emerald-400"
+                  : "bg-rose-500/20 text-rose-400"
+                  }`}
               >
                 {metricas.margenNetoPorcentaje}% margen
               </span>
             </div>
             <span
-              className={`text-xl font-black mt-1 block ${
-                metricas.beneficioNetoReal >= 0
-                  ? "text-emerald-400"
-                  : "text-rose-400"
-              }`}
+              className={`text-xl font-black mt-1 block ${metricas.beneficioNetoReal >= 0
+                ? "text-emerald-400"
+                : "text-rose-400"
+                }`}
             >
               {metricas.beneficioNetoReal >= 0 ? "+" : ""}
               {formatMoney(metricas.beneficioNetoReal)}
@@ -1677,11 +1668,10 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                         isSelectedCat ? "todas" : c.categoria
                       )
                     }
-                    className={`text-left rounded-xl p-3 border transition-all cursor-pointer ${
-                      isSelectedCat
-                        ? "border-violet-500 bg-violet-500/10 shadow-sm"
-                        : "border-border bg-background hover:border-violet-500/40"
-                    }`}
+                    className={`text-left rounded-xl p-3 border transition-all cursor-pointer ${isSelectedCat
+                      ? "border-violet-500 bg-violet-500/10 shadow-sm"
+                      : "border-border bg-background hover:border-violet-500/40"
+                      }`}
                   >
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-bold text-content truncate">
@@ -2174,7 +2164,7 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
         </div>
       </div>
 
-      {/* SUGERENCIAS DE FUNCIONALIDADES RELEVANTES PARA LA ECONOMÍA DEL GYM */}
+      {/* SUGERENCIAS DE FUNCIONALIDADES RELEVANTES PARA LA ECONOMÍA DEL GYM 
       <div className="bg-gradient-to-br from-surface to-background border border-border rounded-2xl p-6 sm:p-7 shadow-sm space-y-4">
         <div className="flex items-center gap-2.5 text-primary">
           <span className="text-xl">💡</span>
@@ -2188,7 +2178,7 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
-          {/* Sugerencia 1: Recordatorios de Cobro por WhatsApp */}
+          {// Sugerencia 1: Recordatorios de Cobro por WhatsApp }
           <div className="bg-surface/80 border border-emerald-500/30 rounded-xl p-4 space-y-3 hover:border-emerald-500/60 transition-colors bg-gradient-to-br from-surface to-emerald-500/5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 font-bold text-sm text-content">
@@ -2224,7 +2214,7 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
             </div>
           </div>
 
-          {/* Sugerencia 2: Módulo de Gastos Fijos y Flujo de Caja (P&L) */}
+          {// Sugerencia 2: Módulo de Gastos Fijos y Flujo de Caja (P&L)}
           <div className="bg-surface/80 border border-violet-500/30 rounded-xl p-4 space-y-3 hover:border-violet-500/60 transition-colors bg-gradient-to-br from-surface to-violet-500/5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 font-bold text-sm text-content">
@@ -2255,7 +2245,7 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
             </div>
           </div>
 
-          {/* Sugerencia 3: Alertas de Vencimiento y Morosidad (Semáforo) */}
+          {// Sugerencia 3: Alertas de Vencimiento y Morosidad (Semáforo) }
           <div className="bg-surface/80 border border-orange-500/30 rounded-xl p-4 space-y-3 hover:border-orange-500/60 transition-colors bg-gradient-to-br from-surface to-orange-500/5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 font-bold text-sm text-content">
@@ -2287,7 +2277,7 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
             </div>
           </div>
 
-          {/* Sugerencia 4: Integración con Pasarelas de Cobro (Mercado Pago / Débito) */}
+          {//Sugerencia 4: Integración con Pasarelas de Cobro (Mercado Pago / Débito) }
           <div className="bg-surface/80 border border-sky-500/30 rounded-xl p-4 space-y-3 hover:border-sky-500/60 transition-colors bg-gradient-to-br from-surface to-sky-500/5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 font-bold text-sm text-content">
@@ -2317,7 +2307,7 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
             )}
           </div>
 
-          {/* Sugerencia 5: Reportes y Exportación Excel / PDF */}
+          {// Sugerencia 5: Reportes y Exportación Excel / PDF }
           <div className="bg-surface/80 border border-emerald-500/30 rounded-xl p-4 space-y-3 hover:border-emerald-500/60 transition-colors bg-gradient-to-br from-surface to-emerald-500/5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 font-bold text-sm text-content">
@@ -2349,7 +2339,7 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
             </div>
           </div>
 
-          {/* Sugerencia 6: Tarifas Promocionales y Venta de Productos */}
+          {// Sugerencia 6: Tarifas Promocionales y Venta de Productos}
           <div className="bg-surface/80 border border-cyan-500/30 rounded-xl p-4 space-y-3 hover:border-cyan-500/60 transition-colors bg-gradient-to-br from-surface to-cyan-500/5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 font-bold text-sm text-content">
@@ -2377,7 +2367,8 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
             </div>
           </div>
         </div>
-      </div>
+      </div> 
+      */}
 
       {/* MODAL PARA DETALLES DE PAGO / COBRO PERSONALIZADO */}
       {modalPagoUsuario && (

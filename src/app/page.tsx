@@ -37,15 +37,15 @@ export const SEDES_MERAKI = [
   },
   {
     id: 3,
-    nombre: "Centro Entrenamiento 3",
-    direccion: "Av. Del Valle 1380",
-    ciudad: "Gardey, Buenos Aires",
-    horarios: "Lun a Vie: 07:30 a 21:30 | Sáb: 09:00 a 13:00",
-    badge: "Gardey",
-    telefono: "+54 9 249 412-3453",
+    nombre: "Próximamente: Centro Entrenamiento 3",
+    direccion: "Estate atento a nuestras redes sociales para conocer la apertura de nuestra nueva sede",
+    ciudad: "",
+    horarios: "",
+    badge: "Próximamente",
+    telefono: "",
     whatsappUrl:
       "https://wa.me/5492494123453?text=Hola%20Meraki!%20Quiero%20consultar%20sobre%20la%20Sede%20Norte",
-    googleMapsUrl: "https://maps.google.com/?q=Av.+Del+Valle+1380,+Gardey",
+    googleMapsUrl: "",
     servicios: ["Fuerza & Potencia", "Preparación Física", "Circuitos Metabólicos"],
   },
 ];
@@ -250,12 +250,12 @@ export default async function Home() {
                   </p>
                 </div>
 
-                <div className="pt-2 border-t border-border/60 space-y-2">
+                {sede.horarios && (<div className="pt-2 border-t border-border/60 space-y-2">
                   <div className="flex items-start gap-2 text-xs text-content-muted">
                     <span className="text-sm">⏱️</span>
                     <span>{sede.horarios}</span>
                   </div>
-                </div>
+                </div>)}
 
                 {/* Etiquetas de Servicios
                 <div className="flex flex-wrap gap-1.5 pt-1">
@@ -271,7 +271,7 @@ export default async function Home() {
               </div>
 
               {/* Botones de Acción de Sede */}
-              <div className="pt-6 border-t border-border/60 flex flex-col gap-2">
+              {sede.googleMapsUrl && (<div className="pt-6 border-t border-border/60 flex flex-col gap-2">
                 <a
                   href={sede.googleMapsUrl}
                   target="_blank"
@@ -281,7 +281,7 @@ export default async function Home() {
                   <span>Ver en Google Maps</span>
                   <span>🗺️</span>
                 </a>
-              </div>
+              </div>)}
             </div>
           ))}
         </div>
