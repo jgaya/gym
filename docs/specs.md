@@ -72,6 +72,9 @@
 ### 2.5. PWA (Progressive Web App)
 - Service Worker nativo (`lib/service-worker.ts`), manifiesto dinámico (`app/manifest.ts`), banner de instalación `InstallPrompt` y soporte de standalone cover en dispositivos móviles.
 
+### 2.6. Analítica y Telemetría
+- **Google Analytics 4 (GA4):** Integración oficial mediante `@next/third-parties/google` (`GoogleAnalytics` en `app/layout.tsx`), condicionada a la variable de entorno `NEXT_PUBLIC_GA_ID`. Incluye utilidades tipadas para despacho de eventos personalizados en cliente (`lib/analytics.ts` con `trackEvent`).
+
 ---
 
 ## 3. Modelo de Roles, Permisos y Seguridad
@@ -163,11 +166,11 @@ erDiagram
   - **Gestión de Avatar:** Recorte inteligente con detector de rostros (`AvatarCropper`) y almacenamiento seguro con validación binaria de formato.
 
 ### 5.3. Gestión de Planes, Rutinas y Ejercicios
-- **Rutas:** `/admin/plan`, `/admin/rutinas`, `/admin/ejercicios`
+- **Rutas:** `/admin/plan`, `/admin/rutinas`, `/admin/rutinas/nueva`, `/admin/rutinas/[id]`, `/admin/ejercicios`
 - **Capacidades:**
   - **ABM de Ejercicios:** Alta con grupo muscular (Pecho, Espalda, Piernas, Hombros, Brazos, Core, etc.), instrucciones técnicas, multimedia (imágenes y videos explicativos).
-  - **ABM de Rutinas y Templates:** Creación de rutinas reutilizables con ordenamiento de ejercicios, configuración de series, repeticiones (fijas o al fallo), pausas en segundos, peso de referencia y asignación a grupos (superseries).
-  - **Plantillas Multi-Día (`PlanRutinaTemplate`):** Vinculación de rutinas prearmadas para los días de un plan (ej: "Hipertrofia 4 días"), permitiendo poblar la rutina completa de un socio nuevo en un solo clic.
+  - **Editor Unificado de Rutinas Todo-en-Uno:** Creación y edición en página completa dedicada (`/admin/rutinas/nueva` y `/admin/rutinas/[id]`) sin modales. Permite definir la rutina completa, su plan semanal (1 a 7 días) y configurar en línea todos los ejercicios día por día (series, repeticiones, descansos, pesos sugeridos y superseries/circuitos) o precargarlos desde rutinas existentes.
+  - **Catálogo Simplificado de Rutinas:** Listado único sin separación técnica entre "diarias" y "multi-día", con buscador, filtro por frecuencia de plan y duplicación rápida en 1 clic.
 
 ### 5.4. Experiencia del Socio: Mi Rutina, Asistencia y Progreso
 - **Rutas:** `/mi-rutina` y `/calendario`
@@ -234,19 +237,32 @@ erDiagram
 - Reconocimiento de marcos faciales previo a la carga de avatares para garantizar encuadres uniformes en los carnets digitales.
 - Caché estática y comportamiento offline básico para consulta de rutinas guardadas en memoria.
 
+### 5.11. Centro de Ayuda y Manuales de Usuario Integrados
+- **Ruta:** `/manual`
+- **Componentes:** `ManualClient.tsx`, `ManualSocio.tsx`, `ManualEntrenador.tsx`, `ManualAdmin.tsx`, `ScreenshotCard.tsx`, `StepGuide.tsx`, `TipCallout.tsx`.
+- **Capacidades:**
+  - Acceso directo mediante ícono de ayuda (`?`) en el header principal (Desktop y Mobile).
+  - Segmentación por rol: apertura por defecto de la guía según el usuario autenticado (`USER`, `ENTRENADOR`, `ADMIN` / `SUPERADMIN`).
+  - Navegación transversal: los administradores pueden alternar libremente entre los manuales de Admin, Entrenador y Socio.
+  - Guías paso a paso con ejemplos prácticos, consejos de rendimiento y capturas de interfaz con visor ampliable (Lightbox).
+  - Índice lateral con desplazamiento fluido a anclas y soporte nativo para impresión / exportación a PDF (`window.print()`).
+
 ---
 
 ## 6. Estructura de Navegación y Rutas
 
 ### 6.1. Portal del Atleta (`USER`)
 - `/`: Portada con resumen rápido del día, acceso al entrenamiento y métricas del socio.
+- `/manual`: Manual interactivo y centro de ayuda del socio con guías y capturas paso a paso.
 - `/mi-rutina`: Interfaz activa de entrenamiento diario, series, repeticiones, cargas y cronómetro.
 - `/calendario`: Registro y visualización mensual de asistencias al gimnasio.
 - `/mis-medidas`: Registro y analítica gráfica de medidas corporales y evolución física.
 - `/perfil`: Ficha médica, datos de emergencia, objetivos personales, foto de perfil y escala de fuente.
 
 ### 6.2. Portal del Entrenador (`ENTRENADOR`)
-- `/admin/rutinas`: Catálogo, creación y edición de rutinas y superseries.
+- `/admin/rutinas`: Catálogo y administración unificada de rutinas de entrenamiento.
+- `/admin/rutinas/nueva`: Editor todo-en-uno de nueva rutina con configuración en línea de ejercicios por día.
+- `/admin/rutinas/[id]`: Editor todo-en-uno para modificar una rutina existente y sus días.
 - `/admin/ejercicios`: Base de datos de ejercicios con técnica, grupo muscular y multimedia.
 - `/admin/usuarios`: Consulta del padrón de alumnos, asignación de rutinas y seguimiento de cargas.
 

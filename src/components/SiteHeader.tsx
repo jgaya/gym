@@ -169,6 +169,28 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
 
         {/* Acciones de la derecha (Desktop) */}
         <div className="hidden md:flex items-center gap-3">
+          <Link
+            href="/manual"
+            aria-label="Manual y Centro de Ayuda"
+            title="Manual y Centro de Ayuda"
+            className="inline-flex items-center justify-center rounded-lg p-2 text-content-muted transition-colors hover:bg-surface-hover hover:text-content focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
+          >
+            <svg
+              className="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <path d="M12 17h.01" />
+            </svg>
+          </Link>
           <FontSizeSelector />
           <ThemeToggle />
 
@@ -234,6 +256,28 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
 
         {/* Botón de Menú Hamburguesa (VISIBLE ÚNICAMENTE EN MOBILE) */}
         <div className="flex md:hidden items-center gap-2">
+          <Link
+            href="/manual"
+            aria-label="Manual y Centro de Ayuda"
+            title="Manual y Centro de Ayuda"
+            className="inline-flex items-center justify-center rounded-lg p-2 text-content-muted transition-colors hover:bg-surface-hover hover:text-content focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
+          >
+            <svg
+              className="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <path d="M12 17h.01" />
+            </svg>
+          </Link>
           <FontSizeSelector />
           <ThemeToggle />
 
@@ -344,6 +388,20 @@ export function SiteHeader({ currentUser }: SiteHeaderProps) {
                 </Link>
               );
             })}
+
+            <Link
+              href="/manual"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium text-content hover:bg-surface-hover mt-1 border border-dashed border-border"
+            >
+              <span className="flex items-center gap-2">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-xs">
+                  ?
+                </span>
+                <span>Manual y Ayuda</span>
+              </span>
+              <span className="text-content-muted text-xs">→</span>
+            </Link>
           </nav>
 
           <div className="mt-auto pt-6 border-t border-border flex items-center justify-between">

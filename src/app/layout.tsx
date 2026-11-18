@@ -66,9 +66,11 @@ const themeInitScript = `
 `;
 
 import { getCurrentUser } from "@/lib/auth";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const currentUser = await getCurrentUser();
+  const gaId = process.env.NEXT_PUBLIC_GA_ID?.trim();
 
   return (
     <html
@@ -104,6 +106,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           </footer>
         </ThemeProvider>
       </body>
+      {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
     </html>
   );
 }

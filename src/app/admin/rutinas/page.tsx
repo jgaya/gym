@@ -1,16 +1,13 @@
 import { Metadata } from "next";
 import {
-  getRutinas,
-  getEjerciciosParaSelector,
   getPlanRutinaTemplates,
   getPlanesSelector,
-  getRutinasSelector,
 } from "./actions";
 import { RutinasClient } from "./RutinasClient";
 
 export const metadata: Metadata = {
-  title: "Gestión de Rutinas y Plantillas — Gym Meraki Admin",
-  description: "ABM de rutinas de entrenamiento, plantillas base y asignación de ejercicios",
+  title: "Gestión de Rutinas — Gym Meraki Admin",
+  description: "Catálogo y diseño de rutinas de entrenamiento multi-día para socios",
 };
 
 interface AdminRutinasPageProps {
@@ -20,15 +17,11 @@ interface AdminRutinasPageProps {
 }
 
 export default async function AdminRutinasPage({ searchParams }: AdminRutinasPageProps) {
-  const [params, initialData, ejerciciosDisponibles, initialTemplates, planes, rutinasSelector] =
-    await Promise.all([
-      searchParams,
-      getRutinas({ page: 1, pageSize: 10 }),
-      getEjerciciosParaSelector(),
-      getPlanRutinaTemplates(),
-      getPlanesSelector(),
-      getRutinasSelector(),
-    ]);
+  const [params, initialTemplates, planes] = await Promise.all([
+    searchParams,
+    getPlanRutinaTemplates(),
+    getPlanesSelector(),
+  ]);
 
   const isEconomyDenied = params.error === "acceso_economia_denegado";
 
@@ -40,6 +33,7 @@ export default async function AdminRutinasPage({ searchParams }: AdminRutinasPag
           <strong>Entrenador</strong> tiene acceso completo a Rutinas, Ejercicios y Usuarios, pero no a la gestión económica ni planes comerciales.
         </div>
       )}
+
       {/* Cabecera de la sección */}
       <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between border-b border-border pb-5">
         <div>
@@ -49,23 +43,19 @@ export default async function AdminRutinasPage({ searchParams }: AdminRutinasPag
             <span className="text-content-muted">Entrenamiento</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-content mt-1">
-            Rutinas y Plantillas
+            Rutinas de Entrenamiento
           </h1>
           <p className="text-sm text-content-muted mt-1">
-            Diseñá rutinas diarias para el catálogo o creá plantillas completas multi-día asociadas a los planes de membresía.
+            Diseñá y administrá las rutinas completas de entrenamiento para los socios, configurando los ejercicios de cada día en una sola pantalla.
           </p>
         </div>
       </div>
 
       {/* Listado y ABM interactivo */}
       <RutinasClient
-        initialData={initialData}
-        ejerciciosDisponibles={ejerciciosDisponibles}
         initialTemplates={initialTemplates}
         planes={planes}
-        rutinasSelector={rutinasSelector}
       />
     </div>
   );
 }
-

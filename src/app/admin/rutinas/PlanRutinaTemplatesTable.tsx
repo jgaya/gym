@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Table,
   TableHeader,
@@ -23,12 +24,13 @@ import {
   PlanRutinaTemplateItem,
   toggleEstadoPlanRutinaTemplate,
   eliminarPlanRutinaTemplate,
+  duplicarRutinaCompleta,
 } from "./actions";
 
 interface PlanRutinaTemplatesTableProps {
   templates: PlanRutinaTemplateItem[];
   isLoading?: boolean;
-  onEdit: (template: PlanRutinaTemplateItem) => void;
+  onEdit?: (template: PlanRutinaTemplateItem) => void;
   onRefresh: () => void;
 }
 
@@ -38,6 +40,7 @@ export function PlanRutinaTemplatesTable({
   onEdit,
   onRefresh,
 }: PlanRutinaTemplatesTableProps) {
+  const router = useRouter();
   const [templateToDelete, setTemplateToDelete] = useState<PlanRutinaTemplateItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [actionLoadingId, setActionLoadingId] = useState<number | null>(null);
@@ -46,6 +49,18 @@ export function PlanRutinaTemplatesTable({
     setActionLoadingId(id);
     try {
       const res = await toggleEstadoPlanRutinaTemplate(id);
+      if (res.success) {
+        onRefresh();
+      }
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
+
+  const handleDuplicar = async (id: number) => {
+    setActionLoadingId(id);
+    try {
+      const res = await duplicarRutinaCompleta(id);
       if (res.success) {
         onRefresh();
       }
@@ -68,14 +83,22 @@ export function PlanRutinaTemplatesTable({
     }
   };
 
+  const handleEdit = (tpl: PlanRutinaTemplateItem) => {
+    if (onEdit) {
+      onEdit(tpl);
+    } else {
+      router.push(`/admin/rutinas/${tpl.id}`);
+    }
+  };
+
   return (
     <>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Plantilla Multi-Día</TableHead>
-            <TableHead>Plan Asociado</TableHead>
-            <TableHead>Estructura de Días y Rutinas</TableHead>
+            <TableHead>Rutina de Entrenamiento</TableHead>
+            <TableHead>Plan / Frecuencia</TableHead>
+            <TableHead>Estructura de Días y Ejercicios</TableHead>
             <TableHead>Estado</TableHead>
             <TableHead className="text-right">Acciones</TableHead>
           </TableRow>
@@ -86,14 +109,14 @@ export function PlanRutinaTemplatesTable({
               <td colSpan={5} className="px-6 py-12 text-center text-content-muted">
                 <div className="flex items-center justify-center gap-2">
                   <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                  Cargando plantillas de planes...
+                  Cargando rutinas...
                 </div>
               </td>
             </tr>
           ) : templates.length === 0 ? (
             <TableEmpty
               colSpan={5}
-              message="No se encontraron plantillas de entrenamiento para planes. Podés crear una para 2, 3 o 5 días."
+              message="No se encontraron rutinas de entrenamiento cargadas. Podés crear una nueva rutina multi-día en un solo clic."
             />
           ) : (
             templates.map((tpl) => (
@@ -101,11 +124,15 @@ export function PlanRutinaTemplatesTable({
                 {/* Nombre y descripción */}
                 <TableCell>
                   <div className="flex flex-col">
-                    <span className="font-semibold text-content text-base">
+                    <button
+                      type="button"
+                      onClick={() => handleEdit(tpl)}
+                      className="font-semibold text-content text-base text-left hover:text-primary transition-colors cursor-pointer"
+                    >
                       {tpl.nombre}
-                    </span>
+                    </button>
                     {tpl.descripcion && (
-                      <span className="text-xs text-content-muted max-w-sm line-clamp-2">
+                      <span className="text-xs text-content-muted max-w-sm line-clamp-2 mt-0.5">
                         {tpl.descripcion}
                       </span>
                     )}
@@ -140,7 +167,7 @@ export function PlanRutinaTemplatesTable({
                             {d.nombreDia || `Día ${d.diaNumero}`}:
                           </span>
                           <span className="text-content-muted">
-                            {d.rutina.nombre}
+                            {d.rutina.nombre.replace(`${tpl.nombre} — `, "")}
                           </span>
                           <span className="text-[10px] text-content-muted/70">
                             ({d.rutina.totalEjercicios} ej.)
@@ -175,18 +202,37 @@ export function PlanRutinaTemplatesTable({
                       buttonTitle={`Acciones para ${tpl.nombre}`}
                       items={[
                         {
-                          label: "Editar Plantilla",
+                          label: "Editar Rutina",
                           icon: <EditIcon />,
-                          onClick: () => onEdit(tpl),
+                          onClick: () => handleEdit(tpl),
                         },
                         {
-                          label: tpl.isActive ? "Desactivar Plantilla" : "Activar Plantilla",
+                          label: "Duplicar Rutina",
+                          icon: (
+                            <svg
+                              className="h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                              />
+                            </svg>
+                          ),
+                          onClick: () => handleDuplicar(tpl.id),
+                        },
+                        {
+                          label: tpl.isActive ? "Desactivar Rutina" : "Activar Rutina",
                           icon: <PowerIcon />,
                           onClick: () => handleToggleEstado(tpl.id),
                           variant: tpl.isActive ? "warning" : "success",
                         },
                         {
-                          label: "Eliminar Plantilla",
+                          label: "Eliminar Rutina",
                           icon: <TrashIcon />,
                           onClick: () => setTemplateToDelete(tpl),
                           variant: "danger",
@@ -205,8 +251,8 @@ export function PlanRutinaTemplatesTable({
       <Modal
         isOpen={Boolean(templateToDelete)}
         onClose={() => setTemplateToDelete(null)}
-        title="Confirmar eliminación de plantilla"
-        description="Esta plantilla dejará de estar disponible para asignar a nuevos socios. Las asignaciones existentes no se verán afectadas."
+        title="Confirmar eliminación de rutina"
+        description="Esta rutina dejará de estar disponible para asignar a nuevos socios. Las asignaciones de entrenamiento existentes no se verán afectadas."
         maxWidth="sm"
         footer={
           <>
@@ -223,20 +269,17 @@ export function PlanRutinaTemplatesTable({
               size="sm"
               onClick={handleConfirmDelete}
               isLoading={isDeleting}
+              disabled={isDeleting}
             >
-              Confirmar Eliminación
+              Eliminar Rutina
             </Button>
           </>
         }
       >
-        {templateToDelete && (
-          <div className="p-3 rounded-lg bg-surface-hover/70 border border-border text-sm space-y-1">
-            <p className="font-semibold text-content">{templateToDelete.nombre}</p>
-            <p className="text-xs text-content-muted">
-              Plan: {templateToDelete.plan.nombre} ({templateToDelete.totalDias} días)
-            </p>
-          </div>
-        )}
+        <div className="py-2 text-sm text-content-muted">
+          ¿Estás seguro de que deseás eliminar la rutina{" "}
+          <strong className="text-content font-bold">{templateToDelete?.nombre}</strong>?
+        </div>
       </Modal>
     </>
   );
