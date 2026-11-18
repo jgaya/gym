@@ -30,16 +30,17 @@
 .dark {
   /* ===============================
      TEMA NOCHE (OSCURO)
-     Fondo negro puro, superficies y bordes en grises oscuros (sin tonos azules),
-     y detalles de acento en verde sobrio (no chillón).
+     Fondo negro puro (#000000) para contraste máximo en pantallas OLED.
+     Superficies y bordes aclarados para óptima visibilidad de tarjetas,
+     rutinas y cajas delimitadoras en teléfonos con brillo bajo.
      =============================== */
   --background: #000000;
   --foreground: #f4f4f5;
 
-  --surface: #121214;
-  --surface-hover: #1c1c20;
+  --surface: #1c1d22;
+  --surface-hover: #282930;
 
-  --border: #27272a;
+  --border: #383944;
 
   --content: #f4f4f5;
   --content-muted: #a1a1aa;
@@ -48,7 +49,7 @@
   --primary-foreground: #ffffff;
   --primary-hover: #15803d;
 
-  --accent: #1c1c20;
+  --accent: #282930;
   --accent-foreground: #f4f4f5;
 
   --logo-shadow: 0 0 14px rgba(255, 255, 255, 0.45), 0 2px 6px rgba(255, 255, 255, 0.25);

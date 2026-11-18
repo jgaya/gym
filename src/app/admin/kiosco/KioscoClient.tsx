@@ -823,14 +823,9 @@ export function KioscoClient({ initialData }: KioscoClientProps) {
                     <tr className="border-b border-border bg-background/50 text-content-muted text-xs uppercase tracking-wider">
                       <th className="py-3 px-4 font-semibold">Producto</th>
                       <th className="py-3 px-4 font-semibold">Sucursal</th>
-                      <th className="py-3 px-4 font-semibold">Precio Compra</th>
-                      <th className="py-3 px-4 font-semibold">Precio Venta</th>
-                      <th className="py-3 px-4 font-semibold">Ganancia Unit.</th>
+                      <th className="py-3 px-4 font-semibold">Precio y Margen</th>
                       <th className="py-3 px-4 font-semibold text-center">
                         Stock Actual
-                      </th>
-                      <th className="py-3 px-4 font-semibold text-center">
-                        Reposición Rápida
                       </th>
                       <th className="py-3 px-4 font-semibold text-right">
                         Acción
@@ -841,7 +836,7 @@ export function KioscoClient({ initialData }: KioscoClientProps) {
                     {filteredProductos.length === 0 ? (
                       <tr>
                         <td
-                          colSpan={8}
+                          colSpan={5}
                           className="py-10 text-center text-content-muted"
                         >
                           No hay productos registrados en esta vista.
@@ -863,83 +858,59 @@ export function KioscoClient({ initialData }: KioscoClientProps) {
                                 {p.nombre}
                               </div>
                               <div className="text-xs text-content-muted">
-                                {p.categoria} • Mínimo sugerido: {p.stockMinimo} u.
+                                {p.categoria} • Mínimo: {p.stockMinimo} u.
                               </div>
                             </td>
 
-                            <td className="py-3.5 px-4 text-xs font-semibold text-content">
+                            <td className="py-3.5 px-4 text-xs font-semibold text-content whitespace-nowrap">
                               📍 {p.sucursalBarrio}
                             </td>
 
-                            <td className="py-3.5 px-4 font-mono text-xs text-content-muted">
-                              {formatMoney(p.precioCompra)}
-                            </td>
-
-                            <td className="py-3.5 px-4 font-mono font-bold text-content">
-                              {formatMoney(p.precioVenta)}
-                            </td>
-
                             <td className="py-3.5 px-4">
-                              <span className="text-xs font-bold text-emerald-400">
-                                +{formatMoney(p.margenUnitario)}
-                              </span>
-                              <span className="text-[11px] text-content-muted ml-1">
-                                ({p.porcentajeMargen}%)
-                              </span>
+                              <div className="font-mono font-bold text-content text-sm">
+                                {formatMoney(p.precioVenta)}
+                              </div>
+                              <div className="text-[11px] text-content-muted flex items-center gap-1.5 mt-0.5">
+                                <span>Costo: {formatMoney(p.precioCompra)}</span>
+                                <span className="text-emerald-400 font-semibold">
+                                  (+{formatMoney(p.margenUnitario)})
+                                </span>
+                              </div>
                             </td>
 
                             <td className="py-3.5 px-4 text-center">
-                              <Badge
-                                variant={
-                                  sinStock
-                                    ? "danger"
-                                    : stockBajo
-                                      ? "warning"
-                                      : "success"
-                                }
-                              >
-                                {p.stock} unidades
-                              </Badge>
-                            </td>
-
-                            <td className="py-3.5 px-4 text-center">
-                              <div className="inline-flex items-center gap-1">
-                                <button
-                                  type="button"
-                                  disabled={isPending || p.stock <= 0}
-                                  onClick={() => handleAjustarStock(p.id, -1)}
-                                  className="px-2 py-1 rounded-lg border border-border bg-background hover:bg-surface-hover text-xs font-bold text-content disabled:opacity-40 cursor-pointer"
-                                  title="Descontar 1 unidad"
+                              <div className="inline-flex items-center gap-2">
+                                <Badge
+                                  variant={
+                                    sinStock
+                                      ? "danger"
+                                      : stockBajo
+                                        ? "warning"
+                                        : "success"
+                                  }
                                 >
-                                  −1
-                                </button>
-                                <button
-                                  type="button"
-                                  disabled={isPending}
-                                  onClick={() => handleAjustarStock(p.id, 1)}
-                                  className="px-2 py-1 rounded-lg border border-border bg-background hover:bg-surface-hover text-xs font-bold text-content cursor-pointer"
-                                  title="Sumar 1 unidad"
-                                >
-                                  +1
-                                </button>
-                                <button
-                                  type="button"
-                                  disabled={isPending}
-                                  onClick={() => handleAjustarStock(p.id, 6)}
-                                  className="px-2 py-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-xs font-bold text-emerald-400 cursor-pointer"
-                                  title="Reponer pack de 6 unidades"
-                                >
-                                  +6
-                                </button>
-                                <button
-                                  type="button"
-                                  disabled={isPending}
-                                  onClick={() => handleAjustarStock(p.id, 12)}
-                                  className="px-2 py-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-xs font-bold text-emerald-400 cursor-pointer"
-                                  title="Reponer pack de 12 unidades"
-                                >
-                                  +12
-                                </button>
+                                  {p.stock} u.
+                                </Badge>
+                                <div className="inline-flex items-center gap-1">
+                                  <button
+                                    type="button"
+                                    disabled={isPending || p.stock <= 0}
+                                    onClick={() => handleAjustarStock(p.id, -1)}
+                                    className="w-6 h-6 flex items-center justify-center rounded-md border border-border bg-background hover:bg-surface-hover text-xs font-bold text-content disabled:opacity-40 cursor-pointer"
+                                    title="Descontar 1 unidad"
+                                  >
+                                    −
+                                  </button>
+                                  <button
+                                    type="button"
+                                    disabled={isPending}
+                                    onClick={() => handleAjustarStock(p.id, 1)}
+                                    className="w-6 h-6 flex items-center justify-center rounded-md border border-border bg-background hover:bg-surface-hover text-xs font-bold text-content cursor-pointer"
+                                    title="Sumar 1 unidad"
+                                  >
+                                    +
+                                  </button>
+                                </div>
                               </div>
                             </td>
 
@@ -1021,12 +992,8 @@ export function KioscoClient({ initialData }: KioscoClientProps) {
                     <tr className="border-b border-border bg-background/50 text-content-muted text-xs uppercase tracking-wider">
                       <th className="py-3 px-4 font-semibold">Fecha</th>
                       <th className="py-3 px-4 font-semibold">Sucursal</th>
-                      <th className="py-3 px-4 font-semibold">Producto</th>
-                      <th className="py-3 px-4 font-semibold text-center">Cant.</th>
-                      <th className="py-3 px-4 font-semibold">Costo Total</th>
-                      <th className="py-3 px-4 font-semibold">Total Venta</th>
-                      <th className="py-3 px-4 font-semibold">Ganancia</th>
-                      <th className="py-3 px-4 font-semibold">Medio de Pago</th>
+                      <th className="py-3 px-4 font-semibold">Detalle de Venta</th>
+                      <th className="py-3 px-4 font-semibold">Total y Cobro</th>
                       <th className="py-3 px-4 font-semibold text-right">Acción</th>
                     </tr>
                   </thead>
@@ -1034,7 +1001,7 @@ export function KioscoClient({ initialData }: KioscoClientProps) {
                     {data.ventas.length === 0 ? (
                       <tr>
                         <td
-                          colSpan={9}
+                          colSpan={5}
                           className="py-10 text-center text-content-muted"
                         >
                           No hay ventas de mostrador registradas en este período.
@@ -1046,7 +1013,7 @@ export function KioscoClient({ initialData }: KioscoClientProps) {
                           key={v.id}
                           className="hover:bg-background/40 transition-colors"
                         >
-                          <td className="py-3 px-4 text-xs text-content-muted">
+                          <td className="py-3 px-4 text-xs text-content-muted whitespace-nowrap">
                             {new Date(v.fechaVenta).toLocaleString("es-AR", {
                               day: "2-digit",
                               month: "2-digit",
@@ -1054,12 +1021,12 @@ export function KioscoClient({ initialData }: KioscoClientProps) {
                               minute: "2-digit",
                             })}
                           </td>
-                          <td className="py-3 px-4 text-xs font-semibold text-content">
+                          <td className="py-3 px-4 text-xs font-semibold text-content whitespace-nowrap">
                             📍 {v.sucursalBarrio}
                           </td>
                           <td className="py-3 px-4">
                             <div className="font-bold text-content text-xs">
-                              {v.productoNombre}
+                              {v.cantidad}x {v.productoNombre}
                             </div>
                             {v.usuarioNombre && (
                               <div className="text-[11px] text-content-muted">
@@ -1067,20 +1034,18 @@ export function KioscoClient({ initialData }: KioscoClientProps) {
                               </div>
                             )}
                           </td>
-                          <td className="py-3 px-4 text-center font-bold text-content">
-                            {v.cantidad}
-                          </td>
-                          <td className="py-3 px-4 font-mono text-xs text-content-muted">
-                            {formatMoney(v.totalCosto)}
-                          </td>
-                          <td className="py-3 px-4 font-mono font-bold text-content">
-                            {formatMoney(v.totalVenta)}
-                          </td>
-                          <td className="py-3 px-4 font-mono font-bold text-emerald-400">
-                            +{formatMoney(v.gananciaNeta)}
-                          </td>
-                          <td className="py-3 px-4 text-xs text-content">
-                            {v.metodoPago}
+                          <td className="py-3 px-4">
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono font-bold text-content text-sm">
+                                {formatMoney(v.totalVenta)}
+                              </span>
+                              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-surface-hover border border-border text-content-muted">
+                                {v.metodoPago}
+                              </span>
+                            </div>
+                            <div className="text-[11px] font-semibold text-emerald-400 mt-0.5">
+                              +{formatMoney(v.gananciaNeta)} ganancia
+                            </div>
                           </td>
                           <td className="py-3 px-4 text-right">
                             <ActionsMenu

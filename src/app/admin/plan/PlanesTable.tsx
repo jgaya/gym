@@ -84,9 +84,8 @@ export function PlanesTable({
         <TableHeader>
           <TableRow>
             <TableHead>Plan</TableHead>
-            <TableHead>Frecuencia</TableHead>
             <TableHead>Precio Mensual</TableHead>
-            <TableHead>Miembros Inscriptos</TableHead>
+            <TableHead>Socios Inscriptos</TableHead>
             <TableHead>Estado</TableHead>
             <TableHead className="text-right">Acciones</TableHead>
           </TableRow>
@@ -94,7 +93,7 @@ export function PlanesTable({
         <TableBody>
           {isLoading ? (
             <tr>
-              <td colSpan={6} className="px-6 py-12 text-center text-content-muted">
+              <td colSpan={5} className="px-6 py-12 text-center text-content-muted">
                 <div className="flex items-center justify-center gap-2">
                   <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
                   Cargando planes de membresía...
@@ -103,32 +102,30 @@ export function PlanesTable({
             </tr>
           ) : planes.length === 0 ? (
             <TableEmpty
-              colSpan={6}
+              colSpan={5}
               message="No se encontraron planes de entrenamiento"
             />
           ) : (
             planes.map((p) => (
               <TableRow key={p.id}>
-                {/* Nombre y descripción */}
+                {/* Nombre, frecuencia y descripción */}
                 <TableCell>
-                  <div className="flex flex-col">
-                    <span className="font-semibold text-content text-base">
-                      {p.nombre}
-                    </span>
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-content text-base">
+                        {p.nombre}
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded bg-surface-hover px-2 py-0.5 text-xs font-semibold text-content border border-border">
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                        {p.diasPorSemana} {p.diasPorSemana === 1 ? "día/sem" : "días/sem"}
+                      </span>
+                    </div>
                     {p.descripcion && (
                       <span className="text-xs text-content-muted max-w-sm truncate">
                         {p.descripcion}
                       </span>
                     )}
                   </div>
-                </TableCell>
-
-                {/* Días por semana */}
-                <TableCell>
-                  <span className="inline-flex items-center gap-1.5 rounded-md bg-surface-hover px-2.5 py-1 text-xs font-bold text-content border border-border">
-                    <span className="h-2 w-2 rounded-full bg-primary" />
-                    {p.diasPorSemana} {p.diasPorSemana === 1 ? "día / semana" : "días / semana"}
-                  </span>
                 </TableCell>
 
                 {/* Precio */}

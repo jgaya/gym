@@ -93,11 +93,9 @@ export function SucursalesTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Sucursal / Barrio</TableHead>
-            <TableHead>Dirección y Teléfono</TableHead>
-            <TableHead>Horarios</TableHead>
+            <TableHead>Sucursal</TableHead>
+            <TableHead>Dirección y Contacto</TableHead>
             <TableHead>Kiosco</TableHead>
-            <TableHead>Redes Sociales</TableHead>
             <TableHead>Socios</TableHead>
             <TableHead>Estado</TableHead>
             <TableHead className="text-right">Acciones</TableHead>
@@ -107,7 +105,7 @@ export function SucursalesTable({
           {isLoading ? (
             <tr>
               <td
-                colSpan={8}
+                colSpan={6}
                 className="px-6 py-12 text-center text-content-muted"
               >
                 <div className="flex items-center justify-center gap-2">
@@ -118,7 +116,7 @@ export function SucursalesTable({
             </tr>
           ) : sucursales.length === 0 ? (
             <TableEmpty
-              colSpan={8}
+              colSpan={6}
               message="No se encontraron sucursales registradas"
             />
           ) : (
@@ -178,13 +176,6 @@ export function SucursalesTable({
                   </div>
                 </TableCell>
 
-                {/* Horarios */}
-                <TableCell>
-                  <span className="text-xs text-content-muted max-w-xs block leading-relaxed">
-                    {s.horarios}
-                  </span>
-                </TableCell>
-
                 {/* Kiosco */}
                 <TableCell>
                   <button
@@ -200,37 +191,6 @@ export function SucursalesTable({
                       <Badge variant="default">Sin Kiosco</Badge>
                     )}
                   </button>
-                </TableCell>
-
-                {/* Redes Sociales */}
-                <TableCell>
-                  <div className="flex items-center gap-2 text-xs">
-                    {s.urlInstagram ? (
-                      <a
-                        href={s.urlInstagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="rounded-md bg-pink-500/10 px-2 py-1 font-semibold text-pink-500 hover:bg-pink-500/20 transition-colors"
-                      >
-                        Instagram
-                      </a>
-                    ) : null}
-                    {s.urlTiktok ? (
-                      <a
-                        href={s.urlTiktok}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="rounded-md bg-surface-hover border border-border px-2 py-1 font-semibold text-content hover:border-primary/40 transition-colors"
-                      >
-                        TikTok
-                      </a>
-                    ) : null}
-                    {!s.urlInstagram && !s.urlTiktok && (
-                      <span className="text-xs italic text-content-muted/70">
-                        Sin enlaces
-                      </span>
-                    )}
-                  </div>
                 </TableCell>
 
                 {/* Total Socios */}

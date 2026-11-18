@@ -81,7 +81,6 @@ export function EjerciciosTable({
           <TableRow>
             <TableHead>Ejercicio</TableHead>
             <TableHead>Grupo Muscular</TableHead>
-            <TableHead>Multimedia</TableHead>
             <TableHead>Rutinas Asociadas</TableHead>
             <TableHead>Estado</TableHead>
             <TableHead className="text-right">Acciones</TableHead>
@@ -90,7 +89,7 @@ export function EjerciciosTable({
         <TableBody>
           {isLoading ? (
             <tr>
-              <td colSpan={6} className="px-6 py-12 text-center text-content-muted">
+              <td colSpan={5} className="px-6 py-12 text-center text-content-muted">
                 <div className="flex items-center justify-center gap-2">
                   <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
                   Cargando catálogo de ejercicios...
@@ -99,7 +98,7 @@ export function EjerciciosTable({
             </tr>
           ) : ejercicios.length === 0 ? (
             <TableEmpty
-              colSpan={6}
+              colSpan={5}
               message="No se encontraron ejercicios en el catálogo"
             />
           ) : (
@@ -112,9 +111,33 @@ export function EjerciciosTable({
                       💪
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-semibold text-content text-sm">
-                        {ej.nombre}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-content text-sm">
+                          {ej.nombre}
+                        </span>
+                        {ej.imagenUrl && (
+                          <a
+                            href={ej.imagenUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs hover:opacity-80"
+                            title="Ver imagen / GIF"
+                          >
+                            🖼️
+                          </a>
+                        )}
+                        {ej.videoUrl && (
+                          <a
+                            href={ej.videoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs hover:opacity-80"
+                            title="Ver video explicativo"
+                          >
+                            🎬
+                          </a>
+                        )}
+                      </div>
                       {ej.descripcion && (
                         <p
                           onClick={() => setEjercicioToView(ej)}
@@ -130,39 +153,6 @@ export function EjerciciosTable({
 
                 {/* Grupo Muscular */}
                 <TableCell>{getGrupoMuscularBadge(ej.grupoMuscular)}</TableCell>
-
-                {/* Multimedia */}
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    {ej.imagenUrl ? (
-                      <a
-                        href={ej.imagenUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20 transition-colors"
-                        title="Ver imagen / GIF"
-                      >
-                        🖼️ Ver
-                      </a>
-                    ) : null}
-
-                    {ej.videoUrl ? (
-                      <a
-                        href={ej.videoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 transition-colors"
-                        title="Ver video demostrativo"
-                      >
-                        🎬 Video
-                      </a>
-                    ) : null}
-
-                    {!ej.imagenUrl && !ej.videoUrl && (
-                      <span className="text-xs text-content-muted/60 italic">Sin recursos</span>
-                    )}
-                  </div>
-                </TableCell>
 
                 {/* Rutinas asociadas */}
                 <TableCell>

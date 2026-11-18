@@ -1741,8 +1741,6 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                   <th className="py-3 px-4">Sucursal</th>
                   <th className="py-3 px-4">Concepto / Detalle</th>
                   <th className="py-3 px-4">Categoría</th>
-                  <th className="py-3 px-4">Tipo</th>
-                  <th className="py-3 px-4">Medio de Pago</th>
                   <th className="py-3 px-4 text-right">Monto Egreso</th>
                   <th className="py-3 px-4 text-right">Acciones</th>
                 </tr>
@@ -1751,7 +1749,7 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                 {gastosFiltrados.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={8}
+                      colSpan={6}
                       className="py-8 text-center text-content-muted"
                     >
                       No hay gastos operativos registrados para este filtro en{" "}
@@ -1774,7 +1772,14 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                         </span>
                       </td>
                       <td className="py-3 px-4">
-                        <div className="font-bold text-content">{g.concepto}</div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-content">{g.concepto}</span>
+                          {g.esRecurrente && (
+                            <span className="text-[10px] font-semibold text-sky-400 bg-sky-500/10 border border-sky-500/20 px-1.5 py-0.5 rounded">
+                              🔄 Fijo
+                            </span>
+                          )}
+                        </div>
                         {(g.notas || g.comprobante) && (
                           <div className="text-[11px] text-content-muted mt-0.5">
                             {g.comprobante ? `Comp: ${g.comprobante} ` : ""}
@@ -1787,22 +1792,13 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                           {g.categoria}
                         </span>
                       </td>
-                      <td className="py-3 px-4 whitespace-nowrap">
-                        {g.esRecurrente ? (
-                          <span className="text-[11px] font-semibold text-sky-400">
-                            🔄 Fijo mensual
-                          </span>
-                        ) : (
-                          <span className="text-[11px] text-content-muted">
-                            Eventual
-                          </span>
-                        )}
-                      </td>
-                      <td className="py-3 px-4 whitespace-nowrap text-content-muted">
-                        {g.metodoPago}
-                      </td>
-                      <td className="py-3 px-4 whitespace-nowrap text-right font-black text-rose-400">
-                        -{formatMoney(g.monto)}
+                      <td className="py-3 px-4 whitespace-nowrap text-right">
+                        <div className="font-black text-rose-400">
+                          -{formatMoney(g.monto)}
+                        </div>
+                        <div className="text-[11px] text-content-muted mt-0.5">
+                          {g.metodoPago}
+                        </div>
                       </td>
                       <td className="py-3 px-4 whitespace-nowrap text-right">
                         <div className="inline-flex items-center gap-1.5">
@@ -1959,16 +1955,15 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                 <th className="py-3 px-4 font-semibold">Socio</th>
                 <th className="py-3 px-4 font-semibold">Sucursal</th>
                 <th className="py-3 px-4 font-semibold">Plan Asignado</th>
-                <th className="py-3 px-4 font-semibold">Importe Cuota</th>
+                <th className="py-3 px-4 font-semibold">Cuota / Cobro</th>
                 <th className="py-3 px-4 font-semibold text-center">Estado del Mes</th>
-                <th className="py-3 px-4 font-semibold">Detalles de Cobro</th>
                 <th className="py-3 px-4 font-semibold text-right">Acción</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {filteredUsuarios.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-content-muted">
+                  <td colSpan={6} className="py-12 text-center text-content-muted">
                     <div className="text-3xl mb-2">📋</div>
                     <p className="font-medium text-content">
                       No se encontraron miembros con los filtros seleccionados
@@ -1988,7 +1983,7 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                       key={u.id}
                       className="hover:bg-background/40 transition-colors group"
                     >
-                      {/* Nombre y Contacto (sin avatar de iniciales para ahorrar espacio) */}
+                      {/* Nombre y Contacto */}
                       <td className="py-3.5 px-4">
                         <div>
                           <div className="font-bold text-content flex items-center gap-2">
@@ -2014,17 +2009,12 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                       </td>
 
                       {/* Sucursal */}
-                      <td className="py-3.5 px-4">
+                      <td className="py-3.5 px-4 whitespace-nowrap">
                         {u.sucursal ? (
-                          <div>
-                            <div className="font-semibold text-content text-xs flex items-center gap-1">
-                              <span>📍</span>
-                              <span>{u.sucursal.barrio}</span>
-                            </div>
-                            <div className="text-[11px] text-content-muted">
-                              {u.sucursal.direccion}
-                            </div>
-                          </div>
+                          <span className="font-semibold text-content text-xs flex items-center gap-1">
+                            <span>📍</span>
+                            <span>{u.sucursal.barrio}</span>
+                          </span>
                         ) : (
                           <span className="text-xs text-content-muted italic">
                             Sin sucursal
@@ -2040,19 +2030,39 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                               {u.plan.nombre}
                             </div>
                             <div className="text-[11px] text-content-muted">
-                              {u.plan.diasPorSemana} días por semana
+                              {u.plan.diasPorSemana} d/sem
                             </div>
                           </div>
                         ) : (
                           <span className="text-xs text-content-muted italic">
-                            Sin plan asignado
+                            Sin plan
                           </span>
                         )}
                       </td>
 
-                      {/* Importe Cuota */}
-                      <td className="py-3.5 px-4 font-bold text-content">
-                        {u.plan ? formatMoney(u.plan.precio) : "-"}
+                      {/* Cuota / Cobro */}
+                      <td className="py-3.5 px-4">
+                        {u.haPagado && u.pagoMesActual ? (
+                          <div className="text-xs space-y-0.5">
+                            <div className="font-bold font-mono text-emerald-400">
+                              {formatMoney(u.pagoMesActual.monto)}
+                            </div>
+                            <div className="text-[11px] text-content-muted">
+                              {u.pagoMesActual.metodoPago || "Efectivo"} •{" "}
+                              {new Date(u.pagoMesActual.fechaPago).toLocaleDateString("es-AR")}
+                              {u.pagoMesActual.comprobante && ` • #${u.pagoMesActual.comprobante}`}
+                            </div>
+                          </div>
+                        ) : (
+                          <div>
+                            <div className="font-bold font-mono text-content">
+                              {u.plan ? formatMoney(u.plan.precio) : "-"}
+                            </div>
+                            <div className="text-[11px] text-content-muted italic">
+                              Sin cobro registrado
+                            </div>
+                          </div>
+                        )}
                       </td>
 
                       {/* Estado del Mes con Semáforo de Vencimiento */}
@@ -2085,28 +2095,6 @@ export function EconomiaClient({ initialData }: EconomiaClientProps) {
                             </div>
                           );
                         })()}
-                      </td>
-
-                      {/* Detalles del pago (si pagó) */}
-                      <td className="py-3.5 px-4">
-                        {u.pagoMesActual ? (
-                          <div className="text-xs space-y-0.5">
-                            <div className="font-medium text-content">
-                              {formatMoney(u.pagoMesActual.monto)} •{" "}
-                              <span className="text-content-muted">
-                                {u.pagoMesActual.metodoPago || "Efectivo"}
-                              </span>
-                            </div>
-                            <div className="text-[11px] text-content-muted">
-                              {new Date(u.pagoMesActual.fechaPago).toLocaleDateString("es-AR")}
-                              {u.pagoMesActual.comprobante && ` • #${u.pagoMesActual.comprobante}`}
-                            </div>
-                          </div>
-                        ) : (
-                          <span className="text-xs text-content-muted italic">
-                            Sin registro de cobro
-                          </span>
-                        )}
                       </td>
 
                       {/* Acciones */}

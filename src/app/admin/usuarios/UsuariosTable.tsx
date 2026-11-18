@@ -89,10 +89,8 @@ export function UsuariosTable({
         <TableHeader>
           <TableRow>
             <TableHead>Miembro</TableHead>
-            <TableHead>DNI</TableHead>
-            <TableHead>Contacto</TableHead>
             <TableHead>Sucursal</TableHead>
-            <TableHead>Plan</TableHead>
+            <TableHead>Plan Asignado</TableHead>
             <TableHead>Rol</TableHead>
             <TableHead>Estado</TableHead>
             <TableHead className="text-right">Acciones</TableHead>
@@ -101,7 +99,7 @@ export function UsuariosTable({
         <TableBody>
           {isLoading ? (
             <tr>
-              <td colSpan={8} className="px-6 py-12 text-center text-content-muted">
+              <td colSpan={6} className="px-6 py-12 text-center text-content-muted">
                 <div className="flex items-center justify-center gap-2">
                   <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
                   Cargando miembros...
@@ -110,7 +108,7 @@ export function UsuariosTable({
             </tr>
           ) : usuarios.length === 0 ? (
             <TableEmpty
-              colSpan={8}
+              colSpan={6}
               message="No se encontraron usuarios coincidentes"
             />
           ) : (
@@ -124,53 +122,41 @@ export function UsuariosTable({
                       {user.apellido.charAt(0)}
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-semibold text-content">
-                        {user.nombre} {user.apellido}
-                      </span>
-                      <span className="text-xs text-content-muted">
-                        {user.email}
-                      </span>
-                    </div>
-                  </div>
-                </TableCell>
-
-                {/* DNI */}
-                <TableCell className="font-mono text-xs text-content font-medium">
-                  {user.dni}
-                </TableCell>
-
-                {/* Contacto */}
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    {user.telefono && (
-                      <a
-                        href={getWhatsAppUrl(
-                          user.telefono,
-                          `Hola ${user.nombre}, te contactamos desde Gym Meraki.`
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-content text-sm">
+                          {user.nombre} {user.apellido}
+                        </span>
+                        {user.telefono && (
+                          <a
+                            href={getWhatsAppUrl(
+                              user.telefono,
+                              `Hola ${user.nombre}, te contactamos desde Gym Meraki.`
+                            )}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={`WhatsApp: ${user.telefono}`}
+                            className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500 hover:text-white transition-colors"
+                          >
+                            <WhatsAppIcon className="h-3 w-3" />
+                          </a>
                         )}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title={`Enviar mensaje por WhatsApp a ${user.nombre}`}
-                        className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500 hover:text-white dark:hover:text-white transition-all transform hover:scale-110 cursor-pointer shadow-2xs"
-                      >
-                        <WhatsAppIcon className="h-3.5 w-3.5" />
-                      </a>
-                    )}
+                      </div>
+                      <div className="text-xs text-content-muted flex items-center gap-1.5 flex-wrap mt-0.5">
+                        <span className="font-mono">DNI {user.dni}</span>
+                        <span>•</span>
+                        <span className="truncate max-w-xs">{user.email}</span>
+                      </div>
+                    </div>
                   </div>
                 </TableCell>
 
                 {/* Sucursal */}
                 <TableCell>
                   {user.sucursal ? (
-                    <div className="flex flex-col">
-                      <span className="inline-flex items-center gap-1 text-xs font-bold text-content">
-                        <span>📍</span>
-                        <span>{user.sucursal.barrio}</span>
-                      </span>
-                      <span className="text-[11px] text-content-muted">
-                        {user.sucursal.direccion}
-                      </span>
-                    </div>
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-content">
+                      <span>📍</span>
+                      <span>{user.sucursal.barrio}</span>
+                    </span>
                   ) : (
                     <span className="text-xs text-content-muted italic">
                       Sin sucursal
@@ -181,8 +167,8 @@ export function UsuariosTable({
                 {/* Plan y Rutina */}
                 <TableCell>
                   {user.plan ? (
-                    <div className="flex flex-col gap-1">
-                      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-content">
+                    <div className="flex flex-col gap-0.5">
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-content">
                         <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                         {user.plan.nombre} ({user.plan.diasPorSemana}d)
                       </span>
@@ -191,11 +177,11 @@ export function UsuariosTable({
                           <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                           </svg>
-                          Rutina: {user.rutinasDias.length}/{user.plan.diasPorSemana} días
+                          {user.rutinasDias.length}/{user.plan.diasPorSemana} días
                         </span>
                       ) : (
                         <span className="text-[11px] font-medium text-amber-600 dark:text-amber-400">
-                          Sin rutina asignada
+                          Sin rutina
                         </span>
                       )}
                     </div>
